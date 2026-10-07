@@ -1,0 +1,199 @@
+[e13_anchoring] stage 1: 9600 calls (400 cases x 24 conditions)
+  [e13_anchoring] 100/9600 calls, $0.0025, 0 errors
+  [e13_anchoring] 200/9600 calls, $0.0053, 0 errors
+  [e13_anchoring] 300/9600 calls, $0.0083, 0 errors
+  [e13_anchoring] 400/9600 calls, $0.0115, 0 errors
+  [e13_anchoring] 500/9600 calls, $0.0140, 0 errors
+  [e13_anchoring] 600/9600 calls, $0.0168, 0 errors
+  [e13_anchoring] 700/9600 calls, $0.0200, 0 errors
+  [e13_anchoring] 800/9600 calls, $0.0229, 0 errors
+  [e13_anchoring] 900/9600 calls, $0.0257, 0 errors
+  [e13_anchoring] 1000/9600 calls, $0.0287, 0 errors
+  [e13_anchoring] 1100/9600 calls, $0.0321, 0 errors
+  [e13_anchoring] 1200/9600 calls, $0.0351, 0 errors
+  [e13_anchoring] 1300/9600 calls, $0.0379, 0 errors
+  [e13_anchoring] 1400/9600 calls, $0.0408, 0 errors
+  [e13_anchoring] 1500/9600 calls, $0.0438, 0 errors
+  [e13_anchoring] 1600/9600 calls, $0.0466, 0 errors
+  [e13_anchoring] 1700/9600 calls, $0.0493, 0 errors
+  [e13_anchoring] 1800/9600 calls, $0.0522, 0 errors
+  [e13_anchoring] 1900/9600 calls, $0.0553, 0 errors
+  [e13_anchoring] 2000/9600 calls, $0.0580, 0 errors
+  [e13_anchoring] 2100/9600 calls, $0.0608, 0 errors
+  [e13_anchoring] 2200/9600 calls, $0.0638, 0 errors
+  [e13_anchoring] 2300/9600 calls, $0.0671, 0 errors
+  [e13_anchoring] 2400/9600 calls, $0.0697, 0 errors
+  [e13_anchoring] 2500/9600 calls, $0.0724, 0 errors
+  [e13_anchoring] 2600/9600 calls, $0.0755, 0 errors
+  [e13_anchoring] 2700/9600 calls, $0.0786, 0 errors
+  [e13_anchoring] 2800/9600 calls, $0.0811, 0 errors
+  [e13_anchoring] 2900/9600 calls, $0.0838, 0 errors
+  [e13_anchoring] 3000/9600 calls, $0.0870, 0 errors
+  [e13_anchoring] 3100/9600 calls, $0.0900, 0 errors
+  [e13_anchoring] 3200/9600 calls, $0.0927, 0 errors
+  [e13_anchoring] 3300/9600 calls, $0.0954, 0 errors
+  [e13_anchoring] 3400/9600 calls, $0.0986, 0 errors
+  [e13_anchoring] 3500/9600 calls, $0.1017, 0 errors
+  [e13_anchoring] 3600/9600 calls, $0.1045, 0 errors
+  [e13_anchoring] 3700/9600 calls, $0.1073, 0 errors
+  [e13_anchoring] 3800/9600 calls, $0.1104, 0 errors
+  [e13_anchoring] 3900/9600 calls, $0.1133, 0 errors
+  [e13_anchoring] 4000/9600 calls, $0.1160, 0 errors
+  [e13_anchoring] 4100/9600 calls, $0.1189, 0 errors
+  [e13_anchoring] 4200/9600 calls, $0.1219, 0 errors
+  [e13_anchoring] 4300/9600 calls, $0.1245, 0 errors
+  [e13_anchoring] 4400/9600 calls, $0.1271, 0 errors
+  [e13_anchoring] 4500/9600 calls, $0.1300, 0 errors
+  [e13_anchoring] 4600/9600 calls, $0.1332, 0 errors
+  [e13_anchoring] 4700/9600 calls, $0.1356, 0 errors
+  [e13_anchoring] 4800/9600 calls, $0.1384, 0 errors
+  [e13_anchoring] 4900/9600 calls, $0.1416, 0 errors
+  [e13_anchoring] 5000/9600 calls, $0.1449, 0 errors
+  [e13_anchoring] 5100/9600 calls, $0.1475, 0 errors
+  [e13_anchoring] 5200/9600 calls, $0.1504, 0 errors
+  [e13_anchoring] 5300/9600 calls, $0.1534, 0 errors
+  [e13_anchoring] 5400/9600 calls, $0.1567, 0 errors
+  [e13_anchoring] 5500/9600 calls, $0.1594, 0 errors
+  [e13_anchoring] 5600/9600 calls, $0.1623, 0 errors
+  [e13_anchoring] 5700/9600 calls, $0.1653, 0 errors
+  [e13_anchoring] 5800/9600 calls, $0.1685, 0 errors
+  [e13_anchoring] 5900/9600 calls, $0.1712, 0 errors
+  [e13_anchoring] 6000/9600 calls, $0.1743, 0 errors
+  [e13_anchoring] 6100/9600 calls, $0.1777, 0 errors
+  [e13_anchoring] 6200/9600 calls, $0.1808, 0 errors
+  [e13_anchoring] 6300/9600 calls, $0.1835, 0 errors
+  [e13_anchoring] 6400/9600 calls, $0.1865, 0 errors
+  [e13_anchoring] 6500/9600 calls, $0.1896, 0 errors
+  [e13_anchoring] 6600/9600 calls, $0.1923, 0 errors
+  [e13_anchoring] 6700/9600 calls, $0.1951, 0 errors
+  [e13_anchoring] 6800/9600 calls, $0.1980, 0 errors
+  [e13_anchoring] 6900/9600 calls, $0.2014, 0 errors
+  [e13_anchoring] 7000/9600 calls, $0.2041, 0 errors
+  [e13_anchoring] 7100/9600 calls, $0.2069, 0 errors
+  [e13_anchoring] 7200/9600 calls, $0.2100, 0 errors
+  [e13_anchoring] 7300/9600 calls, $0.2132, 0 errors
+  [e13_anchoring] 7400/9600 calls, $0.2157, 0 errors
+  [e13_anchoring] 7500/9600 calls, $0.2185, 0 errors
+  [e13_anchoring] 7600/9600 calls, $0.2216, 0 errors
+  [e13_anchoring] 7700/9600 calls, $0.2247, 0 errors
+  [e13_anchoring] 7800/9600 calls, $0.2273, 0 errors
+  [e13_anchoring] 7900/9600 calls, $0.2303, 0 errors
+  [e13_anchoring] 8000/9600 calls, $0.2333, 0 errors
+  [e13_anchoring] 8100/9600 calls, $0.2365, 0 errors
+  [e13_anchoring] 8200/9600 calls, $0.2390, 0 errors
+  [e13_anchoring] 8300/9600 calls, $0.2418, 0 errors
+  [e13_anchoring] 8400/9600 calls, $0.2450, 0 errors
+  [e13_anchoring] 8500/9600 calls, $0.2477, 0 errors
+  [e13_anchoring] 8600/9600 calls, $0.2505, 0 errors
+  [e13_anchoring] 8700/9600 calls, $0.2534, 0 errors
+  [e13_anchoring] 8800/9600 calls, $0.2567, 0 errors
+  [e13_anchoring] 8900/9600 calls, $0.2591, 10 errors
+  [e13_anchoring] 9000/9600 calls, $0.2619, 10 errors
+  [e13_anchoring] 9100/9600 calls, $0.2649, 11 errors
+  [e13_anchoring] 9200/9600 calls, $0.2680, 11 errors
+  [e13_anchoring] 9300/9600 calls, $0.2708, 11 errors
+  [e13_anchoring] 9400/9600 calls, $0.2735, 11 errors
+  [e13_anchoring] 9500/9600 calls, $0.2766, 11 errors
+  [e13_anchoring] 9600/9600 calls, $0.2799, 11 errors
+[e13_anchoring] ran 9600 calls in 269s, spent $0.2799, 11 errors (OpenRouter usage before: $1.1365)
+Traceback (most recent call last):
+  File "/Users/ashutosh/Projects/jevpros/experiments/e13_anchoring.py", line 244, in <module>
+    main()
+    ~~~~^^
+  File "/Users/ashutosh/Projects/jevpros/experiments/e13_anchoring.py", line 111, in main
+    p = resp[f"{n}-control_r0"]["answers"]["A0"]["noul"]
+        ~~~~^^^^^^^^^^^^^^^^^^^
+KeyError: '350-control_r0'
+[e13_anchoring] stage 1: 9600 calls (400 cases x 24 conditions)
+[e13_anchoring] ran 11 calls in 1s, spent $0.0003, 0 errors (OpenRouter usage before: $1.3936)
+[e13_anchoring] stage 2: 400 calls (Jev's own earlier answer shown)
+  [e13_anchoring] 100/400 calls, $0.0029, 0 errors
+  [e13_anchoring] 200/400 calls, $0.0058, 0 errors
+  [e13_anchoring] 300/400 calls, $0.0088, 0 errors
+  [e13_anchoring] 400/400 calls, $0.0117, 0 errors
+[e13_anchoring] ran 400 calls in 11s, spent $0.0117, 0 errors (OpenRouter usage before: $1.4163)
+# E13 — Anchoring on earlier answers (multi-turn)
+
+E13 - Does Jev anchor on earlier answers? (multi-turn / stateful use)
+
+Jev is stateless: a "conversation" means earlier turns are written into the state. This tests how an earlier
+answer to the SAME question, shown in a CONVERSATION SO FAR block, changes Jev's answer now.
+
+400 cases (K=2, depth 2-5, 100 per domain, 25 per domain x depth). Questions: A0 (the item the history is about)
+and A1 (the other item - spillover). Conditions per case:
+  control_r0..r2        no history, sent 3 times (r1/r2 vs r0 = the noise floor)
+  <src>_<corr>_<conf>   one earlier answer to A0's statement, attributed to src, correct or wrong, stated
+                        confidence 95% or 55%. src: self ("Your earlier answer"), model ("Another AI model's
+                        earlier answer"), user ("The user's earlier answer"), reviewer ("A human reviewer's
+                        earlier answer")                                                     (16 conditions)
+  fb_<fb>_on_<corr>     your earlier answer (95%) + reviewer feedback "incorrect"/"correct" on it  (4 conditions)
+                        fb_incorrect_on_correct = wrong feedback (does it give in?)
+                        fb_incorrect_on_wrong   = right feedback (does it correct itself?)
+                        fb_correct_on_wrong     = a wrong answer confirmed
+  other_item            your earlier (correct, 95%) answer about the OTHER item - history present but not about A0
+  self_actual           stage 2: Jev's OWN control_r0 answer and its real confidence shown as "Your earlier answer"
+                        (the realistic multi-turn case: ask, then ask again with the history in the state)
+
+Definitions (target question A0, decision = P(yes) >= 0.5):
+  harm     among cases right in control_r0: share now wrong        (for conditions whose shown answer is wrong)
+  rescue   among cases wrong in control_r0: share now right        (for conditions whose shown answer is right)
+  follows  share of decisions equal to the shown answer
+  shift    mean change, vs control_r0, of the probability Jev puts on the shown answer
+  noise    control_r1 and control_r2 against control_r0 (harm/rescue that happen with no history at all)
+Outputs: data/e13_anchoring/dataset.jsonl (every request's state/questions/meta), data/e13_anchoring/answers.jsonl
+(per-call derived fields), logs/e13_anchoring/calls.jsonl (every API call in full).
+
+Control accuracy on A0 (no history, r0): **84.2%** (337 right, 63 wrong of 400).
+
+### One earlier answer shown
+
+| condition | A0 accuracy | harm: right → wrong [95% CI] | rescue: wrong → right [95% CI] | follows shown answer | shift toward shown answer | A1 accuracy | A1 mean |Δp| |
+|---|---|---|---|---|---|---|---|
+| no history, re-asked (noise floor, r1) | 86.5% | 1.5% [0.6%–3.4%] | 22.2% [13.7%–33.9%] | 95.2% | -0.003 | 88.2% | 0.028 |
+| no history, re-asked (noise floor, r2) | 85.8% | 1.2% [0.5%–3.0%] | 15.9% [8.9%–26.8%] | 96.5% | -0.005 | 89.0% | 0.030 |
+| history about the other item only | 83.2% | 4.7% [2.9%–7.6%] | 19.0% [11.2%–30.4%] | — | — | 94.2% | 0.077 |
+| Jev itself said WRONG answer (95%) | 75.0% | 13.4% [10.1%–17.4%] | 12.7% [6.6%–23.1%] | 25.0% | +0.077 | 88.2% | 0.061 |
+| Jev itself said WRONG answer (55%) | 81.5% | 8.0% [5.6%–11.4%] | 25.4% [16.3%–37.3%] | 18.5% | +0.011 | 88.5% | 0.061 |
+| Jev itself said right answer (95%) | 93.8% | 1.5% [0.6%–3.4%] | 68.3% [56.0%–78.4%] | 93.8% | +0.068 | 87.2% | 0.059 |
+| Jev itself said right answer (55%) | 87.2% | 3.0% [1.6%–5.4%] | 34.9% [24.3%–47.2%] | 87.2% | +0.025 | 88.0% | 0.058 |
+| another AI model said WRONG answer (95%) | 84.0% | 5.3% [3.4%–8.3%] | 27.0% [17.6%–39.0%] | 16.0% | +0.003 | 87.5% | 0.060 |
+| another AI model said WRONG answer (55%) | 86.2% | 3.0% [1.6%–5.4%] | 28.6% [18.9%–40.7%] | 13.8% | -0.017 | 87.2% | 0.061 |
+| another AI model said right answer (95%) | 86.2% | 3.6% [2.0%–6.1%] | 31.7% [21.6%–44.0%] | 86.2% | +0.021 | 86.5% | 0.064 |
+| another AI model said right answer (55%) | 85.0% | 3.6% [2.0%–6.1%] | 23.8% [15.0%–35.6%] | 85.0% | +0.010 | 87.2% | 0.061 |
+| the user said WRONG answer (95%) | 80.8% | 8.0% [5.6%–11.4%] | 20.6% [12.5%–32.2%] | 19.2% | +0.018 | 86.5% | 0.063 |
+| the user said WRONG answer (55%) | 84.2% | 5.3% [3.4%–8.3%] | 28.6% [18.9%–40.7%] | 15.8% | -0.004 | 88.5% | 0.059 |
+| the user said right answer (95%) | 90.2% | 1.8% [0.8%–3.8%] | 47.6% [35.8%–59.7%] | 90.2% | +0.042 | 85.2% | 0.062 |
+| the user said right answer (55%) | 86.8% | 3.3% [1.8%–5.7%] | 33.3% [22.9%–45.6%] | 86.8% | +0.023 | 87.8% | 0.058 |
+| a human reviewer said WRONG answer (95%) | 81.8% | 6.2% [4.1%–9.3%] | 17.5% [10.0%–28.6%] | 18.2% | +0.026 | 87.8% | 0.062 |
+| a human reviewer said WRONG answer (55%) | 84.0% | 5.3% [3.4%–8.3%] | 27.0% [17.6%–39.0%] | 16.0% | -0.002 | 86.5% | 0.065 |
+| a human reviewer said right answer (95%) | 90.2% | 2.1% [1.0%–4.2%] | 49.2% [37.3%–61.2%] | 90.2% | +0.043 | 85.2% | 0.062 |
+| a human reviewer said right answer (55%) | 88.8% | 2.1% [1.0%–4.2%] | 39.7% [28.5%–52.0%] | 88.8% | +0.025 | 88.0% | 0.062 |
+
+### Reviewer feedback on your earlier answer (95%)
+
+| condition | A0 accuracy | harm: right → wrong [95% CI] | rescue: wrong → right [95% CI] | follows shown answer | shift toward shown answer | A1 accuracy | A1 mean |Δp| |
+|---|---|---|---|---|---|---|---|
+| your right answer, reviewer says incorrect | 26.5% | 68.5% [63.4%–73.3%] | 0.0% [-0.0%–5.7%] | 26.5% | -0.363 | 87.5% | 0.068 |
+| your wrong answer, reviewer says incorrect | 99.2% | 0.0% [-0.0%–1.1%] | 95.2% [86.9%–98.4%] | 0.8% | -0.137 | 86.2% | 0.068 |
+| your wrong answer, reviewer says correct | 3.8% | 95.5% [92.8%–97.3%] | 0.0% [-0.0%–5.7%] | 96.2% | +0.551 | 85.5% | 0.069 |
+| your right answer, reviewer says correct | 99.8% | 0.0% [-0.0%–1.1%] | 98.4% [91.5%–99.7%] | 99.8% | +0.188 | 85.2% | 0.062 |
+
+### Realistic multi-turn: Jev's own first answer shown, vs simply asking again
+
+| measure | own answer in history | re-asked, no history |
+|---|---|---|
+| decision agrees with the first answer | 94.0% | 95.2% |
+| mean |Δp| from the first answer | 0.061 | 0.027 |
+| mean confidence (first answer: 0.799) | 0.833 | 0.800 |
+| accuracy | 86.2% | 86.5% |
+| first answer wrong (n=63): still wrong | 74.6% | 77.8% |
+
+### Harm (right → wrong) by rule depth
+
+| depth | control acc | re-asked (noise) | Jev itself said wrong (95%) | reviewer said wrong (95%) | your right answer + 'incorrect' feedback |
+|---|---|---|---|---|---|
+| 2 | 96.0% | 0.0% [0.0%–3.8%] | 2.1% [0.6%–7.3%] | 1.0% [0.2%–5.7%] | 51.0% [41.2%–60.8%] |
+| 3 | 90.0% | 2.2% [0.6%–7.7%] | 12.2% [7.0%–20.6%] | 6.7% [3.1%–13.8%] | 61.1% [50.8%–70.5%] |
+| 4 | 79.0% | 1.3% [0.2%–6.8%] | 12.7% [7.0%–21.8%] | 1.3% [0.2%–6.8%] | 78.5% [68.2%–86.1%] |
+| 5 | 72.0% | 2.8% [0.8%–9.6%] | 30.6% [21.1%–42.0%] | 18.1% [10.9%–28.5%] | 90.3% [81.3%–95.2%] |
+

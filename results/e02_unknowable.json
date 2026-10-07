@@ -1,0 +1,42 @@
+{
+  "control": {
+    "n": 150,
+    "mean_confidence": 0.8435333333333334,
+    "near_half_rate": 0.2,
+    "picked_undetermined": 0.0,
+    "mean_p_undetermined": 0.0082,
+    "mean_p_sufficient": 0.9192666666666666,
+    "noul_accuracy": 0.9,
+    "choice_accuracy": 0.9133333333333333
+  },
+  "irrelevant_missing": {
+    "n": 150,
+    "mean_confidence": 0.8526666666666666,
+    "near_half_rate": 0.15333333333333332,
+    "picked_undetermined": 0.04666666666666667,
+    "mean_p_undetermined": 0.08206666666666668,
+    "mean_p_sufficient": 0.8618666666666667,
+    "noul_accuracy": 0.9133333333333333,
+    "choice_accuracy": 0.8666666666666667
+  },
+  "decisive_missing": {
+    "n": 133,
+    "mean_confidence": 0.7057894736842105,
+    "near_half_rate": 0.48120300751879697,
+    "picked_undetermined": 0.3308270676691729,
+    "mean_p_undetermined": 0.370375939849624,
+    "mean_p_sufficient": 0.6105263157894737,
+    "noul_accuracy": null,
+    "choice_accuracy": null
+  },
+  "no_rule": {
+    "n": 150,
+    "mean_confidence": 0.8198,
+    "near_half_rate": 0.12666666666666668,
+    "picked_undetermined": 0.9933333333333333,
+    "mean_p_undetermined": 0.9153333333333334,
+    "mean_p_sufficient": 0.10300000000000001,
+    "noul_accuracy": null,
+    "choice_accuracy": null
+  }
+}

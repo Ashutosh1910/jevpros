@@ -1,0 +1,34 @@
+{
+  "solo": {
+    "acc": 0.9
+  },
+  "full": {
+    "acc": 0.9066666666666666,
+    "mean_abs_dp_vs_solo": 0.02426666666666667,
+    "flip_rate_vs_solo": 0.03333333333333333,
+    "mean_shift_toward_wrong": 0.002533333333333333
+  },
+  "full_last": {
+    "acc": 0.9066666666666666,
+    "mean_abs_dp_vs_solo": 0.028933333333333332,
+    "flip_rate_vs_solo": 0.03333333333333333,
+    "mean_shift_toward_wrong": 0.002133333333333337
+  },
+  "leading": {
+    "acc": 0.88,
+    "mean_abs_dp_vs_solo": 0.026333333333333337,
+    "flip_rate_vs_solo": 0.04666666666666667,
+    "mean_shift_toward_wrong": 0.003400000000000003
+  },
+  "dup": {
+    "acc": 0.9066666666666666,
+    "mean_abs_dp_vs_solo": 0.0286,
+    "flip_rate_vs_solo": 0.04666666666666667,
+    "mean_shift_toward_wrong": 0.0011333333333333354
+  },
+  "dup_within_call_spread": {
+    "mean": 0.02646666666666667,
+    "max": 0.16000000000000003,
+    "all_identical_rate": 0.19333333333333333
+  }
+}

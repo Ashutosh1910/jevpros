@@ -1,0 +1,35 @@
+# E09 — Counting consistency
+
+E09 - Is Jev's notion of "how many" internally consistent?
+
+200 cases (K=4, depth 1-3). Questions: atoms A0-A3, CNT score (0..4), GE_n nouls "at least n of the 4
+are <yes>" (n=1..4), EQ_n nouls "exactly n of the 4 are <yes>" (n=0..4).
+Coherence checks:
+  monotone      P(GE_n) must not increase with n            (violation if P(GE_n+1) > P(GE_n) + 0.1)
+  exact_sum     sum_n P(EQ_n) should be ~1                   (violation if |sum-1| > 0.2)
+  ge_vs_eq      P(GE_n) ~ sum_{m>=n} P(EQ_m)                  (violation if > 0.2 apart)
+  ge_vs_score   P(GE_n) ~ score-distribution tail             (violation if > 0.2 apart)
+  hard          thresholded GE/EQ/CNT answers vs the count implied by Jev's own atoms
+
+### Accuracy
+
+| question | accuracy |
+|---|---|
+| atoms (per item) | 94.1% |
+| count implied by own atoms | 79.5% |
+| CNT score argmax | 67.5% [60.7%–73.6%] |
+| 'at least n' nouls | 89.6% |
+| 'exactly n' nouls | 84.2% |
+
+### Coherence (violation rates)
+
+| check | violation rate |
+|---|---|
+| P(at least n) increases with n | 0.0% |
+| Σ P(exactly n) far from 1 | 70.5% (mean Σ = 1.36) |
+| P(at least n) vs Σ P(exactly m≥n) | 35.0% |
+| P(at least n) vs score tail | 9.1% |
+| CNT pick ≠ count of own atoms (hard) | 28.5% |
+| 'at least n' ≠ own atoms (hard) | 9.8% |
+| 'exactly n' ≠ own atoms (hard) | 14.6% |
+| not exactly one 'exactly n' said yes | 34.5% |

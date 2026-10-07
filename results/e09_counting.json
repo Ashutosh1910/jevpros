@@ -1,0 +1,16 @@
+{
+  "acc_atoms": 0.94125,
+  "acc_cnt": 0.675,
+  "acc_ge": 0.89625,
+  "acc_eq": 0.842,
+  "acc_atoms_count": 0.795,
+  "v_monotone": 0.0,
+  "v_exact_sum": 0.705,
+  "exact_sum": 1.3583,
+  "v_ge_vs_eq": 0.35,
+  "v_ge_vs_score": 0.09125,
+  "h_cnt_vs_atoms": 0.285,
+  "h_ge_vs_atoms": 0.0975,
+  "h_eq_vs_atoms": 0.146,
+  "h_eq_multiple_yes": 0.345
+}

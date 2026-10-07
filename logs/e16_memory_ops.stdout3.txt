@@ -1,0 +1,253 @@
+[e16_memory_ops] starting: 2100 decisions; 6300 Jev calls + 12600 LLM calls
+  [e16_memory_ops] 100/2100 calls, $0.0065, 0 errors
+  [e16_memory_ops] 200/2100 calls, $0.0139, 0 errors
+  [e16_memory_ops] 300/2100 calls, $0.0225, 0 errors
+  [e16_memory_ops] 400/2100 calls, $0.0290, 0 errors
+  [e16_memory_ops] 500/2100 calls, $0.0365, 0 errors
+  [e16_memory_ops] 600/2100 calls, $0.0450, 0 errors
+  [e16_memory_ops] 700/2100 calls, $0.0516, 0 errors
+  [e16_memory_ops] 800/2100 calls, $0.0591, 0 errors
+  [e16_memory_ops] 900/2100 calls, $0.0677, 0 errors
+  [e16_memory_ops] 1000/2100 calls, $0.0743, 0 errors
+  [e16_memory_ops] 1100/2100 calls, $0.0818, 0 errors
+  [e16_memory_ops] 1200/2100 calls, $0.0903, 0 errors
+  [e16_memory_ops] 1300/2100 calls, $0.0969, 0 errors
+  [e16_memory_ops] 1400/2100 calls, $0.1043, 0 errors
+  [e16_memory_ops] 1500/2100 calls, $0.1129, 0 errors
+  [e16_memory_ops] 1600/2100 calls, $0.1194, 0 errors
+  [e16_memory_ops] 1700/2100 calls, $0.1269, 0 errors
+  [e16_memory_ops] 1800/2100 calls, $0.1355, 0 errors
+  [e16_memory_ops] 1900/2100 calls, $0.1420, 0 errors
+  [e16_memory_ops] 2000/2100 calls, $0.1494, 0 errors
+  [e16_memory_ops] 2100/2100 calls, $0.1580, 0 errors
+[e16_memory_ops] ran 2100 calls in 58s, spent $0.1580, 0 errors (OpenRouter usage before: $3.0006)
+  [e16_memory_ops] 100/4200 calls, $0.0049, 0 errors
+  [e16_memory_ops] 200/4200 calls, $0.0096, 0 errors
+  [e16_memory_ops] 300/4200 calls, $0.0167, 0 errors
+  [e16_memory_ops] 400/4200 calls, $0.0239, 0 errors
+  [e16_memory_ops] 500/4200 calls, $0.0342, 0 errors
+  [e16_memory_ops] 600/4200 calls, $0.0444, 0 errors
+  [e16_memory_ops] 700/4200 calls, $0.0491, 0 errors
+  [e16_memory_ops] 800/4200 calls, $0.0538, 0 errors
+  [e16_memory_ops] 900/4200 calls, $0.0609, 0 errors
+  [e16_memory_ops] 1000/4200 calls, $0.0682, 0 errors
+  [e16_memory_ops] 1100/4200 calls, $0.0784, 0 errors
+  [e16_memory_ops] 1200/4200 calls, $0.0886, 0 errors
+  [e16_memory_ops] 1300/4200 calls, $0.0935, 0 errors
+  [e16_memory_ops] 1400/4200 calls, $0.0984, 0 errors
+  [e16_memory_ops] 1500/4200 calls, $0.1058, 0 errors
+  [e16_memory_ops] 1600/4200 calls, $0.1133, 0 errors
+  [e16_memory_ops] 1700/4200 calls, $0.1238, 0 errors
+  [e16_memory_ops] 1800/4200 calls, $0.1342, 0 errors
+  [e16_memory_ops] 1900/4200 calls, $0.1391, 0 errors
+  [e16_memory_ops] 2000/4200 calls, $0.1438, 0 errors
+  [e16_memory_ops] 2100/4200 calls, $0.1510, 0 errors
+  [e16_memory_ops] 2200/4200 calls, $0.1583, 0 errors
+  [e16_memory_ops] 2300/4200 calls, $0.1686, 0 errors
+  [e16_memory_ops] 2400/4200 calls, $0.1788, 0 errors
+  [e16_memory_ops] 2500/4200 calls, $0.1836, 0 errors
+  [e16_memory_ops] 2600/4200 calls, $0.1884, 0 errors
+  [e16_memory_ops] 2700/4200 calls, $0.1958, 0 errors
+  [e16_memory_ops] 2800/4200 calls, $0.2032, 0 errors
+  [e16_memory_ops] 2900/4200 calls, $0.2134, 0 errors
+  [e16_memory_ops] 3000/4200 calls, $0.2237, 0 errors
+  [e16_memory_ops] 3100/4200 calls, $0.2284, 0 errors
+  [e16_memory_ops] 3200/4200 calls, $0.2331, 0 errors
+  [e16_memory_ops] 3300/4200 calls, $0.2402, 0 errors
+  [e16_memory_ops] 3400/4200 calls, $0.2475, 0 errors
+  [e16_memory_ops] 3500/4200 calls, $0.2577, 0 errors
+  [e16_memory_ops] 3600/4200 calls, $0.2679, 0 errors
+  [e16_memory_ops] 3700/4200 calls, $0.2727, 0 errors
+  [e16_memory_ops] 3800/4200 calls, $0.2774, 0 errors
+  [e16_memory_ops] 3900/4200 calls, $0.2846, 0 errors
+  [e16_memory_ops] 4000/4200 calls, $0.2918, 0 errors
+  [e16_memory_ops] 4100/4200 calls, $0.3023, 0 errors
+  [e16_memory_ops] 4200/4200 calls, $0.3125, 0 errors
+[e16_memory_ops] ran 4200 calls in 322s, spent $0.3125, 0 errors (OpenRouter usage before: $3.1064)
+# E16 — Delegating Mem0's memory-write decision (ADD / UPDATE / DELETE / NONE)
+
+E16 - Delegating an agent's memory-write decision: Mem0's ADD / UPDATE / DELETE / NONE step.
+
+The Mem0 paper's update step (arXiv:2504.19413; used by mem0ai 1.x, still in the 2.x repo but no longer called by
+add()) asks an LLM, for each newly extracted fact and the related existing memories, whether to ADD it, UPDATE an
+existing memory, DELETE an existing memory, or do NONE. This benchmark asks whether a single-pass typed decider can
+take over that decision.
+
+Gold labels follow Mem0's own rules (experiments/mem0_prompt.py, copied verbatim):
+  dup_exact        the new fact repeats a memory word for word                      -> NONE
+  dup_paraphrase   the new fact says the same thing in other words                  -> NONE
+  weaker           the memory is more detailed than the new fact                    -> NONE
+  update_detail    the new fact adds detail to a memory                             -> UPDATE that memory
+  update_change    a single-valued attribute changed (city, job, car, favourite)    -> UPDATE that memory
+  delete_contra    the new fact contradicts a memory (antonym / explicit "not" / "no longer")  -> DELETE that memory
+  add_unrelated    no existing memory is about the new fact's topic                 -> ADD
+Each subtype x K (number of existing memories: 1, 5, 10) x 100 items = 2,100 decisions. With K > 1 the other
+memories are about other topics; for multi-valued topics (foods, sports, pets, allergies, languages), half of the
+items also hold a NEAR distractor: the same topic with a different value ("Loves pizza" next to "Loves sushi").
+
+Deciders (each sees the same existing memories and new fact):
+  jev_flat        Jev, one Choice over every (operation, memory) pair: ADD, UPDATE i, DELETE i, NONE
+  jev_flat_m0     the same Choice, but the state carries Mem0's own prompt text instead of the short rule summary
+  jev_decomp      Jev, one Choice per existing memory: unrelated / same or less / adds or changes / contradicts;
+                  code combines (any contradiction -> DELETE, else any adds/changes -> UPDATE, else any same -> NONE,
+                  else ADD)
+  typed:<model>   an open small LLM given the same options as jev_flat, lettered; the decision and its probability
+                  are read from the first token's log-probabilities (max_tokens 1)
+  mem0:<model>    the model run exactly as Mem0 runs it: Mem0's prompt verbatim, JSON output, events parsed as Mem0's
+                  code reads them (only explicit ADD / UPDATE / DELETE events count)
+jev_flat, jev_decomp and typed:* get a short plain-text summary of Mem0's four rules instead of Mem0's JSON prompt.
+Scoring: STRICT = the set of (operation, memory) changes equals the gold set exactly. LENIENT also accepts
+semantically equivalent changes: DELETE i + ADD for an UPDATE or DELETE gold, and UPDATE i for an exact/paraphrase
+duplicate (rewriting the same fact). Outputs: data/e16_memory_ops/{dataset,answers}.jsonl, logs/e16_memory_ops/calls.jsonl.
+
+### Overall
+
+| decider | strict accuracy [95% CI] | lenient accuracy [95% CI] | unparseable | invalid / multiple changes | p50 ms | p95 ms | $ per 1,000 decisions |
+|---|---|---|---|---|---|---|---|
+| jev_flat | 99.0% [98.5%–99.3%] | 99.8% [99.5%–99.9%] | 0 | 0 | 377 | 548 | $0.037 |
+| jev_flat_m0 | 95.9% [94.9%–96.6%] | 98.4% [97.8%–98.9%] | 0 | 0 | 396 | 831 | $0.075 |
+| jev_decomp | 83.6% [82.0%–85.1%] | 84.2% [82.6%–85.7%] | 0 | 0 | 379 | 670 | $0.050 |
+| typed:meta-llama/llama-3.1-8b-instruct | 47.6% [45.5%–49.8%] | 66.9% [64.8%–68.8%] | 0 | 0 | 704 | 4417 | $0.015 |
+| typed:meta-llama/llama-3.3-70b-instruct | 93.1% [92.0%–94.1%] | 96.4% [95.5%–97.1%] | 0 | 0 | 648 | 1458 | $0.077 |
+| typed:openai/gpt-4o-mini | 67.0% [64.9%–68.9%] | 79.1% [77.3%–80.8%] | 0 | 0 | 957 | 1556 | $0.072 |
+| mem0:meta-llama/llama-3.1-8b-instruct | 37.4% [35.4%–39.5%] | 51.1% [49.0%–53.3%] | 0 | 696 | 383 | 555 | $0.070 |
+| mem0:qwen/qwen-2.5-7b-instruct | 36.2% [34.2%–38.3%] | 55.7% [53.5%–57.8%] | 377 | 118 | 1071 | 3634 | $0.174 |
+| mem0:openai/gpt-4o-mini | 65.7% [63.7%–67.7%] | 80.2% [78.5%–81.9%] | 0 | 177 | 2570 | 5681 | $0.255 |
+
+### Strict accuracy by case type
+
+| case → gold | jev_flat | jev_flat_m0 | jev_decomp | typed:llama-3.1-8b-instruct | typed:llama-3.3-70b-instruct | typed:gpt-4o-mini | mem0:llama-3.1-8b-instruct | mem0:qwen-2.5-7b-instruct | mem0:gpt-4o-mini |
+|---|---|---|---|---|---|---|---|---|---|
+| dup_exact → NONE | 100.0% | 100.0% | 99.7% | 45.7% | 100.0% | 75.7% | 54.7% | 29.3% | 100.0% |
+| dup_paraphrase → NONE | 94.3% | 82.0% | 95.0% | 6.3% | 76.0% | 23.7% | 0.3% | 0.0% | 11.7% |
+| weaker → NONE | 100.0% | 92.0% | 99.0% | 42.0% | 95.3% | 51.7% | 1.0% | 0.3% | 31.3% |
+| update_detail → UPDATE | 100.0% | 100.0% | 97.3% | 98.0% | 99.0% | 96.0% | 67.0% | 70.3% | 85.0% |
+| update_change → UPDATE | 100.0% | 98.0% | 4.7% | 48.7% | 91.3% | 23.7% | 26.0% | 56.0% | 62.3% |
+| delete_contra → DELETE | 98.7% | 99.0% | 100.0% | 71.0% | 90.7% | 98.3% | 28.0% | 16.3% | 73.0% |
+| add_unrelated → ADD | 100.0% | 100.0% | 89.7% | 21.7% | 99.7% | 99.7% | 85.0% | 81.0% | 96.7% |
+
+### Strict accuracy by number of existing memories (K)
+
+| K | jev_flat | jev_flat_m0 | jev_decomp | typed:llama-3.1-8b-instruct | typed:llama-3.3-70b-instruct | typed:gpt-4o-mini | mem0:llama-3.1-8b-instruct | mem0:qwen-2.5-7b-instruct | mem0:gpt-4o-mini |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | 100.0% | 97.4% | 85.4% | 60.4% | 95.3% | 78.6% | 47.7% | 41.9% | 66.6% |
+| 5 | 99.0% | 94.7% | 84.3% | 45.4% | 92.9% | 67.1% | 35.0% | 37.3% | 66.1% |
+| 10 | 98.0% | 95.4% | 81.1% | 37.0% | 91.3% | 55.1% | 29.6% | 29.4% | 64.4% |
+
+### Contradictions (gold DELETE) by wording
+
+| wording | jev_flat | jev_flat_m0 | jev_decomp | typed:llama-3.1-8b-instruct | typed:llama-3.3-70b-instruct | typed:gpt-4o-mini | mem0:llama-3.1-8b-instruct | mem0:qwen-2.5-7b-instruct | mem0:gpt-4o-mini |
+|---|---|---|---|---|---|---|---|---|---|
+| antonym | 100.0% (n=85) | 96.5% (n=85) | 100.0% (n=85) | 56.5% (n=85) | 100.0% (n=85) | 94.1% (n=85) | 36.5% (n=85) | 8.2% (n=85) | 70.6% (n=85) |
+| explicit_not | 100.0% (n=113) | 100.0% (n=113) | 100.0% (n=113) | 69.9% (n=113) | 100.0% (n=113) | 100.0% (n=113) | 21.2% (n=113) | 22.1% (n=113) | 93.8% (n=113) |
+| no_longer | 96.1% (n=102) | 100.0% (n=102) | 100.0% (n=102) | 84.3% (n=102) | 72.5% (n=102) | 100.0% (n=102) | 28.4% (n=102) | 16.7% (n=102) | 52.0% (n=102) |
+
+### Same-topic look-alike memories (multi-valued topics, K > 1, excluding ADD cases)
+
+| setting | jev_flat | jev_flat_m0 | jev_decomp | typed:llama-3.1-8b-instruct | typed:llama-3.3-70b-instruct | typed:gpt-4o-mini | mem0:llama-3.1-8b-instruct | mem0:qwen-2.5-7b-instruct | mem0:gpt-4o-mini |
+|---|---|---|---|---|---|---|---|---|---|
+| no look-alike (multi-valued topics, K>1) | 99.0% (n=210) | 95.7% (n=210) | 98.1% (n=210) | 47.6% (n=210) | 92.9% (n=210) | 57.1% (n=210) | 27.1% (n=210) | 21.4% (n=210) | 66.7% (n=210) |
+| with a same-topic look-alike | 97.9% (n=237) | 94.1% (n=237) | 95.8% (n=237) | 43.5% (n=237) | 94.1% (n=237) | 56.5% (n=237) | 18.6% (n=237) | 16.5% (n=237) | 61.6% (n=237) |
+
+### What each decider did, by gold operation (row shares)
+
+| decider | gold | → ADD | → UPDATE | → DELETE | → NONE | → several | → bad id | → unparseable |
+|---|---|---|---|---|---|---|---|---|
+| jev_flat | ADD | 100.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| jev_flat | UPDATE | 0.0% | 100.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| jev_flat | DELETE | 0.0% | 1.3% | 98.7% | 0.0% | 0.0% | 0.0% | 0.0% |
+| jev_flat | NONE | 0.0% | 1.9% | 0.0% | 98.1% | 0.0% | 0.0% | 0.0% |
+| jev_flat_m0 | ADD | 100.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| jev_flat_m0 | UPDATE | 0.0% | 99.0% | 1.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| jev_flat_m0 | DELETE | 0.0% | 1.0% | 99.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| jev_flat_m0 | NONE | 0.0% | 8.7% | 0.0% | 91.3% | 0.0% | 0.0% | 0.0% |
+| jev_decomp | ADD | 89.7% | 9.0% | 1.3% | 0.0% | 0.0% | 0.0% | 0.0% |
+| jev_decomp | UPDATE | 0.0% | 51.0% | 49.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| jev_decomp | DELETE | 0.0% | 0.0% | 100.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| jev_decomp | NONE | 0.0% | 1.3% | 0.8% | 97.9% | 0.0% | 0.0% | 0.0% |
+| typed:meta-llama/llama-3.1-8b-instruct | ADD | 21.7% | 4.3% | 0.0% | 74.0% | 0.0% | 0.0% | 0.0% |
+| typed:meta-llama/llama-3.1-8b-instruct | UPDATE | 5.0% | 73.3% | 2.3% | 19.3% | 0.0% | 0.0% | 0.0% |
+| typed:meta-llama/llama-3.1-8b-instruct | DELETE | 3.3% | 7.7% | 71.0% | 18.0% | 0.0% | 0.0% | 0.0% |
+| typed:meta-llama/llama-3.1-8b-instruct | NONE | 4.7% | 62.3% | 1.7% | 31.3% | 0.0% | 0.0% | 0.0% |
+| typed:meta-llama/llama-3.3-70b-instruct | ADD | 99.7% | 0.3% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| typed:meta-llama/llama-3.3-70b-instruct | UPDATE | 0.2% | 95.2% | 4.7% | 0.0% | 0.0% | 0.0% | 0.0% |
+| typed:meta-llama/llama-3.3-70b-instruct | DELETE | 0.0% | 9.3% | 90.7% | 0.0% | 0.0% | 0.0% | 0.0% |
+| typed:meta-llama/llama-3.3-70b-instruct | NONE | 0.0% | 9.2% | 0.3% | 90.4% | 0.0% | 0.0% | 0.0% |
+| typed:openai/gpt-4o-mini | ADD | 99.7% | 0.0% | 0.3% | 0.0% | 0.0% | 0.0% | 0.0% |
+| typed:openai/gpt-4o-mini | UPDATE | 11.0% | 59.8% | 29.2% | 0.0% | 0.0% | 0.0% | 0.0% |
+| typed:openai/gpt-4o-mini | DELETE | 1.7% | 0.0% | 98.3% | 0.0% | 0.0% | 0.0% | 0.0% |
+| typed:openai/gpt-4o-mini | NONE | 2.9% | 40.2% | 6.6% | 50.3% | 0.0% | 0.0% | 0.0% |
+| mem0:meta-llama/llama-3.1-8b-instruct | ADD | 85.0% | 1.3% | 0.0% | 0.3% | 13.3% | 0.0% | 0.0% |
+| mem0:meta-llama/llama-3.1-8b-instruct | UPDATE | 16.2% | 46.7% | 3.3% | 0.0% | 33.8% | 0.0% | 0.0% |
+| mem0:meta-llama/llama-3.1-8b-instruct | DELETE | 13.7% | 32.0% | 28.0% | 0.0% | 26.3% | 0.0% | 0.0% |
+| mem0:meta-llama/llama-3.1-8b-instruct | NONE | 6.7% | 27.4% | 5.7% | 18.7% | 37.6% | 4.0% | 0.0% |
+| mem0:qwen/qwen-2.5-7b-instruct | ADD | 81.0% | 8.0% | 0.0% | 0.0% | 3.7% | 0.0% | 7.3% |
+| mem0:qwen/qwen-2.5-7b-instruct | UPDATE | 1.7% | 63.2% | 0.0% | 0.0% | 6.8% | 0.0% | 28.3% |
+| mem0:qwen/qwen-2.5-7b-instruct | DELETE | 2.7% | 45.0% | 16.7% | 0.0% | 5.0% | 0.0% | 30.7% |
+| mem0:qwen/qwen-2.5-7b-instruct | NONE | 1.8% | 72.1% | 0.2% | 9.9% | 5.0% | 0.7% | 10.3% |
+| mem0:openai/gpt-4o-mini | ADD | 96.7% | 0.0% | 0.0% | 0.0% | 3.3% | 0.0% | 0.0% |
+| mem0:openai/gpt-4o-mini | UPDATE | 7.0% | 79.0% | 0.0% | 0.0% | 14.0% | 0.0% | 0.0% |
+| mem0:openai/gpt-4o-mini | DELETE | 1.3% | 14.0% | 73.3% | 0.0% | 11.3% | 0.0% | 0.0% |
+| mem0:openai/gpt-4o-mini | NONE | 0.8% | 45.0% | 1.1% | 47.7% | 5.3% | 0.1% | 0.0% |
+
+### Cascade: confident decisions kept, the rest sent to openai/gpt-4o-mini (Mem0 prompt)
+
+| first decider | sent to the LLM when | share sent | strict accuracy |
+|---|---|---|---|
+| jev_flat | never | 0.0% | 99.0% |
+| jev_flat | conf < 0.5 | 0.7% | 98.5% |
+| jev_flat | conf < 0.7 | 5.4% | 95.7% |
+| jev_flat | conf < 0.8 | 9.7% | 92.9% |
+| jev_flat | conf < 0.9 | 19.7% | 86.6% |
+| jev_flat | conf < 0.95 | 31.5% | 81.0% |
+| jev_flat | always | 100.0% | 65.7% |
+| typed:meta-llama/llama-3.1-8b-instruct | never | 0.0% | 47.6% |
+| typed:meta-llama/llama-3.1-8b-instruct | conf < 0.5 | 17.5% | 50.6% |
+| typed:meta-llama/llama-3.1-8b-instruct | conf < 0.7 | 50.6% | 57.7% |
+| typed:meta-llama/llama-3.1-8b-instruct | conf < 0.8 | 67.7% | 61.6% |
+| typed:meta-llama/llama-3.1-8b-instruct | conf < 0.9 | 81.8% | 64.4% |
+| typed:meta-llama/llama-3.1-8b-instruct | conf < 0.95 | 90.0% | 65.5% |
+| typed:meta-llama/llama-3.1-8b-instruct | always | 100.0% | 65.7% |
+| typed:meta-llama/llama-3.3-70b-instruct | never | 1.0% | 93.0% |
+| typed:meta-llama/llama-3.3-70b-instruct | conf < 0.5 | 1.1% | 93.0% |
+| typed:meta-llama/llama-3.3-70b-instruct | conf < 0.7 | 2.0% | 92.9% |
+| typed:meta-llama/llama-3.3-70b-instruct | conf < 0.8 | 2.5% | 92.7% |
+| typed:meta-llama/llama-3.3-70b-instruct | conf < 0.9 | 3.0% | 92.7% |
+| typed:meta-llama/llama-3.3-70b-instruct | conf < 0.95 | 3.5% | 92.6% |
+| typed:meta-llama/llama-3.3-70b-instruct | always | 100.0% | 65.7% |
+
+### Confidence vs accuracy
+
+| decider | confidence | n | strict accuracy |
+|---|---|---|---|
+| jev_flat | 0.00–0.50 | 14 | 78.6% |
+| jev_flat | 0.50–0.70 | 100 | 85.0% |
+| jev_flat | 0.70–0.90 | 300 | 99.3% |
+| jev_flat | 0.90–0.97 | 470 | 99.8% |
+| jev_flat | 0.97–1.00 | 1216 | 100.0% |
+| jev_flat_m0 | 0.00–0.50 | 58 | 65.5% |
+| jev_flat_m0 | 0.50–0.70 | 262 | 83.6% |
+| jev_flat_m0 | 0.70–0.90 | 549 | 96.9% |
+| jev_flat_m0 | 0.90–0.97 | 423 | 98.3% |
+| jev_flat_m0 | 0.97–1.00 | 808 | 100.0% |
+| jev_decomp | 0.00–0.50 | 5 | 40.0% |
+| jev_decomp | 0.50–0.70 | 205 | 34.1% |
+| jev_decomp | 0.70–0.90 | 315 | 37.5% |
+| jev_decomp | 0.90–0.97 | 100 | 91.0% |
+| jev_decomp | 0.97–1.00 | 1475 | 100.0% |
+| typed:meta-llama/llama-3.1-8b-instruct | 0.00–0.50 | 368 | 34.2% |
+| typed:meta-llama/llama-3.1-8b-instruct | 0.50–0.70 | 694 | 39.6% |
+| typed:meta-llama/llama-3.1-8b-instruct | 0.70–0.90 | 655 | 51.5% |
+| typed:meta-llama/llama-3.1-8b-instruct | 0.90–0.97 | 237 | 66.2% |
+| typed:meta-llama/llama-3.1-8b-instruct | 0.97–1.00 | 146 | 71.9% |
+| typed:meta-llama/llama-3.3-70b-instruct | 0.00–0.50 | 2 | 0.0% |
+| typed:meta-llama/llama-3.3-70b-instruct | 0.50–0.70 | 18 | 50.0% |
+| typed:meta-llama/llama-3.3-70b-instruct | 0.70–0.90 | 21 | 52.4% |
+| typed:meta-llama/llama-3.3-70b-instruct | 0.90–0.97 | 21 | 42.9% |
+| typed:meta-llama/llama-3.3-70b-instruct | 0.97–1.00 | 2017 | 94.5% |
+| typed:openai/gpt-4o-mini | 0.00–0.50 | 17 | 58.8% |
+| typed:openai/gpt-4o-mini | 0.50–0.70 | 78 | 41.0% |
+| typed:openai/gpt-4o-mini | 0.70–0.90 | 115 | 43.5% |
+| typed:openai/gpt-4o-mini | 0.90–0.97 | 121 | 46.3% |
+| typed:openai/gpt-4o-mini | 0.97–1.00 | 1769 | 71.1% |
+

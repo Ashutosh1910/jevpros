@@ -1,0 +1,29 @@
+# E06 — Number of options
+
+E06 - Scaling the number of options in a choice (2 -> 255, the documented maximum).
+
+T1 lookup  - fixed-size state (one record); "what is the record's reference code?" with N look-alike
+             codes as options. Isolates option count from state size.
+T2 roster  - a roster of N employees; exactly one meets 3 conditions (department, badge level above
+             a threshold, training done); most others miss by one condition. Options = N employee IDs.
+             State grows with N (realistic "pick from a list").
+25 trials per (task, N).
+
+| task | N options | accuracy [95% CI] | chance | mean P(true option) | mean confidence | input tokens | latency ms |
+|---|---|---|---|---|---|---|---|
+| T1 lookup | 2 | 100.0% [86.7%–100.0%] | 50.0% | 1.00 | 1.00 | 377 | 397 |
+| T1 lookup | 4 | 100.0% [86.7%–100.0%] | 25.0% | 1.00 | 1.00 | 421 | 390 |
+| T1 lookup | 8 | 100.0% [86.7%–100.0%] | 12.5% | 1.00 | 1.00 | 511 | 398 |
+| T1 lookup | 16 | 100.0% [86.7%–100.0%] | 6.2% | 1.00 | 1.00 | 687 | 400 |
+| T1 lookup | 32 | 100.0% [86.7%–100.0%] | 3.1% | 1.00 | 1.00 | 1039 | 420 |
+| T1 lookup | 64 | 100.0% [86.7%–100.0%] | 1.6% | 1.00 | 1.00 | 1756 | 396 |
+| T1 lookup | 128 | 100.0% [86.7%–100.0%] | 0.8% | 1.00 | 1.00 | 3180 | 410 |
+| T1 lookup | 255 | 100.0% [86.7%–100.0%] | 0.4% | 1.00 | 1.00 | 6004 | 445 |
+| T2 roster | 2 | 100.0% [86.7%–100.0%] | 50.0% | 1.00 | 1.00 | 397 | 396 |
+| T2 roster | 4 | 100.0% [86.7%–100.0%] | 25.0% | 1.00 | 1.00 | 487 | 408 |
+| T2 roster | 8 | 100.0% [86.7%–100.0%] | 12.5% | 1.00 | 1.00 | 668 | 406 |
+| T2 roster | 16 | 100.0% [86.7%–100.0%] | 6.2% | 0.99 | 0.99 | 1030 | 407 |
+| T2 roster | 32 | 100.0% [86.7%–100.0%] | 3.1% | 0.96 | 0.95 | 1755 | 405 |
+| T2 roster | 64 | 96.0% [80.5%–99.3%] | 1.6% | 0.89 | 0.88 | 3202 | 436 |
+| T2 roster | 128 | 96.0% [80.5%–99.3%] | 0.8% | 0.78 | 0.77 | 6095 | 469 |
+| T2 roster | 255 | 80.0% [60.9%–91.1%] | 0.4% | 0.60 | 0.66 | 11841 | 496 |

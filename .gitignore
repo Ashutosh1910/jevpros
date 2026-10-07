@@ -1,0 +1,8 @@
+# secrets: never commit the API key
+.env
+.env.*
+
+# Python / OS clutter
+__pycache__/
+*.pyc
+.DS_Store

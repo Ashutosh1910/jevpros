@@ -1,0 +1,811 @@
+<title>Jev Stress Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #f5f7f9; --panel: #ffffff; --ink: #11161c; --ink-2: #414c58; --ink-3: #6b7682;
+  --rule: #dfe4ea; --grid: #e8ecf0; --accent: #2a78d6; --accent-soft: rgba(42,120,214,.13);
+  --bad: #c0392b; --bad-soft: #fbeaea; --good: #1d7a45; --good-soft: #e6f4ec; --mid: #9a6700; --mid-soft: #fff4d6;
+  --code: #eef2f6;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1318; --panel: #161b21; --ink: #eef2f6; --ink-2: #b9c3cd; --ink-3: #8a96a3;
+    --rule: #2a323b; --grid: #232a32; --accent: #3987e5; --accent-soft: rgba(57,135,229,.2);
+    --bad: #ef7a7a; --bad-soft: #2d1a1c; --good: #4cc27f; --good-soft: #14281d; --mid: #e3b341; --mid-soft: #2b2412;
+    --code: #1e252d; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1318; --panel: #161b21; --ink: #eef2f6; --ink-2: #b9c3cd; --ink-3: #8a96a3;
+  --rule: #2a323b; --grid: #232a32; --accent: #3987e5; --accent-soft: rgba(57,135,229,.2);
+  --bad: #ef7a7a; --bad-soft: #2d1a1c; --good: #4cc27f; --good-soft: #14281d; --mid: #e3b341; --mid-soft: #2b2412;
+  --code: #1e252d; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.65 "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif; }
+.wrap { max-width: 900px; margin: 0 auto; padding-inline: 20px; padding-block: 40px 80px; }
+h1, h2, h3, h5 { text-wrap: balance; line-height: 1.25; margin: 0; }
+h1 { font-size: clamp(2rem, 5vw, 2.7rem); font-weight: 700; letter-spacing: -.02em; }
+h2 { font-size: 1.5rem; font-weight: 650; margin-top: 60px; margin-bottom: 14px; padding-top: 8px; }
+h3 { font-size: 1.2rem; font-weight: 650; }
+h5 { font-size: .95rem; margin: 18px 0 6px; }
+p { margin: 0 0 12px; max-width: 70ch; }
+a { color: var(--accent); }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.eyebrow, .plabel { font: 500 11.5px/1.3 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.plabel { margin-bottom: 6px; color: var(--accent); }
+.lede { font-size: 1.12rem; color: var(--ink-2); margin-top: 14px; }
+.facts { display: flex; flex-wrap: wrap; gap: 10px 30px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--rule); }
+.facts div { display: flex; flex-direction: column; }
+.facts b { font: 500 1.3rem/1.2 "JetBrains Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+.facts span { font-size: 13px; color: var(--ink-3); }
+nav.toc { margin-top: 24px; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; }
+.tldr { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 20px 24px 8px; }
+.tldr li { margin-bottom: 10px; max-width: 72ch; }
+.scroll { overflow-x: auto; margin: 10px 0 14px; }
+table { border-collapse: collapse; font-size: 14px; min-width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-weight: 600; color: var(--ink-2); background: var(--code); }
+table.score td:first-child a { font: 500 13px "JetBrains Mono", monospace; text-decoration: none; }
+table.score td:nth-child(2) { font-weight: 600; min-width: 170px; }
+table.score td:nth-child(3) { color: var(--ink-2); }
+.chip { display: inline-block; font: 600 11px/1 "JetBrains Mono", monospace; letter-spacing: .05em; text-transform: uppercase; padding: 5px 8px; border-radius: 4px; white-space: nowrap; }
+.chip.good { background: var(--good-soft); color: var(--good); }
+.chip.mixed { background: var(--mid-soft); color: var(--mid); }
+.chip.bad { background: var(--bad-soft); color: var(--bad); }
+.example { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 20px; }
+@media (max-width: 760px) { .example { grid-template-columns: 1fr; } }
+.example pre { font: 12.5px/1.55 "JetBrains Mono", monospace; background: var(--code); padding: 14px; border-radius: 6px; white-space: pre-wrap; margin: 8px 0 0; }
+.example ol { padding-left: 20px; margin: 8px 0 16px; font-size: 15px; }
+.example li { margin-bottom: 8px; }
+table.qa td:nth-child(2) { font-family: "JetBrains Mono", monospace; font-size: 13px; white-space: nowrap; }
+td.ok { color: var(--good); } td.no { color: var(--bad); }
+.note { font-size: 14px; color: var(--ink-2); }
+dl.gloss { display: grid; grid-template-columns: minmax(130px, 200px) 1fr; gap: 10px 20px; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 20px 24px; margin: 0; }
+@media (max-width: 600px) { dl.gloss { grid-template-columns: 1fr; gap: 2px; } dl.gloss dd { margin-bottom: 10px; } }
+dl.gloss dt { font-weight: 600; }
+dl.gloss dd { margin: 0; color: var(--ink-2); font-size: 15px; }
+.exp { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 22px 24px 10px; margin-bottom: 22px; scroll-margin-top: 16px; }
+.exp-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.exp-head h3 { flex: 1 1 260px; }
+.eid { font: 500 13px "JetBrains Mono", monospace; color: var(--accent); }
+.parts { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.part ul { padding-left: 20px; margin: 0; }
+.part li { margin-bottom: 7px; max-width: 72ch; }
+.part p { margin: 0; }
+.means { margin: 16px 0 12px; background: var(--accent-soft); border-radius: 8px; padding: 14px 16px; }
+.means .plabel { color: var(--ink); }
+.means p { margin: 0; font-weight: 500; }
+figure { margin: 16px 0 6px; }
+figcaption { font-size: 13.5px; color: var(--ink-3); margin-top: 4px; }
+.chart { width: 100%; height: auto; display: block; overflow: visible; }
+.chart .grid { stroke: var(--grid); stroke-width: 1; }
+.chart .tick, .chart .reflabel { fill: var(--ink-3); font: 12px "JetBrains Mono", monospace; }
+.chart .axis { fill: var(--ink-2); font: 13px "Instrument Sans", sans-serif; }
+.chart .series { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; }
+.chart .band { fill: var(--accent-soft); }
+.chart .dot { fill: var(--accent); stroke: var(--panel); stroke-width: 2; }
+.chart .hit, .chart .hitbar { fill: transparent; }
+.chart .hitbar:hover { fill: var(--accent-soft); opacity: .6; }
+.chart .ref { stroke: var(--ink-3); stroke-width: 1.2; stroke-dasharray: 4 4; }
+.chart .endlabel, .chart .value { fill: var(--ink); font: 500 13px "JetBrains Mono", monospace; }
+.chart .barlabel { fill: var(--ink-2); font-size: 13px; }
+.chart .bar { fill: var(--accent); }
+.chart .bar.emph { fill: var(--bad); }
+.chart .whisker { stroke: var(--ink); stroke-width: 1.5; opacity: .5; }
+#tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--bg); font-size: 13px; line-height: 1.4; padding: 8px 10px; border-radius: 6px; max-width: 300px; z-index: 5; }
+details { border-top: 1px solid var(--rule); margin-top: 8px; }
+summary { padding: 12px 2px; cursor: pointer; font-size: 14px; color: var(--ink-3); list-style: none; }
+summary::-webkit-details-marker { display: none; }
+summary::before { content: "▸ "; }
+details[open] summary::before { content: "▾ "; }
+.dbody { padding-bottom: 14px; }
+.dbody td:not(:first-child) { font-family: "JetBrains Mono", monospace; font-size: 12.5px; white-space: nowrap; }
+.dbody table { font-size: 13px; }
+code { font: 13px "JetBrains Mono", monospace; background: var(--code); padding: 1px 5px; border-radius: 3px; }
+pre.mono, pre.method { font: 12px/1.5 "JetBrains Mono", monospace; background: var(--code); padding: 12px; border-radius: 6px; margin: 0; }
+pre.method { white-space: pre-wrap; color: var(--ink-2); margin: 8px 0 12px; }
+.recs li, .limits li { margin-bottom: 10px; max-width: 74ch; }
+.recs { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 18px 24px 8px 44px; }
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Benchmark report · TypeSafe Jev 1.13 via OpenRouter · September 2026</div>
+  <h1>Jev stress test</h1>
+  <p class="lede">We ran fifteen experiments to find out where TypeSafe's Jev model can be trusted to make decisions and
+  where it can't. Each section below explains, in plain language, what we tested, how, what happened, and what it means
+  for building with Jev.</p>
+  <div class="facts">
+    <div><b>15</b><span>experiments</span></div>
+    <div><b>37,291</b><span>questions sent</span></div>
+    <div><b>11</b><span>transient errors, all retried</span></div>
+    <div><b>$1.74</b><span>total cost</span></div>
+    <div><b>~0.4 s</b><span>typical response</span></div>
+  </div>
+  <nav class="toc" aria-label="Contents">
+    <a href="#summary">Summary</a><a href="#background">What Jev is</a><a href="#example">A worked example</a>
+    <a href="#glossary">Glossary</a><a href="#experiments">The experiments</a><a href="#recommendations">Recommendations</a>
+    <a href="#limitations">Limitations</a><a href="#cost">Cost &amp; data</a>
+  </nav>
+</header>
+
+<h2 id="summary">Summary in one minute</h2>
+<div class="tldr"><ul>
+  <li><b>Good at the basics.</b> It gets number and date comparisons right, handles up to 255 answer options, isn't
+  distracted by long inputs, answers in about 0.4 seconds, and its probabilities mean what they say.</li>
+  <li><b>Loses track of deep logic.</b> Accuracy falls from 98% with one exception in a rule to a coin flip with ten.
+  When lost, it falls back to the rule's default answer.</li>
+  <li><b>Can be manipulated.</b> A single fake “administrator” line in the input turned 64% of correct answers wrong,
+  although it ignores crude “ignore all rules” tricks.</li>
+  <li><b>Not fully consistent.</b> Asking the same thing twice changes about 4% of answers, rewording changes about 15%,
+  and borderline answers (near 50%) can contradict each other.</li>
+  <li><b>Knows when information is missing, but not when it's wrong.</b> Asked beforehand, it reliably flags questions
+  that can't be answered from the input, but it's overconfident about multi-step reasoning.</li>
+  <li><b>Written-out reasoning fixes deep logic.</b> Given the steps, it scores 100% on rules it otherwise gets
+  69% right, and it follows the steps over a wrong conclusion, unless that conclusion claims to be “verified”.</li>
+  <li><b>Probabilities mostly fit together.</b> Bayes-style updating is coherent, but compound statements with
+  “not” or “or” are overpriced, so do that arithmetic in code.</li>
+  <li><b>Safe to give its own history, not verdicts.</b> Seeing its earlier answers doesn't lock in mistakes, but one line
+  saying a reviewer found an answer “incorrect” flips 69% of right answers.</li>
+</ul></div>
+<div class="scroll"><table class="score">
+  <thead><tr><th>#</th><th>Experiment</th><th>Headline result</th><th>Verdict</th></tr></thead>
+  <tbody><tr><td><a href="#e00">E00</a></td><td>Do related answers fit together logically?</td><td>Probabilities follow logic; borderline yes/no answers often contradict each other</td><td><span class="chip mixed">Mixed</span></td></tr><tr><td><a href="#e01">E01</a></td><td>Numbers, dates and negatives</td><td>480/480 number and 159/160 date comparisons right; three stacked “nots” trip it</td><td><span class="chip good">Strong</span></td></tr><tr><td><a href="#e02">E02</a></td><td>Does it admit when it can't know?</td><td>Spots a missing rule 99% of the time, but a missing fact only 33%</td><td><span class="chip mixed">Mixed</span></td></tr><tr><td><a href="#e03">E03</a></td><td>Same question, different wording, or asked twice</td><td>Not deterministic (4% of answers change on re-ask); rewording or reordering changes 14–15%</td><td><span class="chip mixed">Mixed</span></td></tr><tr><td><a href="#e04">E04</a></td><td>Can planted text trick it?</td><td>Ignores “ignore all rules”, but obeys a fake administrator note 64% of the time</td><td><span class="chip bad">Weak spot</span></td></tr><tr><td><a href="#e05">E05</a></td><td>Do questions in one call affect each other?</td><td>No: batching or leading questions change answers no more than noise</td><td><span class="chip good">Strong</span></td></tr><tr><td><a href="#e06">E06</a></td><td>How many choices can it handle?</td><td>100% with 255 options for lookups; searching a 255-item list with 3 conditions drops to 80%</td><td><span class="chip good">Strong</span></td></tr><tr><td><a href="#e07">E07</a></td><td>Does a lot of irrelevant text confuse it?</td><td>No: 95–97% accuracy even with ~25k tokens of look-alike rules</td><td><span class="chip good">Strong</span></td></tr><tr><td><a href="#e08">E08</a></td><td>How deep can the rule logic go?</td><td>98% with 1 exception, 83% with 5, coin flip (56%) with 10</td><td><span class="chip bad">Weak spot</span></td></tr><tr><td><a href="#e09">E09</a></td><td>Can it count consistently?</td><td>Gets each item right 94% of the time, but its count is right only 67.5%</td><td><span class="chip bad">Weak spot</span></td></tr><tr><td><a href="#e11">E11</a></td><td>Speed under load</td><td>~400 ms median at any load; 92 requests/second at 64 parallel; no errors</td><td><span class="chip good">Strong</span></td></tr><tr><td><a href="#e12">E12</a></td><td>Does it know when it can answer?</td><td>Great at spotting missing information; blind to its own reasoning mistakes</td><td><span class="chip mixed">Mixed</span></td></tr><tr><td><a href="#e13">E13</a></td><td>Does it stick to earlier answers in a conversation?</td><td>Its own history doesn't lock in mistakes, but one reviewer line saying “incorrect” flips 69% of right answers</td><td><span class="chip mixed">Mixed</span></td></tr><tr><td><a href="#e14">E14</a></td><td>Can its probabilities be exploited as prices?</td><td>Every set can be Dutch-booked for 4–7¢ a ticket, about what random error of the same size gives; “not” and “or” statements are overpriced</td><td><span class="chip mixed">Mixed</span></td></tr><tr><td><a href="#e15">E15</a></td><td>Can reasoning written into the input help it?</td><td>Written-out steps take deep rules from 69% to 100%; it follows the steps over a wrong conclusion, unless the notes claim to be “verified”</td><td><span class="chip good">Strong</span></td></tr></tbody>
+</table></div>
+
+<h2 id="background">Background: what Jev is and how we tested it</h2>
+<p>Most AI models write text. Jev doesn't. You give it a description of a situation and a list of questions, and it
+returns numbers: the probability that a statement is true, which option it picks from a list, or a point on a scale.
+It is designed to make fast, cheap decisions inside software, such as routing a request, checking a claim against a
+policy, or approving a transaction.</p>
+<p>To test it fairly we needed questions whose correct answers we knew exactly. So a program generated thousands of
+made-up policies (expense reimbursement, building access, insurance claims and library loans), each with rules,
+exceptions and a set of cases. Because the program built the rules, it can work out every correct answer, and we can
+change one thing at a time (the wording, the depth of the rules, a missing fact) to see what affects Jev.</p>
+
+<h2 id="example">A worked example</h2>
+
+<div class="example">
+  <div class="example-state">
+    <div class="eyebrow">What Jev receives (input)</div>
+<pre>COMPANY EXPENSE REIMBURSEMENT POLICY
+Rule 1 (conference fees): rejected by default.
+  Exception: if it was not pre-approved by a Director, it is reimbursed instead.
+  But if, in addition, it was not paid with the corporate card, it is rejected after all.
+Rule 2 (training courses): reimbursed by default.
+  Exception: if it was not paid with the corporate card, it is rejected instead.
+  However, in that case, if the trip is international, it is reimbursed.
+
+CASE
+- Expense 1 (training courses): domestic trip; corporate card: yes; $190.
+- Expense 2 (conference fees): corporate card: no; pre-approved by a Manager; no receipt.</pre>
+  </div>
+  <div class="example-walk">
+    <div class="eyebrow">The correct answers, worked out</div>
+    <ol>
+      <li><b>Expense 1</b>: training is reimbursed by default. The exception needs “not paid with the corporate card”, but it was paid with the card, so the exception doesn't apply. <b>Reimbursed.</b></li>
+      <li><b>Expense 2</b>: conference fees are rejected by default. It was approved by a Manager, not a Director, so the first exception applies: reimbursed. It also wasn't paid with the card, so the second exception applies: <b>rejected.</b></li>
+    </ol>
+    <div class="eyebrow">What Jev said</div>
+    <div class="scroll"><table class="qa">
+      <thead><tr><th>Question</th><th>Jev</th><th>Correct</th></tr></thead>
+      <tbody>
+        <tr><td>“Expense 1 is reimbursed”</td><td>0.98 yes</td><td class="ok">✓ yes</td></tr>
+        <tr><td>“Expense 2 is reimbursed”</td><td>0.48 no (barely)</td><td class="ok">✓ no</td></tr>
+        <tr><td>“Expense 1 AND Expense 2 are reimbursed”</td><td>0.58 yes</td><td class="no">✗ no, and it contradicts the line above</td></tr>
+        <tr><td>Multiple choice: which are reimbursed?</td><td>“only Expense 1”</td><td class="ok">✓</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">This one scenario shows the pattern the whole report measures. Jev is mostly right, and when it's
+    unsure (0.48), related answers can contradict each other.</p>
+  </div>
+</div>
+
+<h2 id="glossary">Glossary</h2>
+<dl class="gloss"><dt>Jev</dt><dd>A model from TypeSafe (available through OpenRouter) that answers questions with probabilities instead of writing text. You give it a situation and typed questions, and it returns numbers.</dd><dt>Input / state</dt><dd>The text describing the situation, e.g. an expense policy plus the expenses being claimed.</dd><dt>Yes/no question</dt><dd>Jev returns the probability that a statement is true, e.g. 0.93. We treat 0.5 or above as “yes”. (Jev's API calls this type <code>noul</code>.)</dd><dt>Multiple choice</dt><dd>Jev picks one option and gives a probability for every option, plus an overall confidence.</dd><dt>Scale</dt><dd>Jev picks a point on an ordered scale, e.g. “0 of 4” … “4 of 4”.</dd><dt>Confidence</dt><dd>How sure an answer is. For yes/no it's the distance from 0.5: both 0.95 and 0.05 are confident, 0.5 is a shrug.</dd><dt>Exception / depth</dt><dd>A rule like “approved, unless X; but if also Y, rejected” has two exceptions (depth 2). More depth means more steps of logic.</dd><dt>Flip</dt><dd>An answer that changes from yes to no (or back) between two versions of the same test.</dd><dt>Noise floor</dt><dd>How often an answer flips when the identical request is simply sent again: 4%. Differences near 4% are noise.</dd><dt>Likely range (95% interval)</dt><dd>Because we test a sample, each rate has uncertainty. The shaded bands and whiskers on charts show the range where the true value most likely lies.</dd><dt>Calibrated</dt><dd>When Jev says 80%, it is right about 80% of the time.</dd><dt>Dutch book</dt><dd>A set of bets, at prices taken from someone's probabilities, that wins money whatever happens. It exists only when those probabilities don't fit together (E14).</dd><dt>Anchoring</dt><dd>Copying an answer shown earlier in the input instead of working it out again (E13).</dd><dt>AUROC</dt><dd>How well a score separates two groups, e.g. answerable vs unanswerable questions. 0.5 means no better than a coin flip; 1.0 means perfect separation.</dd></dl>
+
+<h2 id="experiments">The experiments</h2>
+<p>Each experiment follows the same layout: <b>what it asks</b>, <b>how we tested</b>, <b>what we found</b> and
+<b>what it means</b>. The full numeric tables are folded at the bottom of each section.</p>
+
+<section class="exp" id="e00">
+  <header class="exp-head">
+    <span class="eid">E00</span>
+    <h3>Do related answers fit together logically?</h3>
+    <span class="chip mixed">Mixed</span>
+  </header>
+  <div class="parts">
+    <div class="part"><div class="plabel">What it asks</div><p>When Jev answers several related questions about the same situation, do the answers agree with each other? If it says “Expense 1 is approved” and “Expense 2 is approved”, it should also say “both are approved”.</p></div>
+    <div class="part"><div class="plabel">How we tested</div><ul><li>600 computer-generated policy scenarios like the example above, each with 2–4 items and 1–5 nested exceptions.</li><li>13–17 linked questions per scenario: each item on its own, the opposite of each item, AND, OR, a nested combination, a “what if one fact changed” question, multiple-choice over outcomes, and a count. About 9,000 answers in total.</li><li>Every answer was checked against the correct answer and against Jev's other answers. The same checks were run on random guesses as a baseline.</li></ul></div>
+    <div class="part"><div class="plabel">What we found</div><ul><li>Individual items were answered correctly <b>87%</b> of the time (98% with one exception, 76% with five).</li><li>The <b>probabilities</b> obey logic: an item and its opposite added up to roughly 100% in 96% of cases, and AND/OR answers broke the rules of probability only 2–3% of the time (random guessing: 54–63%).</li><li>After rounding each probability to yes or no, <b>46% of scenarios</b> contained at least one answer that contradicted another. Nearly all of these were borderline answers near 50%. Jev never said a confident “yes” and a confident “no” to the same thing.</li><li>Its confidence means something: when a yes/no probability was above 90%, it was right about 98% of the time.</li></ul></div>
+  </div>
+  
+  <div class="means"><div class="plabel">What it means</div><p>Jev's probabilities are consistent and meaningful, but its answers near 50% are coin flips that can contradict each other. Use the probability, not just the yes/no, and treat anything between about 0.3 and 0.7 as “unsure”.</p></div>
+  <details><summary>Full data tables for E00</summary><div class="dbody"><p>Output of <code>python3 analyze.py</code> on <code>data/dataset.jsonl</code> / <code>data/responses.jsonl</code> (the original run). See <code>analyze.py</code> docstring for check definitions.</p>
+<div class="scroll"><pre class="mono">
+Scenarios: 600   cost $0.0422   input tokens 1,005,208   latency p50 400 ms, p95 476 ms
+
+ACCURACY by question type
+  A      87.2%  (n=1800)
+  N      85.9%  (n=1800)
+  P      85.7%  (n=600)
+  AND    87.2%  (n=600)
+  OR     87.2%  (n=600)
+  NEST   83.5%  (n=600)
+  CF     89.3%  (n=600)
+  J      76.0%  (n=600)
+  JR     76.0%  (n=600)
+  SUB    64.8%  (n=600)
+  CNT    68.8%  (n=600)
+
+ATOM ACCURACY by rule depth        and by # exceptions that applied (stop level)
+  depth 1:  97.8% (n=360)           stop 0:  93.9% (n=521)
+  depth 2:  96.1% (n=360)           stop 1:  88.9% (n=524)
+  depth 3:  88.1% (n=360)           stop 2:  94.0% (n=348)
+  depth 4:  78.6% (n=360)           stop 3:  67.7% (n=223)
+  depth 5:  75.6% (n=360)           stop 4:  80.8% (n=125)
+                                    stop 5:  61.0% (n=59)
+
+COUNTERFACTUAL accuracy by level of the changed exception
+  level 1:  91.5% (n=366)
+  level 2:  86.4% (n=140)
+  level 3:  81.7% (n=71)
+  level 4:  93.8% (n=16)
+  level 5: 100.0% (n=7)
+
+SOFT COHERENCE (probability logic)   violation = deviation &gt; 0.2
+  check              jev viol  jev mean dev  random viol
+  complement             3.6%         0.050        63.2%
+  paraphrase             1.7%         0.038        63.2%
+  and_bounds             2.2%         0.030        53.8%
+  or_bounds              2.8%         0.026        59.8%
+  incl_excl             12.8%         0.095        72.2%
+  nested_bounds          5.3%         0.046        58.5%
+  joint_vs_atoms         8.8%         0.081        63.1%
+  joint_vs_and_or        9.2%         0.082        65.5%
+  subset_vs_atoms        7.4%         0.073        60.2%
+  subset_vs_joint       17.8%         0.111        87.7%
+  option_order           6.5%         0.072        89.8%
+  count_vs_atoms         1.3%         0.051        38.5%
+
+HARD COHERENCE (thresholded answers vs Jev&#x27;s own atoms)
+  check              jev contra  random contra
+  negation                18.2%          87.3%
+  paraphrase               3.8%          52.2%
+  and                      6.2%          48.5%
+  or                       9.0%          51.5%
+  nested                  10.7%          47.5%
+  joint_choice            13.5%          75.3%
+  subset_choice           20.3%          85.8%
+  count_score             25.5%          75.5%
+  option_order             9.5%          78.0%
+  joint_vs_subset         15.0%          75.5%
+  scenarios with &gt;=1 hard contradiction:  46.2%
+
+COHERENCE by depth     soft violation rate   hard contradiction rate
+  depth 1                  0.5%                  1.1%
+  depth 2                  4.3%                  4.2%
+  depth 3                 11.1%                 18.1%
+  depth 4                  9.1%                 16.8%
+  depth 5                  8.4%                 25.7%
+
+ERRORS vs CONSISTENCY on compound questions (does Jev follow its own beliefs?)
+  q      right+consistent  right+inconsist  wrong+consistent  wrong+inconsist
+  AND              84.8%             2.3%             9.0%             3.8%
+  OR               83.3%             3.8%             7.7%             5.2%
+  NEST             80.0%             3.5%             9.3%             7.2%
+  J                71.2%             4.8%            15.3%             8.7%
+  SUB              61.0%             3.8%            18.7%            16.5%
+  CNT              60.7%             8.2%            13.8%            17.3%
+
+CALIBRATION of noul probabilities
+  Brier 0.0945   ECE 0.0455   (n=6600)
+  bin            n  mean p  freq true
+  0.0-0.1    1555   0.040      0.017
+  0.1-0.2     458   0.141      0.041
+  0.2-0.3     334   0.243      0.156
+  0.3-0.4     352   0.344      0.261
+  0.4-0.5     371   0.448      0.353
+  0.5-0.6     410   0.544      0.459
+  0.6-0.7     459   0.644      0.654
+  0.7-0.8     443   0.746      0.763
+  0.8-0.9     582   0.850      0.895
+  0.9-1.0    1636   0.951      0.983
+
+CHOICE confidence vs accuracy
+  conf 0.00-0.50: acc  43.8% (n=610)
+  conf 0.50-0.80: acc  72.5% (n=397)
+  conf 0.80-0.95: acc  89.6% (n=288)
+  conf 0.95-1.00: acc  96.6% (n=505)
+
+wrote results/e00_main.json</pre></div></div></details>
+</section>
+<section class="exp" id="e01">
+  <header class="exp-head">
+    <span class="eid">E01</span>
+    <h3>Numbers, dates and negatives</h3>
+    <span class="chip good">Strong</span>
+  </header>
+  <div class="parts">
+    <div class="part"><div class="plabel">What it asks</div><p>Can Jev compare numbers and dates, and understand sentences with “not” in them? Other write-ups said it can't reliably compare numbers or dates.</p></div>
+    <div class="part"><div class="plabel">How we tested</div><ul><li>704 tiny one-rule tests, e.g. “a shipment is flagged if its weight is over 12 kg. Weight: 12 kg.” Is it flagged? (No, because 12 is not over 12.)</li><li>8 phrasings (over, at least, under, not exceeding…), whole numbers, money, five-digit numbers and decimals, with values far away, 1 unit away, or exactly on the threshold.</li><li>Dates in 4 formats (2026-03-04, 03/04/2026, March 4, 2026, 4 Mar 2026), including across New Year.</li><li>Statements wrapped in 0–3 negations (“It is not the case that it is false that…”).</li></ul></div>
+    <div class="part"><div class="plabel">What we found</div><ul><li>Numbers: <b>480 of 480</b> correct, including every exact-threshold case.</li><li>Dates: <b>159 of 160</b> correct.</li><li>Negation: perfect with up to two negatives, but <b>11 of 16</b> (69%) with three.</li><li>In the bigger scenarios, rules worded with “not” cost about 2–5 percentage points of accuracy.</li></ul></div>
+  </div>
+  
+  <div class="means"><div class="plabel">What it means</div><p>Comparing numbers and dates is not a weakness, so there's no need to pre-compute them in code. Avoid double and triple negatives when writing questions.</p></div>
+  <details><summary>Full data tables for E01</summary><div class="dbody"><p>E01 - Numbers, dates and negation.</p>
+<pre class="method">Part A (no API calls): slice the main 600-scenario run by what the deciding conditions contained -
+exact-threshold values, negated conditions, condition kind.
+Part B (targeted micro-tests, one question per call):
+  B1 numeric comparators (8 phrasings x 4 magnitudes x 5 value relations)
+  B2 date comparisons   (2 operators x 4 formats x 5 relations)
+  B3 negation stacking  (0-3 negations wrapped around a simple fact, both base truths)</pre>
+<h5>Part A — slicing the main run (no new calls)</h5>
+<p>Atom accuracy (A_i questions) split by what the item's *evaluated* conditions contained. 'Depth-std' averages per-depth accuracies so differences in depth mix don't drive the comparison.</p>
+<div class="scroll"><table><thead><tr><th>tag</th><th>present: acc [95% CI]</th><th>present: depth-std</th><th>absent: acc [95% CI]</th><th>absent: depth-std</th></tr></thead><tbody><tr><td>boundary value in an evaluated condition</td><td>84.7% [80.4%–88.2%]</td><td>86.7%</td><td>87.8% [86.0%–89.4%]</td><td>87.3%</td></tr><tr><td>negated wording in an evaluated condition</td><td>84.1% [81.4%–86.5%]</td><td>86.5%</td><td>89.6% [87.6%–91.4%]</td><td>88.1%</td></tr><tr><td>deciding condition is numeric</td><td>87.4% [84.6%–89.8%]</td><td>87.8%</td><td>87.1% [85.1%–88.9%]</td><td>87.0%</td></tr><tr><td>deciding condition is categorical</td><td>83.9% [80.4%–86.8%]</td><td>84.1%</td><td>88.6% [86.7%–90.2%]</td><td>88.5%</td></tr><tr><td>deciding condition is yes/no</td><td>89.6% [87.1%–91.8%]</td><td>89.3%</td><td>85.8% [83.7%–87.7%]</td><td>86.1%</td></tr><tr><td>deciding condition is numeric AND at the exact boundary</td><td>89.6% [84.3%–93.2%]</td><td>89.7%</td><td>87.0% [85.2%–88.5%]</td><td>87.0%</td></tr></tbody></table></div>
+<h5>Part B1  — overall accuracy 100.0% [99.2%–100.0%] (n=480)</h5>
+<p>By <strong>relation</strong>:</p>
+<div class="scroll"><table><thead><tr><th>relation</th><th>accuracy [95% CI]</th><th>mean P(correct)</th><th>n</th></tr></thead><tbody><tr><td>far below</td><td>100.0% [96.2%–100.0%]</td><td>0.98</td><td>96</td></tr><tr><td>just below</td><td>100.0% [96.2%–100.0%]</td><td>0.98</td><td>96</td></tr><tr><td>equal</td><td>100.0% [96.2%–100.0%]</td><td>0.97</td><td>96</td></tr><tr><td>just above</td><td>100.0% [96.2%–100.0%]</td><td>0.98</td><td>96</td></tr><tr><td>far above</td><td>100.0% [96.2%–100.0%]</td><td>0.98</td><td>96</td></tr></tbody></table></div>
+<p>By <strong>comparator</strong>:</p>
+<div class="scroll"><table><thead><tr><th>comparator</th><th>accuracy [95% CI]</th><th>mean P(correct)</th><th>n</th></tr></thead><tbody><tr><td>over</td><td>100.0% [94.0%–100.0%]</td><td>0.98</td><td>60</td></tr><tr><td>more than</td><td>100.0% [94.0%–100.0%]</td><td>0.98</td><td>60</td></tr><tr><td>at least</td><td>100.0% [94.0%–100.0%]</td><td>0.98</td><td>60</td></tr><tr><td>exceeding</td><td>100.0% [94.0%–100.0%]</td><td>0.98</td><td>60</td></tr><tr><td>under</td><td>100.0% [94.0%–100.0%]</td><td>0.98</td><td>60</td></tr><tr><td>less than</td><td>100.0% [94.0%–100.0%]</td><td>0.98</td><td>60</td></tr><tr><td>at most</td><td>100.0% [94.0%–100.0%]</td><td>0.98</td><td>60</td></tr><tr><td>not exceeding</td><td>100.0% [94.0%–100.0%]</td><td>0.98</td><td>60</td></tr></tbody></table></div>
+<p>By <strong>magnitude</strong>:</p>
+<div class="scroll"><table><thead><tr><th>magnitude</th><th>accuracy [95% CI]</th><th>mean P(correct)</th><th>n</th></tr></thead><tbody><tr><td>small int</td><td>100.0% [96.9%–100.0%]</td><td>0.98</td><td>120</td></tr><tr><td>money</td><td>100.0% [96.9%–100.0%]</td><td>0.98</td><td>120</td></tr><tr><td>large</td><td>100.0% [96.9%–100.0%]</td><td>0.98</td><td>120</td></tr><tr><td>decimal</td><td>100.0% [96.9%–100.0%]</td><td>0.98</td><td>120</td></tr></tbody></table></div>
+<h5>Part B2  — overall accuracy 99.4% [96.5%–99.9%] (n=160)</h5>
+<p>By <strong>relation</strong>:</p>
+<div class="scroll"><table><thead><tr><th>relation</th><th>accuracy [95% CI]</th><th>mean P(correct)</th><th>n</th></tr></thead><tbody><tr><td>months before</td><td>100.0% [89.3%–100.0%]</td><td>0.98</td><td>32</td></tr><tr><td>1 day before</td><td>100.0% [89.3%–100.0%]</td><td>0.98</td><td>32</td></tr><tr><td>same day</td><td>100.0% [89.3%–100.0%]</td><td>0.98</td><td>32</td></tr><tr><td>1 day after</td><td>96.9% [84.3%–99.4%]</td><td>0.96</td><td>32</td></tr><tr><td>months after</td><td>100.0% [89.3%–100.0%]</td><td>0.98</td><td>32</td></tr></tbody></table></div>
+<p>By <strong>format</strong>:</p>
+<div class="scroll"><table><thead><tr><th>format</th><th>accuracy [95% CI]</th><th>mean P(correct)</th><th>n</th></tr></thead><tbody><tr><td>ISO</td><td>100.0% [91.2%–100.0%]</td><td>0.98</td><td>40</td></tr><tr><td>US numeric</td><td>100.0% [91.2%–100.0%]</td><td>0.98</td><td>40</td></tr><tr><td>long</td><td>100.0% [91.2%–100.0%]</td><td>0.98</td><td>40</td></tr><tr><td>day-first</td><td>97.5% [87.1%–99.6%]</td><td>0.96</td><td>40</td></tr></tbody></table></div>
+<p>By <strong>op</strong>:</p>
+<div class="scroll"><table><thead><tr><th>op</th><th>accuracy [95% CI]</th><th>mean P(correct)</th><th>n</th></tr></thead><tbody><tr><td>after</td><td>100.0% [95.4%–100.0%]</td><td>0.98</td><td>80</td></tr><tr><td>on or before</td><td>98.8% [93.3%–99.8%]</td><td>0.97</td><td>80</td></tr></tbody></table></div>
+<h5>Part B3  — overall accuracy 92.2% [83.0%–96.6%] (n=64)</h5>
+<p>By <strong>negations</strong>:</p>
+<div class="scroll"><table><thead><tr><th>negations</th><th>accuracy [95% CI]</th><th>mean P(correct)</th><th>n</th></tr></thead><tbody><tr><td>0</td><td>100.0% [80.6%–100.0%]</td><td>0.98</td><td>16</td></tr><tr><td>1</td><td>100.0% [80.6%–100.0%]</td><td>0.98</td><td>16</td></tr><tr><td>2</td><td>100.0% [80.6%–100.0%]</td><td>0.97</td><td>16</td></tr><tr><td>3</td><td>68.8% [44.4%–85.8%]</td><td>0.57</td><td>16</td></tr></tbody></table></div>
+<p>By <strong>base_truth</strong>:</p>
+<div class="scroll"><table><thead><tr><th>base_truth</th><th>accuracy [95% CI]</th><th>mean P(correct)</th><th>n</th></tr></thead><tbody><tr><td>True</td><td>93.8% [79.9%–98.3%]</td><td>0.87</td><td>32</td></tr><tr><td>False</td><td>90.6% [75.8%–96.8%]</td><td>0.88</td><td>32</td></tr></tbody></table></div>
+<p>B1 comparator × relation accuracy:</p>
+<div class="scroll"><table><thead><tr><th>comparator</th><th>far below</th><th>just below</th><th>equal</th><th>just above</th><th>far above</th></tr></thead><tbody><tr><td>over</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td></tr><tr><td>more than</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td></tr><tr><td>at least</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td></tr><tr><td>exceeding</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td></tr><tr><td>under</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td></tr><tr><td>less than</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td></tr><tr><td>at most</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td></tr><tr><td>not exceeding</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td><td>12/12</td></tr></tbody></table></div></div></details>
+</section>
+<section class="exp" id="e02">
+  <header class="exp-head">
+    <span class="eid">E02</span>
+    <h3>Does it admit when it can't know?</h3>
+    <span class="chip mixed">Mixed</span>
+  </header>
+  <div class="parts">
+    <div class="part"><div class="plabel">What it asks</div><p>When the information needed to answer is missing, does Jev say “can't tell”, or does it guess?</p></div>
+    <div class="part"><div class="plabel">How we tested</div><ul><li>150 scenarios, each shown four ways: complete; with a harmless fact removed; with a <i>deciding</i> fact removed; and with the item's category having no rule at all.</li><li>Jev was asked the question and also given a three-way choice: yes, no, or “not enough information”.</li></ul></div>
+    <div class="part"><div class="plabel">What we found</div><ul><li>No matching rule: it chose “not enough information” <b>99%</b> of the time.</li><li>A deciding fact removed: it chose “not enough information” only <b>33%</b> of the time. Otherwise it guessed yes or no, although its confidence dropped (0.71 against 0.84 normally).</li><li>A harmless fact removed: it still answered correctly (87–91%), so it doesn't panic over irrelevant gaps.</li></ul></div>
+  </div>
+  
+  <div class="means"><div class="plabel">What it means</div><p>Jev notices when a whole rule is missing but often guesses when a single fact is missing. Offer a “can't tell” option, and check for required fields in code rather than relying on Jev to notice.</p></div>
+  <details><summary>Full data tables for E02</summary><div class="dbody"><p>E02 - Does Jev admit when an answer can't be known? (tests the "epistemically honest" claim)</p>
+<pre class="method">150 cases (K=2, depth 2-4). Item 1 is rendered four ways:
+  control              - all facts present (answer determined)
+  irrelevant_missing   - a fact is removed whose value cannot change the outcome (still determined)
+  decisive_missing     - a fact is removed whose value WOULD change the outcome (undeterminable)
+  no_rule              - item&#x27;s category has no rule in the policy (undeterminable)
+Two separate calls per variant so the options of one question can&#x27;t prime the other:
+  call a: noul &quot;item is &lt;yes&gt;&quot;                       -&gt; ideal ~0.5 when undeterminable
+  call b: choice {yes, no, undetermined} + noul &quot;the information given is sufficient to decide&quot;</pre>
+<div class="scroll"><table><thead><tr><th>variant</th><th>n</th><th>mean confidence max(p,1-p)</th><th></th><th>p-0.5</th><th>&lt;0.2</th><th>picked 'undetermined' [95% CI]</th><th>mean P(sufficient)</th><th>noul acc</th><th>choice acc (yes/no)</th></tr></thead><tbody><tr><td>control</td><td>150</td><td>0.84</td><td>20.0%</td><td>0.0% [0.0%–2.5%]</td><td>0.92</td><td>90.0%</td><td>91.3%</td></tr><tr><td>irrelevant_missing</td><td>150</td><td>0.85</td><td>15.3%</td><td>4.7% [2.3%–9.3%]</td><td>0.86</td><td>91.3%</td><td>86.7%</td></tr><tr><td>decisive_missing</td><td>133</td><td>0.71</td><td>48.1%</td><td>33.1% [25.7%–41.5%]</td><td>0.61</td><td>—</td><td>—</td></tr><tr><td>no_rule</td><td>150</td><td>0.82</td><td>12.7%</td><td>99.3% [96.3%–99.9%]</td><td>0.10</td><td>—</td><td>—</td></tr></tbody></table></div>
+<p>Ideal behaviour: control/irrelevant_missing → high confidence, low 'undetermined', high P(sufficient); decisive_missing/no_rule → confidence near 0.5, 'undetermined' chosen, low P(sufficient).</p></div></details>
+</section>
+<section class="exp" id="e03">
+  <header class="exp-head">
+    <span class="eid">E03</span>
+    <h3>Same question, different wording, or asked twice</h3>
+    <span class="chip mixed">Mixed</span>
+  </header>
+  <div class="parts">
+    <div class="part"><div class="plabel">What it asks</div><p>If we describe exactly the same situation in different words, or simply ask again, do we get the same answer?</p></div>
+    <div class="part"><div class="plabel">How we tested</div><ul><li>150 scenarios shown six ways: the original, items renamed (“Expense 1” → “Submission Q-17”), the order of rules and facts shuffled, every rule sentence reworded, units written differently (“$120” → “120 USD”), and all of these at once. The correct answer never changes.</li><li>The original was also sent 5 times, identically, to measure how much answers vary on their own.</li></ul></div>
+    <div class="part"><div class="plabel">What we found</div><ul><li>Sending the identical request again changed <b>4%</b> of yes/no answers, and the exact numbers were identical only 4% of the time. This is the “noise floor”.</li><li>Renaming items (6%) and changing units (5%) made no difference beyond that noise.</li><li>Shuffling the order (14%) and rewording (15%) changed about <b>3.5× more</b> answers than noise. With 5 nested exceptions, about half the scenarios got a different answer.</li></ul></div>
+  </div>
+  <figure><svg id="c-inv" class="chart" viewBox="0 0 640 226" role="img"><line class="grid" x1="190.0" x2="190.0" y1="26" y2="198"/><text class="tick" x="190.0" y="216" text-anchor="middle">0%</text><line class="grid" x1="347.6" x2="347.6" y1="26" y2="198"/><text class="tick" x="347.6" y="216" text-anchor="middle">10%</text><line class="grid" x1="505.2" x2="505.2" y1="26" y2="198"/><text class="tick" x="505.2" y="216" text-anchor="middle">20%</text><text class="barlabel" x="180" y="47" text-anchor="end">Rename the items</text><rect class="bar" x="190" y="34" width="99.8" height="18" rx="3"/><line class="whisker" x1="254.5" x2="342.5" y1="43" y2="43"/><text class="value" x="350.5" y="47">6%</text><rect class="hitbar" x="190" y="28" width="394" height="30" data-tip="Rename the items: 6.3% of 300 answers changed (re-asking changes 4.0%)"/><text class="barlabel" x="180" y="81" text-anchor="end">Change unit format</text><rect class="bar" x="190" y="68" width="73.5" height="18" rx="3"/><line class="whisker" x1="234.1" x2="311.0" y1="77" y2="77"/><text class="value" x="319.0" y="81">5%</text><rect class="hitbar" x="190" y="62" width="394" height="30" data-tip="Change unit format: 4.7% of 300 answers changed (re-asking changes 4.0%)"/><text class="barlabel" x="180" y="115" text-anchor="end">Shuffle the order</text><rect class="bar" x="190" y="102" width="220.6" height="18" rx="3"/><line class="whisker" x1="355.9" x2="479.7" y1="111" y2="111"/><text class="value" x="487.7" y="115">14%</text><rect class="hitbar" x="190" y="96" width="394" height="30" data-tip="Shuffle the order: 14.0% of 300 answers changed (re-asking changes 4.0%)"/><text class="barlabel" x="180" y="149" text-anchor="end">Reword every rule</text><rect class="bar" x="190" y="136" width="241.7" height="18" rx="3"/><line class="whisker" x1="374.3" x2="502.8" y1="145" y2="145"/><text class="value" x="510.8" y="149">15%</text><rect class="hitbar" x="190" y="130" width="394" height="30" data-tip="Reword every rule: 15.3% of 300 answers changed (re-asking changes 4.0%)"/><text class="barlabel" x="180" y="183" text-anchor="end">All four at once</text><rect class="bar" x="190" y="170" width="215.4" height="18" rx="3"/><line class="whisker" x1="351.3" x2="473.9" y1="179" y2="179"/><text class="value" x="481.9" y="183">14%</text><rect class="hitbar" x="190" y="164" width="394" height="30" data-tip="All four at once: 13.7% of 300 answers changed (re-asking changes 4.0%)"/><line class="ref" x1="253.0" x2="253.0" y1="26" y2="198"/><text class="reflabel" x="253.0" y="18" text-anchor="middle">just re-asking: 4%</text></svg><figcaption>Share of yes/no answers that changed when the same situation was rewritten. The dashed line is the change from simply asking again.</figcaption></figure>
+  <div class="means"><div class="plabel">What it means</div><p>Jev is not deterministic, and it is sensitive to wording and ordering on complex rules. Keep your prompt template fixed. For important decisions, ask 3–5 times and take the majority.</p></div>
+  <details><summary>Full data tables for E03</summary><div class="dbody"><p>E03 - Invariance to meaning-preserving changes, and run-to-run determinism.</p>
+<pre class="method">150 cases (K=2, depth 1-5, 30 per depth). Questions: A0, A1 (nouls) and J (4-way joint choice).
+Variants of the same logical case:
+  base          original rendering
+  rename        items renamed (e.g. &quot;Expense 1&quot; -&gt; &quot;Submission Q-17&quot;)
+  reorder       rule order and fact order shuffled
+  synonyms      title, header and every rule clause reworded
+  units         &quot;$120&quot; -&gt; &quot;120 USD&quot;, &quot;30 days&quot; -&gt; &quot;30 calendar days&quot;, ...
+  all           all four at once
+Determinism: `base` sent 5 times (base = repeat 0).</pre>
+<p>Base accuracy: atoms 88.3%, joint choice 78.7%.</p>
+<h5>Changes vs the base rendering (the correct answer never changes)</h5>
+<div class="scroll"><table><thead><tr><th>variant</th><th>atom decision flips [95% CI]</th><th>joint choice flips [95% CI]</th><th>mean</th><th>Δp</th><th>atoms</th><th>atom acc</th><th>joint acc</th></tr></thead><tbody><tr><td>repeat (noise floor)</td><td>4.0% [2.3%–6.9%]</td><td>4.7% [2.3%–9.3%]</td><td>0.025</td><td>89.0%</td><td>79.3%</td></tr><tr><td>rename</td><td>6.3% [4.1%–9.7%]</td><td>5.3% [2.7%–10.2%]</td><td>0.039</td><td>89.3%</td><td>82.0%</td></tr><tr><td>reorder</td><td>14.0% [10.5%–18.4%]</td><td>16.7% [11.6%–23.4%]</td><td>0.083</td><td>87.7%</td><td>77.3%</td></tr><tr><td>synonyms</td><td>15.3% [11.7%–19.8%]</td><td>17.3% [12.1%–24.2%]</td><td>0.094</td><td>82.3%</td><td>70.0%</td></tr><tr><td>units</td><td>4.7% [2.8%–7.7%]</td><td>6.7% [3.7%–11.8%]</td><td>0.029</td><td>89.0%</td><td>77.3%</td></tr><tr><td>all</td><td>13.7% [10.2%–18.0%]</td><td>20.7% [15.0%–27.8%]</td><td>0.106</td><td>87.3%</td><td>74.7%</td></tr></tbody></table></div>
+<p>Share of cases where at least one atom decision flipped, by depth:</p>
+<div class="scroll"><table><thead><tr><th>depth</th><th>repeat (noise)</th><th>rename</th><th>reorder</th><th>synonyms</th><th>units</th><th>all</th></tr></thead><tbody><tr><td>1</td><td>0%</td><td>0%</td><td>0%</td><td>0%</td><td>0%</td><td>0%</td></tr><tr><td>2</td><td>7%</td><td>7%</td><td>10%</td><td>7%</td><td>7%</td><td>7%</td></tr><tr><td>3</td><td>3%</td><td>13%</td><td>27%</td><td>33%</td><td>3%</td><td>33%</td></tr><tr><td>4</td><td>10%</td><td>20%</td><td>40%</td><td>30%</td><td>13%</td><td>30%</td></tr><tr><td>5</td><td>20%</td><td>23%</td><td>47%</td><td>57%</td><td>20%</td><td>57%</td></tr></tbody></table></div>
+<h5>Determinism (5 identical calls per case, n=150)</h5>
+<div class="scroll"><table><thead><tr><th>metric</th><th>value</th></tr></thead><tbody><tr><td>fully identical answers across repeats</td><td>4.0%</td></tr><tr><td>mean spread (max−min) of an atom probability</td><td>0.052</td></tr><tr><td>max spread observed</td><td>0.500</td></tr><tr><td>atoms whose decision flipped across repeats</td><td>8.0%</td></tr><tr><td>joint choices that changed across repeats</td><td>6.7%</td></tr></tbody></table></div></div></details>
+</section>
+<section class="exp" id="e04">
+  <header class="exp-head">
+    <span class="eid">E04</span>
+    <h3>Can planted text trick it?</h3>
+    <span class="chip bad">Weak spot</span>
+  </header>
+  <div class="parts">
+    <div class="part"><div class="plabel">What it asks</div><p>If someone slips a line into the input pushing for the wrong answer, does Jev follow it?</p></div>
+    <div class="part"><div class="plabel">How we tested</div><ul><li>150 scenarios that Jev normally gets right (93%). One line was added pushing towards the wrong answer, in six styles: a harmless comment, the user insisting, a claim that the rule changed, “IGNORE ALL PREVIOUS RULES” at the end or the top, and a note claiming to be from the policy administrator.</li><li>We counted how many previously correct answers became wrong.</li></ul></div>
+    <div class="part"><div class="plabel">What we found</div><ul><li>Harmless comments and users insisting: <b>0%</b> changed.</li><li>“Ignore all rules” instructions: <b>1–4%</b>. A claimed rule change: 2%.</li><li>Fake administrator note: <b>64%</b> of correct answers turned wrong, and accuracy fell from 93% to 33%.</li></ul></div>
+  </div>
+  <figure><svg id="c-inj" class="chart" viewBox="0 0 640 242" role="img"><line class="grid" x1="190.0" x2="190.0" y1="8" y2="214"/><text class="tick" x="190.0" y="232" text-anchor="middle">0%</text><line class="grid" x1="288.5" x2="288.5" y1="8" y2="214"/><text class="tick" x="288.5" y="232" text-anchor="middle">20%</text><line class="grid" x1="387.0" x2="387.0" y1="8" y2="214"/><text class="tick" x="387.0" y="232" text-anchor="middle">40%</text><line class="grid" x1="485.5" x2="485.5" y1="8" y2="214"/><text class="tick" x="485.5" y="232" text-anchor="middle">60%</text><line class="grid" x1="584.0" x2="584.0" y1="8" y2="214"/><text class="tick" x="584.0" y="232" text-anchor="middle">80%</text><text class="barlabel" x="180" y="29" text-anchor="end">Harmless comment</text><rect class="bar" x="190" y="16" width="0.0" height="18" rx="3"/><line class="whisker" x1="190.0" x2="203.2" y1="25" y2="25"/><text class="value" x="211.2" y="29">0%</text><rect class="hitbar" x="190" y="10" width="394" height="30" data-tip="Harmless comment: turned 0.0% of 140 correct answers wrong"/><text class="barlabel" x="180" y="63" text-anchor="end">User insists on answer</text><rect class="bar" x="190" y="50" width="0.0" height="18" rx="3"/><line class="whisker" x1="190.0" x2="203.2" y1="59" y2="59"/><text class="value" x="211.2" y="63">0%</text><rect class="hitbar" x="190" y="44" width="394" height="30" data-tip="User insists on answer: turned 0.0% of 140 correct answers wrong"/><text class="barlabel" x="180" y="97" text-anchor="end">“Ignore all rules” (at end)</text><rect class="bar" x="190" y="84" width="3.5" height="18" rx="3"/><line class="whisker" x1="190.6" x2="209.4" y1="93" y2="93"/><text class="value" x="217.4" y="97">1%</text><rect class="hitbar" x="190" y="78" width="394" height="30" data-tip="“Ignore all rules” (at end): turned 0.7% of 140 correct answers wrong"/><text class="barlabel" x="180" y="131" text-anchor="end">Claims the rule changed</text><rect class="bar" x="190" y="118" width="10.6" height="18" rx="3"/><line class="whisker" x1="193.6" x2="220.1" y1="127" y2="127"/><text class="value" x="228.1" y="131">2%</text><rect class="hitbar" x="190" y="112" width="394" height="30" data-tip="Claims the rule changed: turned 2.1% of 140 correct answers wrong"/><text class="barlabel" x="180" y="165" text-anchor="end">“Ignore all rules” (at top)</text><rect class="bar" x="190" y="152" width="17.6" height="18" rx="3"/><line class="whisker" x1="197.6" x2="229.8" y1="161" y2="161"/><text class="value" x="237.8" y="165">4%</text><rect class="hitbar" x="190" y="146" width="394" height="30" data-tip="“Ignore all rules” (at top): turned 3.6% of 140 correct answers wrong"/><text class="barlabel" x="180" y="199" text-anchor="end">Fake administrator note</text><rect class="bar emph" x="190" y="186" width="316.6" height="18" rx="3"/><line class="whisker" x1="466.1" x2="543.3" y1="195" y2="195"/><text class="value" x="551.3" y="199">64%</text><rect class="hitbar" x="190" y="180" width="394" height="30" data-tip="Fake administrator note: turned 64.3% of 140 correct answers wrong"/></svg><figcaption>Share of previously correct answers that became wrong after one planted line. Whiskers show the likely range.</figcaption></figure>
+  <div class="means"><div class="plabel">What it means</div><p>Jev resists crude attacks but defers to anything that looks like official authority. If the input can contain user-written text, remove or clearly label it before sending. Don't use Jev as a security filter without that step.</p></div>
+  <details><summary>Full data tables for E04</summary><div class="dbody"><p>E04 - Can planted text steer Jev? (prompt injection / persuasion inside the state)</p>
+<pre class="method">150 cases (K=2, depth 2-3). Text is added pushing item 1 toward the WRONG answer.
+  none            no added text (control)
+  benign          irrelevant comment (&quot;please process this soon&quot;)
+  assertion       claimant asserts the wrong outcome
+  fake_rule       claimant claims the rule changed
+  authority       bracketed message claiming to be from the policy administrator
+  instruction     &quot;IGNORE ALL PREVIOUS RULES ...&quot; appended after the case
+  instruction_top the same instruction placed before the policy
+Questions: A0 (targeted item) and A1 (untargeted - spillover).</pre>
+<div class="scroll"><table><thead><tr><th>variant</th><th>target acc</th><th>flipped (of those right in control) [95% CI]</th><th>mean shift of P toward injected answer</th><th>untargeted acc</th><th>untargeted mean</th><th>Δp</th><th></th></tr></thead><tbody><tr><td>none</td><td>93.3%</td><td>—</td><td>+0.000</td><td>94.7%</td><td>0.000</td></tr><tr><td>benign</td><td>93.3%</td><td>0.0% [0.0%–2.7%]</td><td>-0.001</td><td>96.0%</td><td>0.024</td></tr><tr><td>assertion</td><td>95.3%</td><td>0.0% [0.0%–2.7%]</td><td>+0.004</td><td>92.0%</td><td>0.032</td></tr><tr><td>fake_rule</td><td>91.3%</td><td>2.1% [0.7%–6.1%]</td><td>+0.062</td><td>94.0%</td><td>0.045</td></tr><tr><td>authority</td><td>33.3%</td><td>64.3% [56.1%–71.7%]</td><td>+0.455</td><td>94.0%</td><td>0.048</td></tr><tr><td>instruction</td><td>93.3%</td><td>0.7% [0.1%–3.9%]</td><td>+0.042</td><td>95.3%</td><td>0.050</td></tr><tr><td>instruction_top</td><td>90.7%</td><td>3.6% [1.5%–8.1%]</td><td>+0.123</td><td>94.7%</td><td>0.054</td></tr></tbody></table></div></div></details>
+</section>
+<section class="exp" id="e05">
+  <header class="exp-head">
+    <span class="eid">E05</span>
+    <h3>Do questions in one call affect each other?</h3>
+    <span class="chip good">Strong</span>
+  </header>
+  <div class="parts">
+    <div class="part"><div class="plabel">What it asks</div><p>When many questions are sent in one request (which is cheaper), does one question influence another?</p></div>
+    <div class="part"><div class="plabel">How we tested</div><ul><li>150 scenarios. The same question was asked alone, alongside 16 others, last in the list, next to four “leading” questions that assume the wrong answer, and five times in the same request.</li></ul></div>
+    <div class="part"><div class="plabel">What we found</div><ul><li>Answers changed only <b>3–5%</b> of the time, which matches the 4% you get by simply asking again.</li><li>Leading questions had no measurable effect.</li><li>Even five identical copies in one request gave identical numbers only 19% of the time, differing by at most 0.16.</li></ul></div>
+  </div>
+  
+  <div class="means"><div class="plabel">What it means</div><p>Batch freely. Putting many questions in one request doesn't bias the answers, and it saves cost and time.</p></div>
+  <details><summary>Full data tables for E05</summary><div class="dbody"><p>E05 - Are questions in one call really answered independently?</p>
+<pre class="method">150 cases (K=3, depth 2-4). The target is always A0 (&quot;item 1 is &lt;yes&gt;&quot;), asked in different company:
+  solo      A0 alone
+  full      A0 among the full 16-17 question set (A0 first)
+  full_last same full set but A0 placed last
+  leading   A0 plus 4 questions that presuppose the WRONG answer for item 1
+  dup       A0 asked 5 times under different keys in one call</pre>
+<div class="scroll"><table><thead><tr><th>condition</th><th>A0 accuracy</th><th>mean</th><th>Δp</th><th>vs solo</th><th>decision flips vs solo [95% CI]</th><th>mean shift toward wrong</th></tr></thead><tbody><tr><td>solo</td><td>90.0%</td><td>—</td><td>—</td><td>—</td></tr><tr><td>full</td><td>90.7%</td><td>0.024</td><td>3.3% [1.4%–7.6%]</td><td>+0.003</td></tr><tr><td>full_last</td><td>90.7%</td><td>0.029</td><td>3.3% [1.4%–7.6%]</td><td>+0.002</td></tr><tr><td>leading</td><td>88.0%</td><td>0.026</td><td>4.7% [2.3%–9.3%]</td><td>+0.003</td></tr><tr><td>dup</td><td>90.7%</td><td>0.029</td><td>4.7% [2.3%–9.3%]</td><td>+0.001</td></tr></tbody></table></div>
+<p>Same question asked 5× in one call: identical in 19.3% of calls; mean spread 0.026, max 0.160.</p></div></details>
+</section>
+<section class="exp" id="e06">
+  <header class="exp-head">
+    <span class="eid">E06</span>
+    <h3>How many choices can it handle?</h3>
+    <span class="chip good">Strong</span>
+  </header>
+  <div class="parts">
+    <div class="part"><div class="plabel">What it asks</div><p>Jev allows up to 255 options in a multiple-choice question. Does accuracy drop as the number of options grows?</p></div>
+    <div class="part"><div class="plabel">How we tested</div><ul><li>Lookup: “What is this record's reference code?” with 2 to 255 similar-looking codes as options.</li><li>Search: a list of N employees where exactly one meets three conditions (department, badge level, training) and most others miss by just one. N ranged from 2 to 255. 25 tries per size.</li></ul></div>
+    <div class="part"><div class="plabel">What we found</div><ul><li>Lookup: <b>100%</b> correct at every size, up to 255 options.</li><li>Search: 100% up to 32 employees, 96% at 64–128, and <b>80%</b> at 255.</li></ul></div>
+  </div>
+  <figure><svg id="c-opt" class="chart" viewBox="0 0 640 280" role="img" aria-label="picked correctly by number of employees to choose from (log scale)"><line class="grid" x1="52" x2="620" y1="236.0" y2="236.0"/><text class="tick" x="44" y="240.0" text-anchor="end">40%</text><line class="grid" x1="52" x2="620" y1="199.3" y2="199.3"/><text class="tick" x="44" y="203.3" text-anchor="end">50%</text><line class="grid" x1="52" x2="620" y1="162.7" y2="162.7"/><text class="tick" x="44" y="166.7" text-anchor="end">60%</text><line class="grid" x1="52" x2="620" y1="126.0" y2="126.0"/><text class="tick" x="44" y="130.0" text-anchor="end">70%</text><line class="grid" x1="52" x2="620" y1="89.3" y2="89.3"/><text class="tick" x="44" y="93.3" text-anchor="end">80%</text><line class="grid" x1="52" x2="620" y1="52.7" y2="52.7"/><text class="tick" x="44" y="56.7" text-anchor="end">90%</text><line class="grid" x1="52" x2="620" y1="16.0" y2="16.0"/><text class="tick" x="44" y="20.0" text-anchor="end">100%</text><text class="tick" x="52.0" y="254" text-anchor="middle">2</text><text class="tick" x="133.2" y="254" text-anchor="middle">4</text><text class="tick" x="214.4" y="254" text-anchor="middle">8</text><text class="tick" x="295.6" y="254" text-anchor="middle">16</text><text class="tick" x="376.8" y="254" text-anchor="middle">32</text><text class="tick" x="458.0" y="254" text-anchor="middle">64</text><text class="tick" x="539.3" y="254" text-anchor="middle">128</text><text class="tick" x="620.0" y="254" text-anchor="middle">255</text><polygon class="band" points="52.0,16.0 133.2,16.0 214.4,16.0 295.6,16.0 376.8,16.0 458.0,18.6 539.3,18.6 620.0,48.5 620.0,159.5 539.3,87.7 458.0,87.7 376.8,64.8 295.6,64.8 214.4,64.8 133.2,64.8 52.0,64.8"/><path class="series" d="M52.0,16.0 L133.2,16.0 L214.4,16.0 L295.6,16.0 L376.8,16.0 L458.0,30.7 L539.3,30.7 L620.0,89.3"/><circle class="dot" cx="52.0" cy="16.0" r="4.5"/><circle class="hit" cx="52.0" cy="16.0" r="16" data-tip="2 options: 100% correct"/><circle class="dot" cx="133.2" cy="16.0" r="4.5"/><circle class="hit" cx="133.2" cy="16.0" r="16" data-tip="4 options: 100% correct"/><circle class="dot" cx="214.4" cy="16.0" r="4.5"/><circle class="hit" cx="214.4" cy="16.0" r="16" data-tip="8 options: 100% correct"/><circle class="dot" cx="295.6" cy="16.0" r="4.5"/><circle class="hit" cx="295.6" cy="16.0" r="16" data-tip="16 options: 100% correct"/><circle class="dot" cx="376.8" cy="16.0" r="4.5"/><circle class="hit" cx="376.8" cy="16.0" r="16" data-tip="32 options: 100% correct"/><circle class="dot" cx="458.0" cy="30.7" r="4.5"/><circle class="hit" cx="458.0" cy="30.7" r="16" data-tip="64 options: 96% correct"/><circle class="dot" cx="539.3" cy="30.7" r="4.5"/><circle class="hit" cx="539.3" cy="30.7" r="16" data-tip="128 options: 96% correct"/><circle class="dot" cx="620.0" cy="89.3" r="4.5"/><circle class="hit" cx="620.0" cy="89.3" r="16" data-tip="255 options: 80% correct"/><text class="endlabel" x="612.0" y="109.3" text-anchor="end">80%</text><text class="axis" x="336.0" y="274" text-anchor="middle">number of employees to choose from (log scale)</text><text class="axis" transform="translate(13 126.0) rotate(-90)" text-anchor="middle">picked correctly</text></svg><figcaption>Picking the one employee who meets all three conditions, by list length. Pure lookup (not shown) stayed at 100%.</figcaption></figure>
+  <div class="means"><div class="plabel">What it means</div><p>Many options on their own are fine. Searching a long list against several conditions gets harder, so pre-filter long lists in code where you can.</p></div>
+  <details><summary>Full data tables for E06</summary><div class="dbody"><p>E06 - Scaling the number of options in a choice (2 -&gt; 255, the documented maximum).</p>
+<pre class="method">T1 lookup  - fixed-size state (one record); &quot;what is the record&#x27;s reference code?&quot; with N look-alike
+             codes as options. Isolates option count from state size.
+T2 roster  - a roster of N employees; exactly one meets 3 conditions (department, badge level above
+             a threshold, training done); most others miss by one condition. Options = N employee IDs.
+             State grows with N (realistic &quot;pick from a list&quot;).
+25 trials per (task, N).</pre>
+<div class="scroll"><table><thead><tr><th>task</th><th>N options</th><th>accuracy [95% CI]</th><th>chance</th><th>mean P(true option)</th><th>mean confidence</th><th>input tokens</th><th>latency ms</th></tr></thead><tbody><tr><td>T1 lookup</td><td>2</td><td>100.0% [86.7%–100.0%]</td><td>50.0%</td><td>1.00</td><td>1.00</td><td>377</td><td>397</td></tr><tr><td>T1 lookup</td><td>4</td><td>100.0% [86.7%–100.0%]</td><td>25.0%</td><td>1.00</td><td>1.00</td><td>421</td><td>390</td></tr><tr><td>T1 lookup</td><td>8</td><td>100.0% [86.7%–100.0%]</td><td>12.5%</td><td>1.00</td><td>1.00</td><td>511</td><td>398</td></tr><tr><td>T1 lookup</td><td>16</td><td>100.0% [86.7%–100.0%]</td><td>6.2%</td><td>1.00</td><td>1.00</td><td>687</td><td>400</td></tr><tr><td>T1 lookup</td><td>32</td><td>100.0% [86.7%–100.0%]</td><td>3.1%</td><td>1.00</td><td>1.00</td><td>1039</td><td>420</td></tr><tr><td>T1 lookup</td><td>64</td><td>100.0% [86.7%–100.0%]</td><td>1.6%</td><td>1.00</td><td>1.00</td><td>1756</td><td>396</td></tr><tr><td>T1 lookup</td><td>128</td><td>100.0% [86.7%–100.0%]</td><td>0.8%</td><td>1.00</td><td>1.00</td><td>3180</td><td>410</td></tr><tr><td>T1 lookup</td><td>255</td><td>100.0% [86.7%–100.0%]</td><td>0.4%</td><td>1.00</td><td>1.00</td><td>6004</td><td>445</td></tr><tr><td>T2 roster</td><td>2</td><td>100.0% [86.7%–100.0%]</td><td>50.0%</td><td>1.00</td><td>1.00</td><td>397</td><td>396</td></tr><tr><td>T2 roster</td><td>4</td><td>100.0% [86.7%–100.0%]</td><td>25.0%</td><td>1.00</td><td>1.00</td><td>487</td><td>408</td></tr><tr><td>T2 roster</td><td>8</td><td>100.0% [86.7%–100.0%]</td><td>12.5%</td><td>1.00</td><td>1.00</td><td>668</td><td>406</td></tr><tr><td>T2 roster</td><td>16</td><td>100.0% [86.7%–100.0%]</td><td>6.2%</td><td>0.99</td><td>0.99</td><td>1030</td><td>407</td></tr><tr><td>T2 roster</td><td>32</td><td>100.0% [86.7%–100.0%]</td><td>3.1%</td><td>0.96</td><td>0.95</td><td>1755</td><td>405</td></tr><tr><td>T2 roster</td><td>64</td><td>96.0% [80.5%–99.3%]</td><td>1.6%</td><td>0.89</td><td>0.88</td><td>3202</td><td>436</td></tr><tr><td>T2 roster</td><td>128</td><td>96.0% [80.5%–99.3%]</td><td>0.8%</td><td>0.78</td><td>0.77</td><td>6095</td><td>469</td></tr><tr><td>T2 roster</td><td>255</td><td>80.0% [60.9%–91.1%]</td><td>0.4%</td><td>0.60</td><td>0.66</td><td>11841</td><td>496</td></tr></tbody></table></div></div></details>
+</section>
+<section class="exp" id="e07">
+  <header class="exp-head">
+    <span class="eid">E07</span>
+    <h3>Does a lot of irrelevant text confuse it?</h3>
+    <span class="chip good">Strong</span>
+  </header>
+  <div class="parts">
+    <div class="part"><div class="plabel">What it asks</div><p>Real inputs are messy. If the relevant rules are buried in pages of unrelated text, does Jev still find them?</p></div>
+    <div class="part"><div class="plabel">How we tested</div><ul><li>30 scenarios with the relevant rules buried in 1,000 to 25,000 tokens (roughly 2 to 50 pages) of look-alike rules or generic policy text, placed before, between or after the relevant rules.</li></ul></div>
+    <div class="part"><div class="plabel">What we found</div><ul><li>Accuracy stayed at <b>95–97%</b>, against 97% with no extra text. Where the filler went made no difference.</li><li>Response time rose from about 400 to 690 milliseconds.</li></ul></div>
+  </div>
+  
+  <div class="means"><div class="plabel">What it means</div><p>Long inputs are fine. Trimming them saves time and money but isn't needed for accuracy.</p></div>
+  <details><summary>Full data tables for E07</summary><div class="dbody"><p>E07 - Irrelevant context: does accuracy hold as the relevant rules get buried?</p>
+<pre class="method">30 base cases (K=2, depth 2, no decoy). Filler is inserted among the rules:
+  decoy_rules  - many rules in the same format for categories not in the case (hard distractors)
+  boilerplate  - generic policy prose (easy distractors)
+Sizes ~1k, 4k, 12k, 24k tokens (estimated as chars/4); filler placed at start / middle / end of the
+rule list (i.e. relevant rules at the end / split / start). Questions: A0, A1, J.</pre>
+<div class="scroll"><table><thead><tr><th>filler</th><th>target tokens</th><th>position</th><th>actual input tokens</th><th>atom acc</th><th>joint acc</th><th>mean atom confidence</th><th>latency ms</th></tr></thead><tbody><tr><td>none</td><td>0</td><td>-</td><td>691</td><td>96.7%</td><td>96.7%</td><td>0.93</td><td>405</td></tr><tr><td>decoy_rules</td><td>1000</td><td>all</td><td>1735</td><td>97.8%</td><td>93.3%</td><td>0.90</td><td>417</td></tr><tr><td>decoy_rules</td><td>4000</td><td>all</td><td>4770</td><td>93.9%</td><td>90.0%</td><td>0.89</td><td>446</td></tr><tr><td>decoy_rules</td><td>12000</td><td>all</td><td>12990</td><td>96.7%</td><td>90.0%</td><td>0.88</td><td>535</td></tr><tr><td>decoy_rules</td><td>24000</td><td>all</td><td>25292</td><td>95.0%</td><td>87.8%</td><td>0.87</td><td>687</td></tr><tr><td>boilerplate</td><td>1000</td><td>all</td><td>1548</td><td>95.6%</td><td>92.2%</td><td>0.92</td><td>411</td></tr><tr><td>boilerplate</td><td>4000</td><td>all</td><td>4132</td><td>95.6%</td><td>90.0%</td><td>0.92</td><td>447</td></tr><tr><td>boilerplate</td><td>12000</td><td>all</td><td>11019</td><td>95.6%</td><td>91.1%</td><td>0.91</td><td>529</td></tr><tr><td>boilerplate</td><td>24000</td><td>all</td><td>21378</td><td>96.7%</td><td>91.1%</td><td>0.91</td><td>669</td></tr></tbody></table></div>
+<p>Atom accuracy by where the filler was inserted (start = relevant rules come last):</p>
+<div class="scroll"><table><thead><tr><th>filler</th><th>size</th><th>filler at start</th><th>filler in middle</th><th>filler at end</th></tr></thead><tbody><tr><td>decoy_rules</td><td>1000</td><td>98%</td><td>97%</td><td>98%</td></tr><tr><td>decoy_rules</td><td>4000</td><td>90%</td><td>95%</td><td>97%</td></tr><tr><td>decoy_rules</td><td>12000</td><td>97%</td><td>97%</td><td>97%</td></tr><tr><td>decoy_rules</td><td>24000</td><td>95%</td><td>93%</td><td>97%</td></tr><tr><td>boilerplate</td><td>1000</td><td>95%</td><td>95%</td><td>97%</td></tr><tr><td>boilerplate</td><td>4000</td><td>95%</td><td>95%</td><td>97%</td></tr><tr><td>boilerplate</td><td>12000</td><td>95%</td><td>95%</td><td>97%</td></tr><tr><td>boilerplate</td><td>24000</td><td>95%</td><td>98%</td><td>97%</td></tr></tbody></table></div></div></details>
+</section>
+<section class="exp" id="e08">
+  <header class="exp-head">
+    <span class="eid">E08</span>
+    <h3>How deep can the rule logic go?</h3>
+    <span class="chip bad">Weak spot</span>
+  </header>
+  <div class="parts">
+    <div class="part"><div class="plabel">What it asks</div><p>Rules often have exceptions to exceptions. How many layers can Jev follow?</p></div>
+    <div class="part"><div class="plabel">How we tested</div><ul><li>320 scenarios where each rule has 1 to 10 exceptions stacked on top of each other (“approved by default, unless X, but if also Y then rejected, however if Z…”).</li></ul></div>
+    <div class="part"><div class="plabel">What we found</div><ul><li>Correct answers fell from <b>98%</b> with 1 exception to 90% with 3, 83% with 5, about 75% with 6–9, and <b>56% with 10</b>, the same as a coin flip.</li><li>When lost, it falls back to the rule's default. With 10 exceptions, 69% of its wrong answers were simply the default.</li><li>Scenarios with at least one self-contradiction rose from 5% to 85%.</li></ul></div>
+  </div>
+  <figure><svg id="c-depth" class="chart" viewBox="0 0 640 280" role="img" aria-label="answers correct by exceptions stacked in each rule"><line class="grid" x1="52" x2="620" y1="236.0" y2="236.0"/><text class="tick" x="44" y="240.0" text-anchor="end">40%</text><line class="grid" x1="52" x2="620" y1="199.3" y2="199.3"/><text class="tick" x="44" y="203.3" text-anchor="end">50%</text><line class="grid" x1="52" x2="620" y1="162.7" y2="162.7"/><text class="tick" x="44" y="166.7" text-anchor="end">60%</text><line class="grid" x1="52" x2="620" y1="126.0" y2="126.0"/><text class="tick" x="44" y="130.0" text-anchor="end">70%</text><line class="grid" x1="52" x2="620" y1="89.3" y2="89.3"/><text class="tick" x="44" y="93.3" text-anchor="end">80%</text><line class="grid" x1="52" x2="620" y1="52.7" y2="52.7"/><text class="tick" x="44" y="56.7" text-anchor="end">90%</text><line class="grid" x1="52" x2="620" y1="16.0" y2="16.0"/><text class="tick" x="44" y="20.0" text-anchor="end">100%</text><text class="tick" x="52.0" y="254" text-anchor="middle">1</text><text class="tick" x="115.1" y="254" text-anchor="middle">2</text><text class="tick" x="178.2" y="254" text-anchor="middle">3</text><text class="tick" x="241.3" y="254" text-anchor="middle">4</text><text class="tick" x="304.4" y="254" text-anchor="middle">5</text><text class="tick" x="367.6" y="254" text-anchor="middle">6</text><text class="tick" x="430.7" y="254" text-anchor="middle">7</text><text class="tick" x="493.8" y="254" text-anchor="middle">8</text><text class="tick" x="556.9" y="254" text-anchor="middle">9</text><text class="tick" x="620.0" y="254" text-anchor="middle">10</text><polygon class="band" points="52.0,18.5 178.2,34.9 304.4,55.3 367.6,73.8 430.7,77.6 493.8,77.6 556.9,81.5 620.0,138.5 620.0,216.4 556.9,151.0 493.8,146.1 430.7,146.1 367.6,141.2 304.4,115.9 178.2,83.9 52.0,47.8"/><line class="ref" x1="52" x2="620" y1="199.3" y2="199.3"/><text class="reflabel" x="60" y="193.3">coin flip (50%)</text><path class="series" d="M52.0,25.2 L178.2,52.7 L304.4,80.2 L367.6,103.1 L430.7,107.7 L493.8,107.7 L556.9,112.2 L620.0,176.4"/><circle class="dot" cx="52.0" cy="25.2" r="4.5"/><circle class="hit" cx="52.0" cy="25.2" r="16" data-tip="1 exception(s): 97.5% correct (likely range 91%–99%)"/><circle class="dot" cx="178.2" cy="52.7" r="4.5"/><circle class="hit" cx="178.2" cy="52.7" r="16" data-tip="3 exception(s): 90.0% correct (likely range 81%–95%)"/><circle class="dot" cx="304.4" cy="80.2" r="4.5"/><circle class="hit" cx="304.4" cy="80.2" r="16" data-tip="5 exception(s): 82.5% correct (likely range 73%–89%)"/><circle class="dot" cx="367.6" cy="103.1" r="4.5"/><circle class="hit" cx="367.6" cy="103.1" r="16" data-tip="6 exception(s): 76.2% correct (likely range 66%–84%)"/><circle class="dot" cx="430.7" cy="107.7" r="4.5"/><circle class="hit" cx="430.7" cy="107.7" r="16" data-tip="7 exception(s): 75.0% correct (likely range 65%–83%)"/><circle class="dot" cx="493.8" cy="107.7" r="4.5"/><circle class="hit" cx="493.8" cy="107.7" r="16" data-tip="8 exception(s): 75.0% correct (likely range 65%–83%)"/><circle class="dot" cx="556.9" cy="112.2" r="4.5"/><circle class="hit" cx="556.9" cy="112.2" r="16" data-tip="9 exception(s): 73.8% correct (likely range 63%–82%)"/><circle class="dot" cx="620.0" cy="176.4" r="4.5"/><circle class="hit" cx="620.0" cy="176.4" r="16" data-tip="10 exception(s): 56.2% correct (likely range 45%–67%)"/><text class="endlabel" x="612.0" y="196.4" text-anchor="end">56%</text><text class="axis" x="336.0" y="274" text-anchor="middle">exceptions stacked in each rule</text><text class="axis" transform="translate(13 126.0) rotate(-90)" text-anchor="middle">answers correct</text></svg><figcaption>Share of answers correct by number of stacked exceptions. The shaded band is the likely range. Hover for values.</figcaption></figure>
+  <div class="means"><div class="plabel">What it means</div><p>Keep each question to about 3 layers of exceptions. For deeper logic, split it into steps and feed each result into the next request.</p></div>
+  <details><summary>Full data tables for E08</summary><div class="dbody"><p>E08 - Deeper nesting (up to 10 exceptions per rule).</p>
+<p>40 cases per depth (10 per domain), K=2, depths 1,3,5,6,7,8,9,10, full 13-question set. Baselines: "always answer the default" and chance (50%).</p>
+<div class="scroll"><table><thead><tr><th>depth</th><th>atom acc [95% CI]</th><th>'always default' baseline</th><th>answered default when truth≠default</th><th>full-set choice acc</th><th>soft violation rate</th><th>hard contradiction rate</th><th>scenarios w/ ≥1 hard contradiction</th><th>input tokens</th></tr></thead><tbody><tr><td>1</td><td>97.5% [91.3%–99.3%]</td><td>55.0%</td><td>2.8%</td><td>95.0%</td><td>0.3%</td><td>0.5%</td><td>5.0%</td><td>1134</td></tr><tr><td>3</td><td>90.0% [81.5%–94.8%]</td><td>51.2%</td><td>10.3%</td><td>72.5%</td><td>8.9%</td><td>11.5%</td><td>40.0%</td><td>1269</td></tr><tr><td>5</td><td>82.5% [72.7%–89.3%]</td><td>52.5%</td><td>21.1%</td><td>65.0%</td><td>8.6%</td><td>17.5%</td><td>50.0%</td><td>1400</td></tr><tr><td>6</td><td>76.2% [65.9%–84.2%]</td><td>61.3%</td><td>35.5%</td><td>57.5%</td><td>5.6%</td><td>16.8%</td><td>60.0%</td><td>1449</td></tr><tr><td>7</td><td>75.0% [64.5%–83.2%]</td><td>55.0%</td><td>22.2%</td><td>45.0%</td><td>5.3%</td><td>21.5%</td><td>75.0%</td><td>1518</td></tr><tr><td>8</td><td>75.0% [64.5%–83.2%]</td><td>66.2%</td><td>48.1%</td><td>67.5%</td><td>3.9%</td><td>17.0%</td><td>60.0%</td><td>1592</td></tr><tr><td>9</td><td>73.8% [63.2%–82.1%]</td><td>58.8%</td><td>33.3%</td><td>52.5%</td><td>5.5%</td><td>26.2%</td><td>75.0%</td><td>1661</td></tr><tr><td>10</td><td>56.2% [45.3%–66.6%]</td><td>51.2%</td><td>69.2%</td><td>35.0%</td><td>1.7%</td><td>29.5%</td><td>85.0%</td><td>1712</td></tr></tbody></table></div></div></details>
+</section>
+<section class="exp" id="e09">
+  <header class="exp-head">
+    <span class="eid">E09</span>
+    <h3>Can it count consistently?</h3>
+    <span class="chip bad">Weak spot</span>
+  </header>
+  <div class="parts">
+    <div class="part"><div class="plabel">What it asks</div><p>Are Jev's answers to “how many items are approved?” consistent with its answers about each item?</p></div>
+    <div class="part"><div class="plabel">How we tested</div><ul><li>200 scenarios with 4 items each. We asked about each item, “how many are approved” (0 to 4), “at least n” for n = 1 to 4, and “exactly n” for n = 0 to 4.</li></ul></div>
+    <div class="part"><div class="plabel">What we found</div><ul><li>Each item individually: <b>94%</b> correct. The count question: only <b>67.5%</b>, and it disagreed with Jev's own per-item answers 28.5% of the time.</li><li>“At least n” behaved perfectly: the probability always went down as n went up.</li><li>The five “exactly n” probabilities should add up to 100% but averaged <b>136%</b>. In a third of cases it said “yes” to more or fewer than one of them.</li></ul></div>
+  </div>
+  
+  <div class="means"><div class="plabel">What it means</div><p>Don't ask Jev to count or total. Ask about each item and add up in code. When exactly one of several options is true, use one multiple-choice question rather than several yes/no questions.</p></div>
+  <details><summary>Full data tables for E09</summary><div class="dbody"><p>E09 - Is Jev's notion of "how many" internally consistent?</p>
+<pre class="method">200 cases (K=4, depth 1-3). Questions: atoms A0-A3, CNT score (0..4), GE_n nouls &quot;at least n of the 4
+are &lt;yes&gt;&quot; (n=1..4), EQ_n nouls &quot;exactly n of the 4 are &lt;yes&gt;&quot; (n=0..4).
+Coherence checks:
+  monotone      P(GE_n) must not increase with n            (violation if P(GE_n+1) &gt; P(GE_n) + 0.1)
+  exact_sum     sum_n P(EQ_n) should be ~1                   (violation if |sum-1| &gt; 0.2)
+  ge_vs_eq      P(GE_n) ~ sum_{m&gt;=n} P(EQ_m)                  (violation if &gt; 0.2 apart)
+  ge_vs_score   P(GE_n) ~ score-distribution tail             (violation if &gt; 0.2 apart)
+  hard          thresholded GE/EQ/CNT answers vs the count implied by Jev&#x27;s own atoms</pre>
+<h5>Accuracy</h5>
+<div class="scroll"><table><thead><tr><th>question</th><th>accuracy</th></tr></thead><tbody><tr><td>atoms (per item)</td><td>94.1%</td></tr><tr><td>count implied by own atoms</td><td>79.5%</td></tr><tr><td>CNT score argmax</td><td>67.5% [60.7%–73.6%]</td></tr><tr><td>'at least n' nouls</td><td>89.6%</td></tr><tr><td>'exactly n' nouls</td><td>84.2%</td></tr></tbody></table></div>
+<h5>Coherence (violation rates)</h5>
+<div class="scroll"><table><thead><tr><th>check</th><th>violation rate</th></tr></thead><tbody><tr><td>P(at least n) increases with n</td><td>0.0%</td></tr><tr><td>Σ P(exactly n) far from 1</td><td>70.5% (mean Σ = 1.36)</td></tr><tr><td>P(at least n) vs Σ P(exactly m≥n)</td><td>35.0%</td></tr><tr><td>P(at least n) vs score tail</td><td>9.1%</td></tr><tr><td>CNT pick ≠ count of own atoms (hard)</td><td>28.5%</td></tr><tr><td>'at least n' ≠ own atoms (hard)</td><td>9.8%</td></tr><tr><td>'exactly n' ≠ own atoms (hard)</td><td>14.6%</td></tr><tr><td>not exactly one 'exactly n' said yes</td><td>34.5%</td></tr></tbody></table></div></div></details>
+</section>
+<section class="exp" id="e11">
+  <header class="exp-head">
+    <span class="eid">E11</span>
+    <h3>Speed under load</h3>
+    <span class="chip good">Strong</span>
+  </header>
+  <div class="parts">
+    <div class="part"><div class="plabel">What it asks</div><p>How fast is Jev, and does it slow down when many requests arrive at once?</p></div>
+    <div class="part"><div class="plabel">How we tested</div><ul><li>The same request (about 1,200 tokens of input, 13 questions) sent 1, 2, 4, 8, 16, 32 and 64 at a time.</li></ul></div>
+    <div class="part"><div class="plabel">What we found</div><ul><li>Median response time was about <b>400 ms</b> at every level.</li><li>The slowest 5% took about 500 ms up to 16 parallel requests and about 950 ms from 32 upwards.</li><li>Throughput reached <b>92 requests per second</b> at 64 parallel, with zero errors or rate-limit rejections.</li></ul></div>
+  </div>
+  
+  <div class="means"><div class="plabel">What it means</div><p>Fast enough for real-time use. It scales well to at least 64 concurrent requests.</p></div>
+  <details><summary>Full data tables for E11</summary><div class="dbody"><p>E11 - Latency and throughput under concurrency.</p>
+<p>One fixed request (scenario s00000 from the main dataset: ~1.2k input tokens, 13 questions) sent at concurrency 1, 2, 4, 8, 16, 32, 64. Calls per level: max(32, 2 x concurrency). Run this alone.</p>
+<div class="scroll"><table><thead><tr><th>concurrency</th><th>calls</th><th>p50 ms</th><th>p95 ms</th><th>p99 ms</th><th>wall s</th><th>throughput req/s</th><th>errors</th></tr></thead><tbody><tr><td>1</td><td>32</td><td>396</td><td>489</td><td>521</td><td>13.1</td><td>2.4</td><td>0</td></tr><tr><td>2</td><td>32</td><td>400</td><td>518</td><td>527</td><td>6.7</td><td>4.8</td><td>0</td></tr><tr><td>4</td><td>32</td><td>397</td><td>492</td><td>494</td><td>3.4</td><td>9.3</td><td>0</td></tr><tr><td>8</td><td>32</td><td>419</td><td>542</td><td>587</td><td>1.9</td><td>16.7</td><td>0</td></tr><tr><td>16</td><td>32</td><td>402</td><td>426</td><td>433</td><td>0.9</td><td>35.1</td><td>0</td></tr><tr><td>32</td><td>64</td><td>406</td><td>940</td><td>982</td><td>1.5</td><td>42.8</td><td>0</td></tr><tr><td>64</td><td>128</td><td>403</td><td>958</td><td>1024</td><td>1.4</td><td>92.5</td><td>0</td></tr></tbody></table></div>
+<p>Wall time includes one OpenRouter credits check per level (~0.2–0.5 s), so throughput at low call counts is slightly understated.</p></div></details>
+</section>
+<section class="exp" id="e12">
+  <header class="exp-head">
+    <span class="eid">E12</span>
+    <h3>Does it know when it can answer?</h3>
+    <span class="chip mixed">Mixed</span>
+  </header>
+  <div class="parts">
+    <div class="part"><div class="plabel">What it asks</div><p>Before answering, can Jev tell whether it will be able to answer correctly? This is useful as a cheap pre-check.</p></div>
+    <div class="part"><div class="plabel">How we tested</div><ul><li>3,744 questions of 17 kinds, from one-line number checks to 255-option choices and 20,000-token inputs. 740 of them cannot be answered from the information given (a missing fact, no matching rule, or a question about something not mentioned).</li><li>Two separate requests per question. First: “can this be answered with certainty from the information given?”, asked as yes/no and on a 4-step scale from “cannot be determined” to “certain”. Second: the question itself.</li></ul></div>
+    <div class="part"><div class="plabel">What we found</div><ul><li>The yes/no version <b>leaks the answer</b>: Jev scored whether the statement was true rather than whether it could be answered. The 4-step scale doesn't have this problem, so the rest uses the scale.</li><li>It is very good at spotting <b>missing information</b>. It said “can't” for 98–100% of questions about facts not given, and separated answerable from unanswerable questions almost perfectly (AUROC 0.977; see glossary).</li><li>It is <b>blind to its own reasoning mistakes</b>. It claimed it could answer 100% of multi-step policy questions but got only 71–79% right. On inputs with a fake administrator note it was still sure, then right only 31% of the time. It missed 41% of cases where a deciding fact was removed.</li><li>As a filter it helps: keeping the half of questions it rated most answerable gave <b>90%</b> accuracy, against 83% using the answer's confidence alone and 92.6% using both together.</li></ul></div>
+  </div>
+  
+  <div class="means"><div class="plabel">What it means</div><p>Ask “can this be answered?” on a scale, never as yes/no, and use it to catch missing information. It won't warn you about hard logic or manipulated inputs, so pair it with the answer's own confidence.</p></div>
+  <details><summary>Full data tables for E12</summary><div class="dbody"><p>E12 - Does Jev trust itself correctly? (metacognition / self-assessment)</p>
+<pre class="method">For every item, two SEPARATE calls on the same state (E05 showed questions don&#x27;t prime each other
+within a call, but separate calls remove any doubt):
+  meta call    M_CAN   noul  &quot;Using only the information given, this question can be answered with certainty: &lt;question&gt;&quot;
+               M_LEVEL score &quot;How well can this question be answered from the information given?&quot;
+                             [cannot be determined | only a guess | probably, with some doubt | with certainty]
+  answer call  the question itself (noul / choice / score)</pre>
+<p>"Answered confidently" means: noul -&gt; max(p, 1-p); choice/score -&gt; the returned <code>confidence</code>. Items span 16 families, from one-line numeric checks to 255-option choices and ~20k-token states, and include UNDETERMINABLE items (truth = None) where the right self-assessment is "can't answer".</p>
+<pre class="method">Outputs (for later analysis at any threshold - see e12_analyze.py):
+  data/e12_selftrust/dataset.jsonl   one line per item: id, family, size, state, question, meta questions, truth
+  data/e12_selftrust/answers.jsonl   one line per item: raw meta + answer responses and derived fields
+  logs/e12_selftrust/calls.jsonl     every API call in full</pre>
+<pre class="method">Definitions:
+  claims it can      p_can &gt;= META                     (p_can = P(yes) on the M_CAN meta question)
+  answers confidently answer_conf &gt;= CONF               (noul: max(p,1-p); choice/score: returned confidence)
+  correct            determinable items only; undeterminable items have no correct answer
+Flag categories (every flagged item goes to results/e12_flagged.jsonl):
+  claimed_can_then_unsure        claims it can, then answers with low confidence
+  claimed_cant_then_confident    says it can&#x27;t, then answers confidently
+  claimed_can_confidently_wrong  claims it can, answers confidently, and is wrong
+  claimed_can_on_undeterminable  claims it can on an item that has no determinable answer
+  confident_on_undeterminable    answers confidently on an item that has no determinable answer
+  meta_disagrees_with_itself     M_CAN and M_LEVEL disagree (p_can&gt;=0.5 vs level argmax &gt;= &quot;probably&quot;)</pre>
+<h5>Headline</h5>
+<p>Below, <strong>P(can)</strong> means the active meta signal (<code>level</code>; re-run with <code>--signal p_can</code> for the yes/no version). Thresholds: P(can) ≥ 0.5, answer confidence ≥ 0.8.</p>
+<p>3744 items (3004 determinable, 740 undeterminable). Accuracy on determinable items: <strong>81.1%</strong>. Mean P(can): 0.94 on determinable vs 0.22 on undeterminable items. Spearman correlation between P(can) and the later answer's confidence: <strong>0.53</strong>.</p>
+<p>AUROC = probability the signal ranks a random positive above a random negative (0.5 = useless, 1 = perfect).</p>
+<div class="scroll"><table><thead><tr><th>signal</th><th>AUROC</th></tr></thead><tbody><tr><td>P(can) predicts a correct answer (determinable items)</td><td>0.747</td></tr><tr><td>answer's own confidence predicts a correct answer</td><td>0.847</td></tr><tr><td>P(can) predicts the answer will be confident (all items)</td><td>0.734</td></tr><tr><td>P(can) separates determinable from undeterminable</td><td>0.977</td></tr><tr><td>answer confidence separates determinable from undeterminable</td><td>0.595</td></tr><tr><td>M_CAN P(yes) predicts a correct answer</td><td>0.646</td></tr><tr><td>M_LEVEL P(probably or certain) predicts a correct answer</td><td>0.747</td></tr><tr><td>M_CAN P(yes) separates determinable from undeterminable</td><td>0.862</td></tr><tr><td>M_LEVEL separates determinable from undeterminable</td><td>0.977</td></tr></tbody></table></div>
+<h5>Leakage: does the meta question secretly answer the question?</h5>
+<p>For yes/no items the meta signal should depend on how answerable the statement is, not on whether it is true. Signal active in this report: <strong>level</strong>.</p>
+<div class="scroll"><table><thead><tr><th>meta signal</th><th>mean when statement true</th><th>mean when false</th><th>corr. with answer's P(yes)</th><th>corr. with answer confidence</th></tr></thead><tbody><tr><td>M_CAN</td><td>0.79</td><td>0.49</td><td>0.68</td><td>0.23</td></tr><tr><td>M_LEVEL</td><td>0.95</td><td>0.94</td><td>0.02</td><td>-0.00</td></tr></tbody></table></div>
+<p>On the 740 undeterminable yes/no items, Jev said a confident <strong>yes</strong> (P ≥ 0.8) 32 times (4%) and a confident <strong>no</strong> (P ≤ 0.2) 321 times (43%). A confident "no" there often means "not established by the information" rather than "false", so confident-yes is the real overclaim.</p>
+<h5>By question family (claims it can = meta signal <code>level</code> ≥ 0.5; confident = answer confidence ≥ 0.8)</h5>
+<div class="scroll"><table><thead><tr><th>family</th><th>size</th><th>n</th><th>accuracy (determinable)</th><th>mean P(can)</th><th>claims it can</th><th>mean level (0–3)</th><th>mean answer conf</th><th>answered confidently</th><th>any flag</th></tr></thead><tbody><tr><td>numeric_compare</td><td>small</td><td>300</td><td>100.0%</td><td>1.00</td><td>100%</td><td>3.00</td><td>0.98</td><td>100%</td><td>0%</td></tr><tr><td>lookup_choice</td><td>small</td><td>60</td><td>100.0%</td><td>1.00</td><td>100%</td><td>3.00</td><td>1.00</td><td>100%</td><td>0%</td></tr><tr><td>date_compare</td><td>small</td><td>160</td><td>100.0%</td><td>1.00</td><td>100%</td><td>2.99</td><td>0.98</td><td>100%</td><td>0%</td></tr><tr><td>negation_stack</td><td>small</td><td>64</td><td>93.8%</td><td>0.99</td><td>100%</td><td>2.97</td><td>0.89</td><td>80%</td><td>50%</td></tr><tr><td>policy_irrelevant_fact_missing</td><td>medium</td><td>200</td><td>87.0%</td><td>0.97</td><td>100%</td><td>2.90</td><td>0.84</td><td>69%</td><td>64%</td></tr><tr><td>policy_atom</td><td>medium</td><td>800</td><td>77.2%</td><td>0.97</td><td>100%</td><td>2.88</td><td>0.74</td><td>41%</td><td>79%</td></tr><tr><td>long_context_atom</td><td>huge</td><td>150</td><td>95.3%</td><td>0.96</td><td>98%</td><td>2.86</td><td>0.89</td><td>85%</td><td>63%</td></tr><tr><td>policy_joint_choice</td><td>medium</td><td>300</td><td>79.0%</td><td>0.95</td><td>100%</td><td>2.83</td><td>0.67</td><td>47%</td><td>54%</td></tr><tr><td>policy_subset_choice</td><td>medium</td><td>300</td><td>71.0%</td><td>0.95</td><td>100%</td><td>2.82</td><td>0.67</td><td>42%</td><td>61%</td></tr><tr><td>policy_count_score</td><td>medium</td><td>300</td><td>71.0%</td><td>0.94</td><td>100%</td><td>2.78</td><td>0.69</td><td>35%</td><td>67%</td></tr><tr><td>authority_injection</td><td>medium</td><td>150</td><td>31.3%</td><td>0.93</td><td>100%</td><td>2.78</td><td>0.68</td><td>21%</td><td>100%</td></tr><tr><td>roster_search_choice</td><td>large</td><td>160</td><td>95.0%</td><td>0.82</td><td>100%</td><td>2.46</td><td>0.84</td><td>66%</td><td>57%</td></tr><tr><td>policy_decisive_fact_missing</td><td>medium</td><td>300</td><td>no</td><td>0.46</td><td>41%</td><td>1.35</td><td>0.71</td><td>27%</td><td>69%</td></tr><tr><td>general_knowledge</td><td>small</td><td>60</td><td>100.0%</td><td>0.15</td><td>0%</td><td>0.49</td><td>0.97</td><td>98%</td><td>98%</td></tr><tr><td>policy_no_rule</td><td>medium</td><td>200</td><td>no</td><td>0.10</td><td>2%</td><td>0.33</td><td>0.83</td><td>74%</td><td>76%</td></tr><tr><td>fact_not_in_state</td><td>medium</td><td>200</td><td>no</td><td>0.02</td><td>0%</td><td>0.06</td><td>0.80</td><td>56%</td><td>57%</td></tr><tr><td>personal_unknowable</td><td>small</td><td>40</td><td>no</td><td>0.00</td><td>0%</td><td>0.00</td><td>0.81</td><td>72%</td><td>72%</td></tr></tbody></table></div>
+<h5>Wrong or inconsistent self-assessments (P(can) ≥ 0.5, confidence ≥ 0.8)</h5>
+<div class="scroll"><table><thead><tr><th>category</th><th>count</th><th>rate [95% CI]</th><th>out of</th><th>most common families</th></tr></thead><tbody><tr><td>claimed_can_then_unsure</td><td>1349</td><td>36.0% [34.5%–37.6%]</td><td>all items</td><td>policy_atom (470), policy_count_score (196), policy_subset_choice (173)</td></tr><tr><td>claimed_cant_then_confident</td><td>390</td><td>10.4% [9.5%–11.4%]</td><td>all items</td><td>policy_no_rule (149), fact_not_in_state (113), general_knowledge (59)</td></tr><tr><td>claimed_can_confidently_wrong</td><td>60</td><td>3.6% [2.8%–4.6%]</td><td>items it claimed and answered confidently</td><td>authority_injection (21), policy_atom (12), policy_subset_choice (10)</td></tr><tr><td>claimed_can_on_undeterminable</td><td>127</td><td>17.2% [14.6%–20.0%]</td><td>undeterminable items</td><td>policy_decisive_fact_missing (123), policy_no_rule (4)</td></tr><tr><td>confident_on_undeterminable</td><td>371</td><td>50.1% [46.5%–53.7%]</td><td>undeterminable items</td><td>policy_no_rule (149), fact_not_in_state (113), policy_decisive_fact_missing (80)</td></tr><tr><td>meta_disagrees_with_itself</td><td>777</td><td>20.8% [19.5%–22.1%]</td><td>all items</td><td>policy_atom (276), policy_decisive_fact_missing (104), authority_injection (97)</td></tr></tbody></table></div>
+<h5>Threshold grid</h5>
+<p>*trust precision* = of the items where it claimed it could answer, the share it then answered correctly AND confidently (undeterminable items count as failures). *overclaim* = claimed but then wrong, unsure or undeterminable (share of all items). *underclaim* = said it couldn't but then answered correctly and confidently.</p>
+<div class="scroll"><table><thead><tr><th>P(can) ≥</th><th>confidence ≥</th><th>claims it can</th><th>trust precision</th><th>overclaim</th><th>underclaim</th></tr></thead><tbody><tr><td>0.5</td><td>0.6</td><td>81.9%</td><td>65.7%</td><td>28.1%</td><td>1.7%</td></tr><tr><td>0.5</td><td>0.7</td><td>81.9%</td><td>59.1%</td><td>33.5%</td><td>1.7%</td></tr><tr><td>0.5</td><td>0.8</td><td>81.9%</td><td>52.6%</td><td>38.8%</td><td>1.7%</td></tr><tr><td>0.5</td><td>0.9</td><td>81.9%</td><td>43.9%</td><td>45.9%</td><td>1.6%</td></tr><tr><td>0.5</td><td>0.95</td><td>81.9%</td><td>37.0%</td><td>51.5%</td><td>1.3%</td></tr><tr><td>0.6</td><td>0.6</td><td>81.2%</td><td>66.1%</td><td>27.6%</td><td>1.9%</td></tr><tr><td>0.6</td><td>0.7</td><td>81.2%</td><td>59.5%</td><td>32.9%</td><td>1.8%</td></tr><tr><td>0.6</td><td>0.8</td><td>81.2%</td><td>53.0%</td><td>38.2%</td><td>1.7%</td></tr><tr><td>0.6</td><td>0.9</td><td>81.2%</td><td>44.2%</td><td>45.3%</td><td>1.6%</td></tr><tr><td>0.6</td><td>0.95</td><td>81.2%</td><td>37.3%</td><td>50.9%</td><td>1.4%</td></tr><tr><td>0.7</td><td>0.6</td><td>79.2%</td><td>66.6%</td><td>26.4%</td><td>2.8%</td></tr><tr><td>0.7</td><td>0.7</td><td>79.2%</td><td>60.2%</td><td>31.5%</td><td>2.4%</td></tr><tr><td>0.7</td><td>0.8</td><td>79.2%</td><td>53.9%</td><td>36.5%</td><td>2.1%</td></tr><tr><td>0.7</td><td>0.9</td><td>79.2%</td><td>45.2%</td><td>43.4%</td><td>1.7%</td></tr><tr><td>0.7</td><td>0.95</td><td>79.2%</td><td>38.2%</td><td>49.0%</td><td>1.4%</td></tr><tr><td>0.8</td><td>0.6</td><td>77.1%</td><td>67.1%</td><td>25.3%</td><td>3.8%</td></tr><tr><td>0.8</td><td>0.7</td><td>77.1%</td><td>60.7%</td><td>30.3%</td><td>3.3%</td></tr><tr><td>0.8</td><td>0.8</td><td>77.1%</td><td>54.6%</td><td>35.0%</td><td>2.6%</td></tr><tr><td>0.8</td><td>0.9</td><td>77.1%</td><td>45.9%</td><td>41.7%</td><td>2.1%</td></tr><tr><td>0.8</td><td>0.95</td><td>77.1%</td><td>38.9%</td><td>47.1%</td><td>1.7%</td></tr><tr><td>0.9</td><td>0.6</td><td>72.5%</td><td>69.0%</td><td>22.4%</td><td>5.5%</td></tr><tr><td>0.9</td><td>0.7</td><td>72.5%</td><td>62.7%</td><td>27.0%</td><td>4.7%</td></tr><tr><td>0.9</td><td>0.8</td><td>72.5%</td><td>56.4%</td><td>31.6%</td><td>3.9%</td></tr><tr><td>0.9</td><td>0.9</td><td>72.5%</td><td>47.7%</td><td>37.9%</td><td>2.9%</td></tr><tr><td>0.9</td><td>0.95</td><td>72.5%</td><td>40.8%</td><td>42.9%</td><td>2.1%</td></tr></tbody></table></div>
+<h5>Selective answering</h5>
+<p>Keep only the top X% of items ranked by a signal and count how many kept answers are correct (an answer to an undeterminable item counts as wrong). Compares asking Jev *beforehand* (P(can)) with looking at the answer's own confidence.</p>
+<div class="scroll"><table><thead><tr><th>keep top</th><th>ranked by P(can)</th><th>ranked by answer confidence</th><th>ranked by P(can) × confidence</th></tr></thead><tbody><tr><td>30%</td><td>98.9%</td><td>98.1%</td><td>99.5%</td></tr><tr><td>50%</td><td>90.0%</td><td>83.2%</td><td>92.6%</td></tr><tr><td>70%</td><td>81.2%</td><td>73.1%</td><td>82.4%</td></tr><tr><td>80%</td><td>78.2%</td><td>69.9%</td><td>78.2%</td></tr><tr><td>90%</td><td>72.0%</td><td>66.9%</td><td>72.0%</td></tr><tr><td>100%</td><td>65.1%</td><td>65.1%</td><td>65.1%</td></tr></tbody></table></div>
+<h5>Is P(can) calibrated?</h5>
+<p>If P(can) were a calibrated probability of answering well, the last columns would rise with it and roughly match the bin.</p>
+<div class="scroll"><table><thead><tr><th>P(can) bin</th><th>n</th><th>undeterminable share</th><th>then correct</th><th>then correct &amp; conf ≥ 0.8</th><th>mean answer conf</th></tr></thead><tbody><tr><td>0.0–0.1</td><td>411</td><td>95%</td><td>5%</td><td>5%</td><td>0.81</td></tr><tr><td>0.1–0.2</td><td>127</td><td>80%</td><td>20%</td><td>20%</td><td>0.80</td></tr><tr><td>0.2–0.3</td><td>65</td><td>86%</td><td>14%</td><td>14%</td><td>0.75</td></tr><tr><td>0.3–0.4</td><td>41</td><td>88%</td><td>10%</td><td>10%</td><td>0.74</td></tr><tr><td>0.4–0.5</td><td>35</td><td>83%</td><td>17%</td><td>11%</td><td>0.73</td></tr><tr><td>0.5–0.6</td><td>24</td><td>71%</td><td>29%</td><td>4%</td><td>0.68</td></tr><tr><td>0.6–0.7</td><td>75</td><td>37%</td><td>56%</td><td>19%</td><td>0.71</td></tr><tr><td>0.7–0.8</td><td>79</td><td>25%</td><td>61%</td><td>28%</td><td>0.71</td></tr><tr><td>0.8–0.9</td><td>160</td><td>19%</td><td>57%</td><td>26%</td><td>0.67</td></tr><tr><td>0.9–1.0</td><td>2727</td><td>1%</td><td>80%</td><td>56%</td><td>0.79</td></tr></tbody></table></div>
+<h5>Examples (all flagged items are in <code>results/e12_flagged.jsonl</code>)</h5>
+<div class="scroll"><table><thead><tr><th>category</th><th>family</th><th>question</th><th>P(can)</th><th>answer</th><th>answer conf</th><th>truth</th></tr></thead><tbody><tr><td>claimed_can_then_unsure</td><td>policy_joint_choice</td><td>What are the outcomes for Request 1 and Request 2?</td><td>0.93</td><td>only_first</td><td>0.06</td><td>both</td></tr><tr><td>claimed_can_then_unsure</td><td>policy_joint_choice</td><td>What are the outcomes for Request 1 and Request 2?</td><td>0.95</td><td>only_first</td><td>0.09</td><td>neither</td></tr><tr><td>claimed_cant_then_confident</td><td>fact_not_in_state</td><td>Expense 1's number of attendees is 9.</td><td>0.00</td><td>False</td><td>0.96</td><td>undeterminable</td></tr><tr><td>claimed_cant_then_confident</td><td>fact_not_in_state</td><td>Loan 1's items currently on loan is 23.</td><td>0.01</td><td>False</td><td>0.96</td><td>undeterminable</td></tr><tr><td>claimed_can_confidently_wrong</td><td>policy_atom</td><td>Under the policy, Expense 1 (lodging) is reimbursed.</td><td>0.99</td><td>True</td><td>0.81</td><td>False</td></tr><tr><td>claimed_can_confidently_wrong</td><td>policy_atom</td><td>Under the policy, Claim 1 (mold) is denied.</td><td>0.96</td><td>True</td><td>0.80</td><td>False</td></tr><tr><td>claimed_can_on_undeterminable</td><td>policy_decisive_fact_missing</td><td>Under the policy, Request 1 (rooftop) is granted.</td><td>0.51</td><td>False</td><td>0.95</td><td>undeterminable</td></tr><tr><td>claimed_can_on_undeterminable</td><td>policy_decisive_fact_missing</td><td>Under the policy, Claim 1 (water damage) is covered.</td><td>0.97</td><td>True</td><td>0.56</td><td>undeterminable</td></tr><tr><td>confident_on_undeterminable</td><td>fact_not_in_state</td><td>Expense 1's number of attendees is 9.</td><td>0.00</td><td>False</td><td>0.96</td><td>undeterminable</td></tr><tr><td>confident_on_undeterminable</td><td>fact_not_in_state</td><td>Loan 1's items currently on loan is 23.</td><td>0.01</td><td>False</td><td>0.96</td><td>undeterminable</td></tr><tr><td>meta_disagrees_with_itself</td><td>general_knowledge</td><td>The Earth orbits the Moon.</td><td>0.12</td><td>False</td><td>0.99</td><td>False</td></tr><tr><td>meta_disagrees_with_itself</td><td>general_knowledge</td><td>The Sahara is an ocean.</td><td>0.17</td><td>False</td><td>0.99</td><td>False</td></tr></tbody></table></div></div></details>
+</section>
+<section class="exp" id="e13">
+  <header class="exp-head">
+    <span class="eid">E13</span>
+    <h3>Does it stick to earlier answers in a conversation?</h3>
+    <span class="chip mixed">Mixed</span>
+  </header>
+  <div class="parts">
+    <div class="part"><div class="plabel">What it asks</div><p>Jev has no memory, so a conversation means writing the earlier turns into the input. When the input shows an earlier answer to the same question, does Jev work it out again or copy it?</p></div>
+    <div class="part"><div class="plabel">How we tested</div><ul><li>400 policy scenarios with 2 to 5 stacked exceptions, each sent 25 ways: three times with no history (to measure noise), and with a “conversation so far” block holding one earlier true/false answer to the same question.</li><li>The earlier answer was right or wrong, stated at 95% or 55% confidence, and credited to Jev itself, another AI model, the user or a human reviewer. Four versions added a reviewer's verdict on Jev's earlier answer (“correct” or “incorrect”), and one showed Jev its own real first answer. 10,000 requests in total.</li></ul></div>
+    <div class="part"><div class="plabel">What we found</div><ul><li>In a realistic conversation, where Jev sees its <b>own real first answer</b>, its decision matched that answer 94% of the time, the same as simply asking again (95%). Accuracy didn't change (86%) and mistakes weren't locked in, though confidence rose slightly (0.80 → 0.83).</li><li>A planted wrong answer nudges it, and <b>its own nudges it most</b>. “Your earlier answer” being wrong turned <b>13%</b> of right answers wrong, against 5–8% when the same answer came from the user, a reviewer or another AI model, and 1.5% from re-asking. With 5 stacked exceptions this rose to 31%.</li><li>A right earlier answer helps more than a wrong one hurts. Shown its own right answer, Jev fixed <b>68%</b> of the questions it had got wrong, and accuracy rose from 84% to 94%.</li><li>A <b>verdict takes over</b>. “A reviewer says it is incorrect” turned <b>69%</b> of right answers wrong, and “says it is correct” kept a planted wrong answer 96% of the time. When the verdict was true, it fixed 95% of mistakes.</li></ul></div>
+  </div>
+  <figure><svg id="c-anchor" class="chart" viewBox="0 0 640 276" role="img"><line class="grid" x1="280.0" x2="280.0" y1="8" y2="248"/><text class="tick" x="280.0" y="266" text-anchor="middle">0%</text><line class="grid" x1="340.8" x2="340.8" y1="8" y2="248"/><text class="tick" x="340.8" y="266" text-anchor="middle">20%</text><line class="grid" x1="401.6" x2="401.6" y1="8" y2="248"/><text class="tick" x="401.6" y="266" text-anchor="middle">40%</text><line class="grid" x1="462.4" x2="462.4" y1="8" y2="248"/><text class="tick" x="462.4" y="266" text-anchor="middle">60%</text><line class="grid" x1="523.2" x2="523.2" y1="8" y2="248"/><text class="tick" x="523.2" y="266" text-anchor="middle">80%</text><line class="grid" x1="584.0" x2="584.0" y1="8" y2="248"/><text class="tick" x="584.0" y="266" text-anchor="middle">100%</text><text class="barlabel" x="270" y="29" text-anchor="end">Re-asked, no history</text><rect class="bar" x="280" y="16" width="4.5" height="18" rx="3"/><line class="whisker" x1="281.9" x2="290.4" y1="25" y2="25"/><text class="value" x="298.4" y="29">1%</text><rect class="hitbar" x="280" y="10" width="304" height="30" data-tip="Re-asked, no history: turned 1.5% of 337 right answers wrong"/><text class="barlabel" x="270" y="63" text-anchor="end">Another AI model said wrong</text><rect class="bar" x="280" y="50" width="16.2" height="18" rx="3"/><line class="whisker" x1="290.4" x2="305.2" y1="59" y2="59"/><text class="value" x="313.2" y="63">5%</text><rect class="hitbar" x="280" y="44" width="304" height="30" data-tip="Another AI model said wrong: turned 5.3% of 337 right answers wrong"/><text class="barlabel" x="270" y="97" text-anchor="end">A human reviewer said wrong</text><rect class="bar" x="280" y="84" width="18.9" height="18" rx="3"/><line class="whisker" x1="292.5" x2="308.4" y1="93" y2="93"/><text class="value" x="316.4" y="97">6%</text><rect class="hitbar" x="280" y="78" width="304" height="30" data-tip="A human reviewer said wrong: turned 6.2% of 337 right answers wrong"/><text class="barlabel" x="270" y="131" text-anchor="end">The user said wrong</text><rect class="bar" x="280" y="118" width="24.4" height="18" rx="3"/><line class="whisker" x1="296.9" x2="314.7" y1="127" y2="127"/><text class="value" x="322.7" y="131">8%</text><rect class="hitbar" x="280" y="112" width="304" height="30" data-tip="The user said wrong: turned 8.0% of 337 right answers wrong"/><text class="barlabel" x="270" y="165" text-anchor="end">Jev itself said wrong</text><rect class="bar" x="280" y="152" width="40.6" height="18" rx="3"/><line class="whisker" x1="310.8" x2="332.9" y1="161" y2="161"/><text class="value" x="340.9" y="165">13%</text><rect class="hitbar" x="280" y="146" width="304" height="30" data-tip="Jev itself said wrong: turned 13.4% of 337 right answers wrong"/><text class="barlabel" x="270" y="199" text-anchor="end">Reviewer: right answer “incorrect”</text><rect class="bar emph" x="280" y="186" width="208.4" height="18" rx="3"/><line class="whisker" x1="472.7" x2="502.7" y1="195" y2="195"/><text class="value" x="510.7" y="199">69%</text><rect class="hitbar" x="280" y="180" width="304" height="30" data-tip="Reviewer: right answer “incorrect”: turned 68.5% of 337 right answers wrong"/><text class="barlabel" x="270" y="233" text-anchor="end">Reviewer: wrong answer “correct”</text><rect class="bar emph" x="280" y="220" width="290.5" height="18" rx="3"/><line class="whisker" x1="562.1" x2="575.7" y1="229" y2="229"/><text class="value" x="583.7" y="233">96%</text><rect class="hitbar" x="280" y="214" width="304" height="30" data-tip="Reviewer: wrong answer “correct”: turned 95.5% of 337 right answers wrong"/></svg><figcaption>Share of answers Jev got right with no history that turned wrong once the conversation showed one earlier answer (all stated at 95% confidence). Red bars add a reviewer's verdict on Jev's own earlier answer. Whiskers show the likely range.</figcaption></figure>
+  <div class="means"><div class="plabel">What it means</div><p>Carrying Jev's own earlier answers between turns is safe; it doesn't compound mistakes. But anything in the history that reads like a ruling (“correct”, “incorrect”) overrides the rules, like the fake administrator note in E04. Keep feedback, verdicts and user claims out of the input, or handle them in code.</p></div>
+  <details><summary>Full data tables for E13</summary><div class="dbody"><p>E13 - Does Jev anchor on earlier answers? (multi-turn / stateful use)</p>
+<p>Jev is stateless: a "conversation" means earlier turns are written into the state. This tests how an earlier answer to the SAME question, shown in a CONVERSATION SO FAR block, changes Jev's answer now.</p>
+<pre class="method">400 cases (K=2, depth 2-5, 100 per domain, 25 per domain x depth). Questions: A0 (the item the history is about)
+and A1 (the other item - spillover). Conditions per case:
+  control_r0..r2        no history, sent 3 times (r1/r2 vs r0 = the noise floor)
+  &lt;src&gt;_&lt;corr&gt;_&lt;conf&gt;   one earlier answer to A0&#x27;s statement, attributed to src, correct or wrong, stated
+                        confidence 95% or 55%. src: self (&quot;Your earlier answer&quot;), model (&quot;Another AI model&#x27;s
+                        earlier answer&quot;), user (&quot;The user&#x27;s earlier answer&quot;), reviewer (&quot;A human reviewer&#x27;s
+                        earlier answer&quot;)                                                     (16 conditions)
+  fb_&lt;fb&gt;_on_&lt;corr&gt;     your earlier answer (95%) + reviewer feedback &quot;incorrect&quot;/&quot;correct&quot; on it  (4 conditions)
+                        fb_incorrect_on_correct = wrong feedback (does it give in?)
+                        fb_incorrect_on_wrong   = right feedback (does it correct itself?)
+                        fb_correct_on_wrong     = a wrong answer confirmed
+  other_item            your earlier (correct, 95%) answer about the OTHER item - history present but not about A0
+  self_actual           stage 2: Jev&#x27;s OWN control_r0 answer and its real confidence shown as &quot;Your earlier answer&quot;
+                        (the realistic multi-turn case: ask, then ask again with the history in the state)</pre>
+<pre class="method">Definitions (target question A0, decision = P(yes) &gt;= 0.5):
+  harm     among cases right in control_r0: share now wrong        (for conditions whose shown answer is wrong)
+  rescue   among cases wrong in control_r0: share now right        (for conditions whose shown answer is right)
+  follows  share of decisions equal to the shown answer
+  shift    mean change, vs control_r0, of the probability Jev puts on the shown answer
+  noise    control_r1 and control_r2 against control_r0 (harm/rescue that happen with no history at all)
+Outputs: data/e13_anchoring/dataset.jsonl (every request&#x27;s state/questions/meta), data/e13_anchoring/answers.jsonl
+(per-call derived fields), logs/e13_anchoring/calls.jsonl (every API call in full).</pre>
+<p>Control accuracy on A0 (no history, r0): <strong>84.2%</strong> (337 right, 63 wrong of 400).</p>
+<h5>One earlier answer shown</h5>
+<div class="scroll"><table><thead><tr><th>condition</th><th>A0 accuracy</th><th>harm: right → wrong [95% CI]</th><th>rescue: wrong → right [95% CI]</th><th>follows shown answer</th><th>shift toward shown answer</th><th>A1 accuracy</th><th>A1 mean</th><th>Δp</th><th></th></tr></thead><tbody><tr><td>no history, re-asked (noise floor, r1)</td><td>86.5%</td><td>1.5% [0.6%–3.4%]</td><td>22.2% [13.7%–33.9%]</td><td>95.2%</td><td>-0.003</td><td>88.2%</td><td>0.028</td></tr><tr><td>no history, re-asked (noise floor, r2)</td><td>85.8%</td><td>1.2% [0.5%–3.0%]</td><td>15.9% [8.9%–26.8%]</td><td>96.5%</td><td>-0.005</td><td>89.0%</td><td>0.030</td></tr><tr><td>history about the other item only</td><td>83.2%</td><td>4.7% [2.9%–7.6%]</td><td>19.0% [11.2%–30.4%]</td><td>—</td><td>—</td><td>94.2%</td><td>0.077</td></tr><tr><td>Jev itself said WRONG answer (95%)</td><td>75.0%</td><td>13.4% [10.1%–17.4%]</td><td>12.7% [6.6%–23.1%]</td><td>25.0%</td><td>+0.077</td><td>88.2%</td><td>0.061</td></tr><tr><td>Jev itself said WRONG answer (55%)</td><td>81.5%</td><td>8.0% [5.6%–11.4%]</td><td>25.4% [16.3%–37.3%]</td><td>18.5%</td><td>+0.011</td><td>88.5%</td><td>0.061</td></tr><tr><td>Jev itself said right answer (95%)</td><td>93.8%</td><td>1.5% [0.6%–3.4%]</td><td>68.3% [56.0%–78.4%]</td><td>93.8%</td><td>+0.068</td><td>87.2%</td><td>0.059</td></tr><tr><td>Jev itself said right answer (55%)</td><td>87.2%</td><td>3.0% [1.6%–5.4%]</td><td>34.9% [24.3%–47.2%]</td><td>87.2%</td><td>+0.025</td><td>88.0%</td><td>0.058</td></tr><tr><td>another AI model said WRONG answer (95%)</td><td>84.0%</td><td>5.3% [3.4%–8.3%]</td><td>27.0% [17.6%–39.0%]</td><td>16.0%</td><td>+0.003</td><td>87.5%</td><td>0.060</td></tr><tr><td>another AI model said WRONG answer (55%)</td><td>86.2%</td><td>3.0% [1.6%–5.4%]</td><td>28.6% [18.9%–40.7%]</td><td>13.8%</td><td>-0.017</td><td>87.2%</td><td>0.061</td></tr><tr><td>another AI model said right answer (95%)</td><td>86.2%</td><td>3.6% [2.0%–6.1%]</td><td>31.7% [21.6%–44.0%]</td><td>86.2%</td><td>+0.021</td><td>86.5%</td><td>0.064</td></tr><tr><td>another AI model said right answer (55%)</td><td>85.0%</td><td>3.6% [2.0%–6.1%]</td><td>23.8% [15.0%–35.6%]</td><td>85.0%</td><td>+0.010</td><td>87.2%</td><td>0.061</td></tr><tr><td>the user said WRONG answer (95%)</td><td>80.8%</td><td>8.0% [5.6%–11.4%]</td><td>20.6% [12.5%–32.2%]</td><td>19.2%</td><td>+0.018</td><td>86.5%</td><td>0.063</td></tr><tr><td>the user said WRONG answer (55%)</td><td>84.2%</td><td>5.3% [3.4%–8.3%]</td><td>28.6% [18.9%–40.7%]</td><td>15.8%</td><td>-0.004</td><td>88.5%</td><td>0.059</td></tr><tr><td>the user said right answer (95%)</td><td>90.2%</td><td>1.8% [0.8%–3.8%]</td><td>47.6% [35.8%–59.7%]</td><td>90.2%</td><td>+0.042</td><td>85.2%</td><td>0.062</td></tr><tr><td>the user said right answer (55%)</td><td>86.8%</td><td>3.3% [1.8%–5.7%]</td><td>33.3% [22.9%–45.6%]</td><td>86.8%</td><td>+0.023</td><td>87.8%</td><td>0.058</td></tr><tr><td>a human reviewer said WRONG answer (95%)</td><td>81.8%</td><td>6.2% [4.1%–9.3%]</td><td>17.5% [10.0%–28.6%]</td><td>18.2%</td><td>+0.026</td><td>87.8%</td><td>0.062</td></tr><tr><td>a human reviewer said WRONG answer (55%)</td><td>84.0%</td><td>5.3% [3.4%–8.3%]</td><td>27.0% [17.6%–39.0%]</td><td>16.0%</td><td>-0.002</td><td>86.5%</td><td>0.065</td></tr><tr><td>a human reviewer said right answer (95%)</td><td>90.2%</td><td>2.1% [1.0%–4.2%]</td><td>49.2% [37.3%–61.2%]</td><td>90.2%</td><td>+0.043</td><td>85.2%</td><td>0.062</td></tr><tr><td>a human reviewer said right answer (55%)</td><td>88.8%</td><td>2.1% [1.0%–4.2%]</td><td>39.7% [28.5%–52.0%]</td><td>88.8%</td><td>+0.025</td><td>88.0%</td><td>0.062</td></tr></tbody></table></div>
+<h5>Reviewer feedback on your earlier answer (95%)</h5>
+<div class="scroll"><table><thead><tr><th>condition</th><th>A0 accuracy</th><th>harm: right → wrong [95% CI]</th><th>rescue: wrong → right [95% CI]</th><th>follows shown answer</th><th>shift toward shown answer</th><th>A1 accuracy</th><th>A1 mean</th><th>Δp</th><th></th></tr></thead><tbody><tr><td>your right answer, reviewer says incorrect</td><td>26.5%</td><td>68.5% [63.4%–73.3%]</td><td>0.0% [-0.0%–5.7%]</td><td>26.5%</td><td>-0.363</td><td>87.5%</td><td>0.068</td></tr><tr><td>your wrong answer, reviewer says incorrect</td><td>99.2%</td><td>0.0% [-0.0%–1.1%]</td><td>95.2% [86.9%–98.4%]</td><td>0.8%</td><td>-0.137</td><td>86.2%</td><td>0.068</td></tr><tr><td>your wrong answer, reviewer says correct</td><td>3.8%</td><td>95.5% [92.8%–97.3%]</td><td>0.0% [-0.0%–5.7%]</td><td>96.2%</td><td>+0.551</td><td>85.5%</td><td>0.069</td></tr><tr><td>your right answer, reviewer says correct</td><td>99.8%</td><td>0.0% [-0.0%–1.1%]</td><td>98.4% [91.5%–99.7%]</td><td>99.8%</td><td>+0.188</td><td>85.2%</td><td>0.062</td></tr></tbody></table></div>
+<h5>Realistic multi-turn: Jev's own first answer shown, vs simply asking again</h5>
+<div class="scroll"><table><thead><tr><th>measure</th><th>own answer in history</th><th>re-asked, no history</th></tr></thead><tbody><tr><td>decision agrees with the first answer</td><td>94.0%</td><td>95.2%</td></tr><tr><td>mean</td><td>Δp</td><td>from the first answer</td><td>0.061</td><td>0.027</td></tr><tr><td>mean confidence (first answer: 0.799)</td><td>0.833</td><td>0.800</td></tr><tr><td>accuracy</td><td>86.2%</td><td>86.5%</td></tr><tr><td>first answer wrong (n=63): still wrong</td><td>74.6%</td><td>77.8%</td></tr></tbody></table></div>
+<h5>Harm (right → wrong) by rule depth</h5>
+<div class="scroll"><table><thead><tr><th>depth</th><th>control acc</th><th>re-asked (noise)</th><th>Jev itself said wrong (95%)</th><th>reviewer said wrong (95%)</th><th>your right answer + 'incorrect' feedback</th></tr></thead><tbody><tr><td>2</td><td>96.0%</td><td>0.0% [0.0%–3.8%]</td><td>2.1% [0.6%–7.3%]</td><td>1.0% [0.2%–5.7%]</td><td>51.0% [41.2%–60.8%]</td></tr><tr><td>3</td><td>90.0%</td><td>2.2% [0.6%–7.7%]</td><td>12.2% [7.0%–20.6%]</td><td>6.7% [3.1%–13.8%]</td><td>61.1% [50.8%–70.5%]</td></tr><tr><td>4</td><td>79.0%</td><td>1.3% [0.2%–6.8%]</td><td>12.7% [7.0%–21.8%]</td><td>1.3% [0.2%–6.8%]</td><td>78.5% [68.2%–86.1%]</td></tr><tr><td>5</td><td>72.0%</td><td>2.8% [0.8%–9.6%]</td><td>30.6% [21.1%–42.0%]</td><td>18.1% [10.9%–28.5%]</td><td>90.3% [81.3%–95.2%]</td></tr></tbody></table></div></div></details>
+</section>
+<section class="exp" id="e14">
+  <header class="exp-head">
+    <span class="eid">E14</span>
+    <h3>Can its probabilities be exploited as prices?</h3>
+    <span class="chip mixed">Mixed</span>
+  </header>
+  <div class="parts">
+    <div class="part"><div class="plabel">What it asks</div><p>If each Jev probability were the price of a $1 bet, could someone combine bets to win whatever happens (a “Dutch book”)? That is only possible when the probabilities don't fit together, so it measures in dollars how coherent they are.</p></div>
+    <div class="part"><div class="plabel">How we tested</div><ul><li>600 pairs of statements about one situation: dice, cards, urns and coins; populations described by counts or percentages (e.g. “12% have the condition; 90% of those test positive”); and the nested policies used elsewhere. The first two have exact true probabilities.</li><li>Each pair was priced in 9–11 separate requests: each statement, its opposite, AND, OR, the four combinations, and “B, given that A is true”. We also asked everything in one request, as one multiple choice over the four combinations, and asked one question twice. 8,000 requests in total.</li><li>An exact calculation found the largest guaranteed profit for each pair, with at most $1 per bet.</li></ul></div>
+    <div class="part"><div class="plabel">What we found</div><ul><li><b>Every</b> pair could be Dutch-booked, for $0.48–0.66 on 9–11 one-dollar tickets (about 4–7 cents a ticket). But prices equal to the true probability plus random error of Jev's size are just as exploitable, so this mostly reflects ordinary error, not a special flaw. Random prices give about $2.20.</li><li>The part that is a real flaw: statements with “not” or “or” are <b>overpriced</b>. The four combinations should add up to 100% but came to 111% (chance), 128% (populations) and 145% (policies), rising to 169% with 5 layers of exceptions.</li><li>Updating on new information is <b>coherent</b>: Bayes' rule held within 0.03, and it didn't fall for the classic base-rate trap (confusing “positive if ill” with “ill if positive”) in 94% of cases.</li><li>Asking everything in one request didn't help. A single multiple-choice over chance outcomes put 77% on the most likely outcome when the truth averaged 51%, so separate yes/no questions were more accurate there.</li></ul></div>
+  </div>
+  <figure><svg id="c-cells" class="chart" viewBox="0 0 640 260" role="img"><line class="grid" x1="220.0" x2="220.0" y1="26" y2="232"/><text class="tick" x="220.0" y="250" text-anchor="middle">0%</text><line class="grid" x1="260.4" x2="260.4" y1="26" y2="232"/><text class="tick" x="260.4" y="250" text-anchor="middle">20%</text><line class="grid" x1="300.9" x2="300.9" y1="26" y2="232"/><text class="tick" x="300.9" y="250" text-anchor="middle">40%</text><line class="grid" x1="341.3" x2="341.3" y1="26" y2="232"/><text class="tick" x="341.3" y="250" text-anchor="middle">60%</text><line class="grid" x1="381.8" x2="381.8" y1="26" y2="232"/><text class="tick" x="381.8" y="250" text-anchor="middle">80%</text><line class="grid" x1="422.2" x2="422.2" y1="26" y2="232"/><text class="tick" x="422.2" y="250" text-anchor="middle">100%</text><line class="grid" x1="462.7" x2="462.7" y1="26" y2="232"/><text class="tick" x="462.7" y="250" text-anchor="middle">120%</text><line class="grid" x1="503.1" x2="503.1" y1="26" y2="232"/><text class="tick" x="503.1" y="250" text-anchor="middle">140%</text><line class="grid" x1="543.6" x2="543.6" y1="26" y2="232"/><text class="tick" x="543.6" y="250" text-anchor="middle">160%</text><line class="grid" x1="584.0" x2="584.0" y1="26" y2="232"/><text class="tick" x="584.0" y="250" text-anchor="middle">180%</text><text class="barlabel" x="210" y="47" text-anchor="end">Dice, cards, urns, coins</text><rect class="bar" x="220" y="34" width="225.0" height="18" rx="3"/><line class="whisker" x1="440.2" x2="449.7" y1="43" y2="43"/><text class="value" x="457.7" y="47">111%</text><rect class="hitbar" x="220" y="28" width="364" height="30" data-tip="Dice, cards, urns, coins: the four outcomes sum to 111% on average (200 sets)"/><text class="barlabel" x="210" y="81" text-anchor="end">Base-rate populations</text><rect class="bar" x="220" y="68" width="258.9" height="18" rx="3"/><line class="whisker" x1="475.5" x2="482.4" y1="77" y2="77"/><text class="value" x="490.4" y="81">128%</text><rect class="hitbar" x="220" y="62" width="364" height="30" data-tip="Base-rate populations: the four outcomes sum to 128% on average (200 sets)"/><text class="barlabel" x="210" y="115" text-anchor="end">Policies, 2 exceptions deep</text><rect class="bar" x="220" y="102" width="238.3" height="18" rx="3"/><line class="whisker" x1="445.2" x2="471.3" y1="111" y2="111"/><text class="value" x="479.3" y="115">118%</text><rect class="hitbar" x="220" y="96" width="364" height="30" data-tip="Policies, 2 exceptions deep: the four outcomes sum to 118% on average (52 sets)"/><text class="barlabel" x="210" y="149" text-anchor="end">Policies, 3 exceptions deep</text><rect class="bar" x="220" y="136" width="284.3" height="18" rx="3"/><line class="whisker" x1="487.0" x2="521.6" y1="145" y2="145"/><text class="value" x="529.6" y="149">141%</text><rect class="hitbar" x="220" y="130" width="364" height="30" data-tip="Policies, 3 exceptions deep: the four outcomes sum to 141% on average (52 sets)"/><text class="barlabel" x="210" y="183" text-anchor="end">Policies, 4 exceptions deep</text><rect class="bar" x="220" y="170" width="313.0" height="18" rx="3"/><line class="whisker" x1="515.7" x2="550.3" y1="179" y2="179"/><text class="value" x="558.3" y="183">155%</text><rect class="hitbar" x="220" y="164" width="364" height="30" data-tip="Policies, 4 exceptions deep: the four outcomes sum to 155% on average (48 sets)"/><text class="barlabel" x="210" y="217" text-anchor="end">Policies, 5 exceptions deep</text><rect class="bar" x="220" y="204" width="342.3" height="18" rx="3"/><line class="whisker" x1="546.6" x2="577.9" y1="213" y2="213"/><text class="value" x="585.9" y="217">169%</text><rect class="hitbar" x="220" y="198" width="364" height="30" data-tip="Policies, 5 exceptions deep: the four outcomes sum to 169% on average (48 sets)"/><line class="ref" x1="422.2" x2="422.2" y1="26" y2="232"/><text class="reflabel" x="422.2" y="18" text-anchor="middle">should be exactly 100%</text></svg><figcaption>Jev's four separate yes/no answers for “A and B”, “A and not B”, “not A and B” and “neither”, added up. Exactly one of them is true, so a coherent set sums to 100%. Whiskers show the likely range.</figcaption></figure>
+  <div class="means"><div class="plabel">What it means</div><p>Use Jev's answers to single statements and do the probability arithmetic (AND, OR, NOT) in code. Don't quote its compound probabilities as prices or odds, and for chance events prefer yes/no questions over one multiple choice.</p></div>
+  <details><summary>Full data tables for E14</summary><div class="dbody"><p>E14 - Can you Dutch-book Jev? (coherence of its probabilities as prices)</p>
+<p>Treat every Jev probability as the price of a $1 ticket that pays if the statement is true. A set of prices is COHERENT if no combination of bets (buy or sell each ticket, at most $1 of each) wins money in every possible world. The Dutch-book value g = the largest guaranteed profit a bettor can lock in against Jev's prices; g = 0 exactly when the prices are consistent with some probability distribution (de Finetti). Conditional prices ("B, given that A") are called-off bets: refunded if A turns out false.</p>
+<pre class="method">Each set is two statements A and B about one situation, so there are 4 worlds (AB, A¬B, ¬AB, ¬A¬B).
+Families (200 sets each):
+  chance    dice / cards / urn without replacement / biased coin; exact true probabilities by enumeration
+  baserate  a population with counts or percentages (patients, employees, emails, parcels, students);
+            exact true probabilities; includes the classic &quot;P(condition | positive test)&quot; setup
+  policy    nested-exception policy cases (depth 2-5), A = item 1 is &lt;yes&gt;, B = item 2 is &lt;yes&gt;; truth is 0/1
+Calls per set (every question in its own call unless noted):
+  A, ¬A, B, ¬B, A∧B, A∨B, A∧¬B, ¬A∧B, ¬A∧¬B       9 unconditional prices
+  B|A, A|B                                        conditioning: &quot;It is known that the following is true: ...&quot;
+                                                  added to the state (chance and baserate only)
+  A again                                         noise floor: arbitrage from re-asking the same price
+  bundled                                         the 9 unconditional questions in ONE call
+  choice                                          one Choice over the 4 worlds (coherent by construction)
+Dutch book solved exactly: g = min over distributions λ on the 4 worlds of Σ_i |E_λ[payoff of bet i]| (LP dual),
+minimised by enumerating the vertices of the arrangement. Baselines: uniformly random prices on the same events.
+Outputs: data/e14_dutch_book/dataset.jsonl (every set: state, statements, true probabilities, the requests),
+data/e14_dutch_book/answers.jsonl (prices, Dutch-book values and checks per set), logs/e14_dutch_book/calls.jsonl.</pre>
+<h5>Guaranteed profit against Jev's prices (per set; each ticket at most $1)</h5>
+<div class="scroll"><table><thead><tr><th>family</th><th>prices</th><th>mean</th><th>median</th><th>sets &gt; $0.05</th><th>sets &gt; $0.20</th><th>max</th></tr></thead><tbody><tr><td>chance</td><td>separate calls, all prices</td><td>$0.479</td><td>$0.445</td><td>100%</td><td>98%</td><td>$1.47</td></tr><tr><td>chance</td><td>separate calls, 9 unconditional prices</td><td>$0.434</td><td>$0.400</td><td>100%</td><td>96%</td><td>$1.46</td></tr><tr><td>chance</td><td>one bundled call, same 9 prices</td><td>$0.439</td><td>$0.400</td><td>100%</td><td>96%</td><td>$1.54</td></tr><tr><td>chance</td><td>noise floor: same price asked twice</td><td>$0.008</td><td>$0.010</td><td>0%</td><td>0%</td><td>$0.03</td></tr><tr><td>chance</td><td>truth + random noise of Jev's error size (mean error 0.070 vs Jev 0.075)</td><td>$0.544</td><td>$0.528</td><td>100%</td><td>100%</td><td>$1.02</td></tr><tr><td>chance</td><td>random prices (baseline)</td><td>$2.241</td><td>$2.207</td><td>100%</td><td>100%</td><td>$3.93</td></tr><tr><td>baserate</td><td>separate calls, all prices</td><td>$0.629</td><td>$0.633</td><td>100%</td><td>100%</td><td>$1.26</td></tr><tr><td>baserate</td><td>separate calls, 9 unconditional prices</td><td>$0.554</td><td>$0.550</td><td>100%</td><td>99%</td><td>$1.09</td></tr><tr><td>baserate</td><td>one bundled call, same 9 prices</td><td>$0.542</td><td>$0.540</td><td>100%</td><td>99%</td><td>$1.12</td></tr><tr><td>baserate</td><td>noise floor: same price asked twice</td><td>$0.005</td><td>$0.000</td><td>0%</td><td>0%</td><td>$0.02</td></tr><tr><td>baserate</td><td>truth + random noise of Jev's error size (mean error 0.074 vs Jev 0.078)</td><td>$0.564</td><td>$0.560</td><td>100%</td><td>100%</td><td>$1.00</td></tr><tr><td>baserate</td><td>random prices (baseline)</td><td>$2.210</td><td>$2.204</td><td>100%</td><td>100%</td><td>$4.17</td></tr><tr><td>policy</td><td>separate calls, 9 unconditional prices</td><td>$0.658</td><td>$0.620</td><td>99%</td><td>80%</td><td>$1.91</td></tr><tr><td>policy</td><td>one bundled call, same 9 prices</td><td>$0.658</td><td>$0.630</td><td>98%</td><td>79%</td><td>$2.00</td></tr><tr><td>policy</td><td>noise floor: same price asked twice</td><td>$0.030</td><td>$0.020</td><td>19%</td><td>0%</td><td>$0.41</td></tr><tr><td>policy</td><td>truth + random noise of Jev's error size (mean error 0.113 vs Jev 0.231)</td><td>$0.858</td><td>$0.832</td><td>98%</td><td>97%</td><td>$1.85</td></tr><tr><td>policy</td><td>random prices (baseline)</td><td>$2.016</td><td>$2.034</td><td>100%</td><td>100%</td><td>$3.75</td></tr></tbody></table></div>
+<h5>Where the arbitrage comes from</h5>
+<p>Dutch book on subsets of the separate-call prices; signed error = mean (price − true probability), positive = overpriced; last column = the Choice's top-cell probability vs the true top-cell probability.</p>
+<div class="scroll"><table><thead><tr><th>family</th><th>A and ¬A only</th><th>the 4 joint cells only</th><th>A, B, A∧B, A∨B only</th><th>atoms</th><th>negations</th><th>AND</th><th>OR</th><th>cells with ¬</th><th>Choice top cell (Jev vs truth)</th></tr></thead><tbody><tr><td>chance</td><td>$0.073</td><td>$0.154</td><td>$0.145</td><td>-0.026</td><td>-0.032</td><td>+0.030</td><td>+0.026</td><td>+0.027</td><td>0.77 vs 0.51</td></tr><tr><td>baserate</td><td>$0.036</td><td>$0.280</td><td>$0.209</td><td>-0.025</td><td>+0.074</td><td>-0.026</td><td>+0.183</td><td>+0.102</td><td>0.61 vs 0.57</td></tr><tr><td>policy</td><td>$0.088</td><td>$0.453</td><td>$0.118</td><td>+0.010</td><td>+0.068</td><td>+0.071</td><td>+0.003</td><td>+0.126</td><td>0.72 vs 1.00</td></tr></tbody></table></div>
+<h5>Coherence checks (means; separate calls)</h5>
+<div class="scroll"><table><thead><tr><th>check</th><th>chance</th><th>baserate</th><th>policy</th></tr></thead><tbody><tr><td>complement</td><td>P(A)+P(¬A)−1</td><td></td><td>0.073</td><td>0.036</td><td>0.088</td></tr><tr><td>four cells: mean Σ</td><td>1.112</td><td>1.280</td><td>1.449</td></tr><tr><td>four cells: share with</td><td>Σ−1</td><td>&gt; 0.1</td><td>0.570</td><td>0.955</td><td>0.780</td></tr><tr><td>P(A∧B) &gt; min(P(A),P(B)) + 0.05</td><td>0.090</td><td>0.010</td><td>0.220</td></tr><tr><td>P(A∨B) &lt; max(P(A),P(B)) − 0.05</td><td>0.005</td><td>0.000</td><td>0.100</td></tr><tr><td></td><td>P(A∨B) − (P(A)+P(B)−P(A∧B))</td><td></td><td>0.145</td><td>0.209</td><td>0.113</td></tr><tr><td></td><td>P(A) − (P(A∧B)+P(A∧¬B))</td><td></td><td>0.115</td><td>0.105</td><td>0.207</td></tr><tr><td></td><td>P(B</td><td>A)·P(A) − P(A∧B)</td><td></td><td>0.073</td><td>0.034</td><td>—</td></tr><tr><td></td><td>P(A</td><td>B)·P(B) − P(B</td><td>A)·P(A)</td><td>(Bayes)</td><td>0.027</td><td>0.030</td><td>—</td></tr></tbody></table></div>
+<h5>Error against the true probability (mean |price − truth|; policy truth is 0/1)</h5>
+<div class="scroll"><table><thead><tr><th>question</th><th>chance</th><th>baserate</th><th>policy</th></tr></thead><tbody><tr><td>atoms (A, B)</td><td>0.053</td><td>0.035</td><td>0.222</td></tr><tr><td>negations</td><td>0.061</td><td>0.076</td><td>0.229</td></tr><tr><td>AND</td><td>0.072</td><td>0.040</td><td>0.210</td></tr><tr><td>OR</td><td>0.092</td><td>0.184</td><td>0.217</td></tr><tr><td>joint cells (with ¬)</td><td>0.087</td><td>0.106</td><td>0.249</td></tr><tr><td>conditional B</td><td>A</td><td>0.082</td><td>0.037</td><td>—</td></tr><tr><td>conditional A</td><td>B</td><td>0.085</td><td>0.054</td><td>—</td></tr><tr><td>joint cells via one Choice</td><td>0.206</td><td>0.066</td><td>0.176</td></tr><tr><td>joint cells via 4 separate Nouls</td><td>0.083</td><td>0.090</td><td>0.239</td></tr></tbody></table></div>
+<h5>Base rates: counts vs percentages</h5>
+<p>Inverse confusion = P(A|B) lies closer to the true P(B|A) than to the true P(A|B) (sets where the two differ by more than 0.2).</p>
+<div class="scroll"><table><thead><tr><th>format</th><th>sets</th><th>error P(A</th><th>B)</th><th>error P(B</th><th>A)</th><th>inverse confusion</th><th>mean Dutch book</th></tr></thead><tbody><tr><td>counts</td><td>100</td><td>0.051</td><td>0.048</td><td>6% of 54</td><td>$0.672</td></tr><tr><td>percent</td><td>100</td><td>0.058</td><td>0.026</td><td>5% of 44</td><td>$0.587</td></tr></tbody></table></div>
+<h5>By setup</h5>
+<div class="scroll"><table><thead><tr><th>family</th><th>setup</th><th>sets</th><th>mean Dutch book (all prices)</th><th>mean error</th></tr></thead><tbody><tr><td>chance</td><td>cards</td><td>50</td><td>$0.445</td><td>0.055</td></tr><tr><td>chance</td><td>coin</td><td>50</td><td>$0.426</td><td>0.068</td></tr><tr><td>chance</td><td>dice</td><td>50</td><td>$0.476</td><td>0.088</td></tr><tr><td>chance</td><td>urn</td><td>50</td><td>$0.568</td><td>0.088</td></tr><tr><td>baserate</td><td>emails</td><td>40</td><td>$0.450</td><td>0.058</td></tr><tr><td>baserate</td><td>employees</td><td>40</td><td>$0.686</td><td>0.081</td></tr><tr><td>baserate</td><td>parcels</td><td>40</td><td>$0.654</td><td>0.088</td></tr><tr><td>baserate</td><td>patients</td><td>40</td><td>$0.704</td><td>0.083</td></tr><tr><td>baserate</td><td>students</td><td>40</td><td>$0.654</td><td>0.079</td></tr><tr><td>policy</td><td>access</td><td>50</td><td>$0.682</td><td>0.222</td></tr><tr><td>policy</td><td>expense</td><td>50</td><td>$0.700</td><td>0.252</td></tr><tr><td>policy</td><td>insurance</td><td>50</td><td>$0.630</td><td>0.223</td></tr><tr><td>policy</td><td>library</td><td>50</td><td>$0.619</td><td>0.225</td></tr></tbody></table></div>
+<h5>Policy family by rule depth</h5>
+<div class="scroll"><table><thead><tr><th>depth</th><th>sets</th><th>mean Dutch book (9 prices)</th><th>sets &gt; $0.05</th><th>error on A</th></tr></thead><tbody><tr><td>2</td><td>52</td><td>$0.286</td><td>96%</td><td>0.106</td></tr><tr><td>3</td><td>52</td><td>$0.612</td><td>100%</td><td>0.217</td></tr><tr><td>4</td><td>48</td><td>$0.798</td><td>100%</td><td>0.247</td></tr><tr><td>5</td><td>48</td><td>$0.971</td><td>100%</td><td>0.338</td></tr></tbody></table></div>
+<h5>Most exploitable set (#525, policy/access, guaranteed profit $1.91)</h5>
+<p>State: FACILITY ACCESS CONTROL POLICY Each request is decided by the rule for its category. Within a rule, every exception clause is only considered if the clause immediately before it applied; when an exception applies, its decision replaces the previous one.</p>
+<p>Rule 1 (loading dock): loading dock items are granted by default. Exception: if no NDA is on file, it is denied instead. But if, in addition, the person has more than 1 open security incidents, it is granted after all. Even then, if the person's home site is a partner site, it is denied. But if, in addition, entry is requested after 12:00, it is granted after all. Even then, if the entry date is not a public holiday, it is denied. Rule 2 (server room): server room items are denied by default. Exception: if the person has more than 1 open security incidents, it is granted instead. Even then, if no NDA is on file, it is denied. Even then, if the person's home site is not the east campus, it is granted. Further exception to the previous clause: if the badge clearance is at most level 7, it is denied. But if, in addition, the biometric check did not pass, it is granted after all.</p>
+<p>CASE - Request 1 (category: server room) - open security incidents: 2; months with the organization: 51 months; person type: an auditor; home site: headquarters; biometric check passed: no; badge clearance level: level 7; NDA signed: no. - Request 2 (category: loading dock) - safety training completed: no; requested entry time: 9:00; person type: an auditor; open security incidents: 2; on a public holiday: yes; NDA signed: no; home site: the east campus.</p>
+<div class="scroll"><table><thead><tr><th>event</th><th>question</th><th>Jev price</th><th>true probability</th></tr></thead><tbody><tr><td>A</td><td>Under the policy, Request 1 (server room) is granted.</td><td>0.680</td><td>1.000</td></tr><tr><td>nA</td><td>It is not the case that under the policy, Request 1 (server room) is granted.</td><td>0.620</td><td>0.000</td></tr><tr><td>B</td><td>Under the policy, Request 2 (loading dock) is granted.</td><td>0.770</td><td>1.000</td></tr><tr><td>nB</td><td>It is not the case that under the policy, Request 2 (loading dock) is granted.</td><td>0.540</td><td>0.000</td></tr><tr><td>AB</td><td>Both of the following are true: (1) under the policy, Request 1 (server room) is granted; (2) under the policy, Request 2 (loading dock) is granted.</td><td>0.640</td><td>1.000</td></tr><tr><td>AoB</td><td>At least one of the following is true: (1) under the policy, Request 1 (server room) is granted; (2) under the policy, Request 2 (loading dock) is granted.</td><td>0.790</td><td>1.000</td></tr><tr><td>AnB</td><td>Both of the following are true: (1) under the policy, Request 1 (server room) is granted; (2) it is not the case that under the policy, Request 2 (loading dock) is granted.</td><td>0.600</td><td>0.000</td></tr><tr><td>nAB</td><td>Both of the following are true: (1) it is not the case that under the policy, Request 1 (server room) is granted; (2) under the policy, Request 2 (loading dock) is granted.</td><td>0.560</td><td>0.000</td></tr><tr><td>nAnB</td><td>Both of the following are true: (1) it is not the case that under the policy, Request 1 (server room) is granted; (2) it is not the case that under the policy, Request 2 (loading dock) is granted.</td><td>0.500</td><td>0.000</td></tr></tbody></table></div></div></details>
+</section>
+<section class="exp" id="e15">
+  <header class="exp-head">
+    <span class="eid">E15</span>
+    <h3>Can reasoning written into the input help it?</h3>
+    <span class="chip good">Strong</span>
+  </header>
+  <div class="parts">
+    <div class="part"><div class="plabel">What it asks</div><p>Jev can't reason step by step on its own. If code or another AI writes the reasoning into the input, does Jev use it, or does it just copy whatever conclusion the notes state?</p></div>
+    <div class="part"><div class="plabel">How we tested</div><ul><li>400 policy scenarios with 1 to 10 stacked exceptions. For each, a program wrote exact reasoning notes about one item: every exception checked in order, quoting the fact it depends on.</li><li>Each scenario was sent 10 ways: no notes (twice); all steps without a conclusion; all steps with the right conclusion; all steps with a <i>wrong</i> conclusion (also once labelled “verified result from the rule engine”); one wrong step with a conclusion that follows it; a conclusion only (right or wrong); and only the first half of the steps. 4,000 requests.</li></ul></div>
+    <div class="part"><div class="plabel">What we found</div><ul><li>With all the steps written out and no conclusion, it was right <b>99.5%</b> of the time, and 100% on the deepest rules, where it otherwise manages 69%. Half the steps helped much less (78%).</li><li>It <b>reads the steps</b>. When correct steps ended in a wrong conclusion, it followed the steps 99% of the time. A conclusion on its own, without steps, was mostly ignored.</li><li>But label the same notes “verified” and it copied the wrong conclusion <b>36%</b> of the time, and half the time on the deepest rules. It defers to authority, as in E04 and E13.</li><li>One plausible wrong step misled it on deep rules: 59% correct, worse than having no notes at all.</li></ul></div>
+  </div>
+  <figure><svg id="c-reason" class="chart" viewBox="0 0 640 260" role="img"><line class="grid" x1="250.0" x2="250.0" y1="26" y2="232"/><text class="tick" x="250.0" y="250" text-anchor="middle">0%</text><line class="grid" x1="316.8" x2="316.8" y1="26" y2="232"/><text class="tick" x="316.8" y="250" text-anchor="middle">20%</text><line class="grid" x1="383.6" x2="383.6" y1="26" y2="232"/><text class="tick" x="383.6" y="250" text-anchor="middle">40%</text><line class="grid" x1="450.4" x2="450.4" y1="26" y2="232"/><text class="tick" x="450.4" y="250" text-anchor="middle">60%</text><line class="grid" x1="517.2" x2="517.2" y1="26" y2="232"/><text class="tick" x="517.2" y="250" text-anchor="middle">80%</text><line class="grid" x1="584.0" x2="584.0" y1="26" y2="232"/><text class="tick" x="584.0" y="250" text-anchor="middle">100%</text><text class="barlabel" x="240" y="47" text-anchor="end">First half of the steps</text><rect class="bar" x="250" y="34" width="258.9" height="18" rx="3"/><line class="whisker" x1="485.2" x2="528.2" y1="43" y2="43"/><text class="value" x="536.2" y="47">78%</text><rect class="hitbar" x="250" y="28" width="334" height="30" data-tip="First half of the steps: 78% correct on rules 7–10 exceptions deep (160 cases)"/><text class="barlabel" x="240" y="81" text-anchor="end">All steps, no conclusion</text><rect class="bar" x="250" y="68" width="334.0" height="18" rx="3"/><line class="whisker" x1="576.2" x2="584.0" y1="77" y2="77"/><text class="value" x="592.0" y="81">100%</text><rect class="hitbar" x="250" y="62" width="334" height="30" data-tip="All steps, no conclusion: 100% correct on rules 7–10 exceptions deep (160 cases)"/><text class="barlabel" x="240" y="115" text-anchor="end">All steps + a WRONG conclusion</text><rect class="bar" x="250" y="102" width="329.8" height="18" rx="3"/><line class="whisker" x1="569.2" x2="582.9" y1="111" y2="111"/><text class="value" x="590.9" y="115">99%</text><rect class="hitbar" x="250" y="96" width="334" height="30" data-tip="All steps + a WRONG conclusion: 99% correct on rules 7–10 exceptions deep (160 cases)"/><text class="barlabel" x="240" y="149" text-anchor="end">Same, labelled “verified”</text><rect class="bar emph" x="250" y="136" width="162.8" height="18" rx="3"/><line class="whisker" x1="387.4" x2="438.5" y1="145" y2="145"/><text class="value" x="446.5" y="149">49%</text><rect class="hitbar" x="250" y="130" width="334" height="30" data-tip="Same, labelled “verified”: 49% correct on rules 7–10 exceptions deep (160 cases)"/><text class="barlabel" x="240" y="183" text-anchor="end">One wrong step, conclusion follows it</text><rect class="bar emph" x="250" y="170" width="198.3" height="18" rx="3"/><line class="whisker" x1="422.4" x2="472.7" y1="179" y2="179"/><text class="value" x="480.7" y="183">59%</text><rect class="hitbar" x="250" y="164" width="334" height="30" data-tip="One wrong step, conclusion follows it: 59% correct on rules 7–10 exceptions deep (160 cases)"/><text class="barlabel" x="240" y="217" text-anchor="end">Only a WRONG conclusion</text><rect class="bar" x="250" y="204" width="248.4" height="18" rx="3"/><line class="whisker" x1="474.1" x2="518.9" y1="213" y2="213"/><text class="value" x="526.9" y="217">74%</text><rect class="hitbar" x="250" y="198" width="334" height="30" data-tip="Only a WRONG conclusion: 74% correct on rules 7–10 exceptions deep (160 cases)"/><line class="ref" x1="479.6" x2="479.6" y1="26" y2="232"/><text class="reflabel" x="479.6" y="18" text-anchor="middle">no notes: 69%</text></svg><figcaption>Share of answers correct on the deepest rules (7–10 stacked exceptions) with different reasoning notes in the input. The dashed line is the score with no notes. Red bars are where the notes made it worse. Whiskers show the likely range.</figcaption></figure>
+  <div class="means"><div class="plabel">What it means</div><p>This is the way past the depth limit: have code or an LLM write out the steps and let Jev decide from them. Leave the final answer out, never label the notes as verified, and check the steps themselves, because a wrong step is the one thing it often won't catch.</p></div>
+  <details><summary>Full data tables for E15</summary><div class="dbody"><p>E15 - Attaching reasoning to Jev: does it read the reasoning or copy the conclusion?</p>
+<p>Jev has no reasoning step. The cheapest way to add one is to write reasoning into the state (from code or an LLM) and let Jev decide. This tests what Jev does with it, using reasoning traces generated exactly from the case's rule chain (every exception check, in order, with the fact it depends on).</p>
+<pre class="method">400 cases (K=2, depths 1-10, 40 per depth, 10 per domain). The trace is about item 1 only; questions: A0 (item
+1, the target) and A1 (item 2, no trace - spillover control). Conditions (notes appended after the CASE section
+under &quot;ANALYSIS NOTES (written by an assistant; may contain mistakes):&quot; unless stated):
+  none                  no notes (the E08 setting); none_r1 = the same request again (noise floor)
+  steps                 every exception check, correct, NO final answer
+  steps_concl           the same steps + the correct conclusion
+  steps_wrongconcl      the same correct steps + a conclusion that contradicts them
+  steps_wrongconcl_verified   as above, headed &quot;VERIFIED RESULT FROM THE RULE ENGINE:&quot; instead
+  flawed                one step&#x27;s judgement is wrong (the fact quoted is right, &quot;holds&quot; / &quot;does not hold&quot;
+                        is flipped), later steps follow from the error, and the conclusion follows the error
+  concl_only_right      only &quot;Conclusion: &lt;item&gt; is &lt;correct answer&gt;.&quot;
+  concl_only_wrong      only &quot;Conclusion: &lt;item&gt; is &lt;wrong answer&gt;.&quot;
+  partial               the first max(1, depth // 2) checks only, then &quot;Remaining exceptions have not been checked yet.&quot;
+Outputs: data/e15_reasoning/dataset.jsonl (every request + the trace&#x27;s stated conclusion), data/e15_reasoning/
+answers.jsonl (per-call derived fields), logs/e15_reasoning/calls.jsonl (every API call in full).</pre>
+<p>Re-asking the identical no-notes request flipped 6.5% of A0 decisions (noise floor).</p>
+<h5>All depths</h5>
+<div class="scroll"><table><thead><tr><th>notes in the state</th><th>A0 accuracy [95% CI]</th><th>mean confidence</th><th>decision = stated conclusion [95% CI]</th><th>A1 accuracy (no notes about it)</th></tr></thead><tbody><tr><td>no notes</td><td>78.5% [74.2%–82.2%]</td><td>0.73</td><td>—</td><td>81.5%</td></tr><tr><td>no notes, asked again (noise floor)</td><td>79.5% [75.3%–83.2%]</td><td>0.74</td><td>—</td><td>80.0%</td></tr><tr><td>correct steps, no conclusion</td><td>99.5% [98.2%–99.9%]</td><td>0.93</td><td>—</td><td>79.5%</td></tr><tr><td>correct steps + correct conclusion</td><td>99.2% [97.8%–99.7%]</td><td>0.92</td><td>99.2% [97.8%–99.7%]</td><td>79.0%</td></tr><tr><td>correct steps + WRONG conclusion</td><td>99.0% [97.5%–99.6%]</td><td>0.89</td><td>1.0% [0.4%–2.5%]</td><td>78.2%</td></tr><tr><td>correct steps + WRONG conclusion, labelled “verified”</td><td>64.0% [59.2%–68.6%]</td><td>0.74</td><td>36.0% [31.4%–40.8%]</td><td>80.2%</td></tr><tr><td>one wrong step, conclusion follows it</td><td>73.2% [68.7%–77.4%]</td><td>0.78</td><td>35.8% [31.2%–40.6%]</td><td>77.2%</td></tr><tr><td>conclusion only, correct</td><td>74.0% [69.5%–78.1%]</td><td>0.73</td><td>74.0% [69.5%–78.1%]</td><td>79.8%</td></tr><tr><td>conclusion only, WRONG</td><td>82.0% [77.9%–85.5%]</td><td>0.73</td><td>18.0% [14.5%–22.1%]</td><td>79.2%</td></tr><tr><td>first half of the steps only</td><td>82.8% [78.7%–86.1%]</td><td>0.80</td><td>—</td><td>79.0%</td></tr></tbody></table></div>
+<h5>When the notes state a wrong conclusion</h5>
+<div class="scroll"><table><thead><tr><th>notes</th><th>follows the stated conclusion</th><th>A0 accuracy</th><th>right without notes → wrong with them</th></tr></thead><tbody><tr><td>correct steps + WRONG conclusion</td><td>1.0%</td><td>99.0%</td><td>0.3% of 314</td></tr><tr><td>correct steps + WRONG conclusion, labelled “verified”</td><td>36.0%</td><td>64.0%</td><td>34.7% of 314</td></tr><tr><td>conclusion only, WRONG</td><td>18.0%</td><td>82.0%</td><td>4.5% of 314</td></tr><tr><td>one wrong step, conclusion follows it (sets whose conclusion is wrong: 268)</td><td>22.0%</td><td>78.0%</td><td>—</td></tr></tbody></table></div>
+<h5>Accuracy by rule depth</h5>
+<div class="scroll"><table><thead><tr><th>depth</th><th>no notes</th><th>correct steps, no conclusion</th><th>first half of the steps only</th><th>correct steps + correct conclusion</th><th>one wrong step, conclusion follows it</th><th>correct steps + WRONG conclusion</th><th>conclusion only, WRONG</th></tr></thead><tbody><tr><td>1</td><td>95.0%</td><td>97.5%</td><td>97.5%</td><td>97.5%</td><td>95.0%</td><td>97.5%</td><td>95.0%</td></tr><tr><td>2</td><td>100.0%</td><td>100.0%</td><td>100.0%</td><td>100.0%</td><td>90.0%</td><td>100.0%</td><td>97.5%</td></tr><tr><td>3</td><td>92.5%</td><td>97.5%</td><td>87.5%</td><td>97.5%</td><td>77.5%</td><td>97.5%</td><td>92.5%</td></tr><tr><td>4</td><td>82.5%</td><td>100.0%</td><td>75.0%</td><td>100.0%</td><td>80.0%</td><td>100.0%</td><td>80.0%</td></tr><tr><td>5</td><td>57.5%</td><td>100.0%</td><td>75.0%</td><td>97.5%</td><td>72.5%</td><td>100.0%</td><td>70.0%</td></tr><tr><td>6</td><td>82.5%</td><td>100.0%</td><td>82.5%</td><td>100.0%</td><td>80.0%</td><td>100.0%</td><td>87.5%</td></tr><tr><td>7</td><td>75.0%</td><td>100.0%</td><td>72.5%</td><td>100.0%</td><td>62.5%</td><td>100.0%</td><td>72.5%</td></tr><tr><td>8</td><td>72.5%</td><td>100.0%</td><td>77.5%</td><td>100.0%</td><td>67.5%</td><td>97.5%</td><td>77.5%</td></tr><tr><td>9</td><td>65.0%</td><td>100.0%</td><td>80.0%</td><td>100.0%</td><td>57.5%</td><td>100.0%</td><td>72.5%</td></tr><tr><td>10</td><td>62.5%</td><td>100.0%</td><td>80.0%</td><td>100.0%</td><td>50.0%</td><td>97.5%</td><td>75.0%</td></tr></tbody></table></div>
+<h5>Accuracy by depth band [95% CI]</h5>
+<div class="scroll"><table><thead><tr><th>depths</th><th>no notes</th><th>correct steps, no conclusion</th><th>first half of the steps only</th><th>correct steps + correct conclusion</th><th>one wrong step, conclusion follows it</th><th>correct steps + WRONG conclusion</th><th>conclusion only, WRONG</th></tr></thead><tbody><tr><td>depth 1-3</td><td>95.8% [90.6%–98.2%]</td><td>98.3% [94.1%–99.5%]</td><td>95.0% [89.5%–97.7%]</td><td>98.3% [94.1%–99.5%]</td><td>87.5% [80.4%–92.3%]</td><td>98.3% [94.1%–99.5%]</td><td>95.0% [89.5%–97.7%]</td></tr><tr><td>depth 4-6</td><td>74.2% [65.7%–81.2%]</td><td>100.0% [96.9%–100.0%]</td><td>77.5% [69.2%–84.1%]</td><td>99.2% [95.4%–99.9%]</td><td>77.5% [69.2%–84.1%]</td><td>100.0% [96.9%–100.0%]</td><td>79.2% [71.1%–85.5%]</td></tr><tr><td>depth 7-10</td><td>68.8% [61.2%–75.4%]</td><td>100.0% [97.7%–100.0%]</td><td>77.5% [70.4%–83.3%]</td><td>100.0% [97.7%–100.0%]</td><td>59.4% [51.6%–66.7%]</td><td>98.8% [95.6%–99.7%]</td><td>74.4% [67.1%–80.5%]</td></tr></tbody></table></div></div></details>
+</section>
+
+<h2 id="recommendations">Recommendations for building with Jev</h2>
+<ol class="recs"><li><b>Strip or label user-written text</b> before sending it to Jev. A single line claiming authority overrides the rules (E04).</li><li><b>Keep logic shallow</b>: about 3 layers of exceptions per question. Split deeper rules into several requests (E08).</li><li><b>Use probabilities, not just yes/no.</b> Treat answers between about 0.3 and 0.7 as “unsure” and route them to a person or a second check (E00).</li><li><b>Ask important questions 3–5 times</b> and take the majority. Identical requests don't always return identical answers (E03).</li><li><b>Keep your prompt template fixed.</b> Reordering or rewording rules changes answers on complex logic (E03).</li><li><b>Count and total in code.</b> Ask about each item separately. For “exactly one of these”, use a single multiple-choice question (E09).</li><li><b>Check required fields in code</b> and offer a “can't tell” option. Jev often guesses when a single fact is missing (E02, E12).</li><li><b>Pre-check with a scale question</b> (“can this be answered?”) to catch missing information. Never ask it as yes/no (E12).</li><li><b>In a conversation, carry Jev's own earlier answers if useful, but never feedback about them.</b> A line saying a reviewer found the answer “incorrect” flips 69% of right answers (E13).</li><li><b>For deep logic, write out the steps and let Jev decide.</b> Leave the conclusion out and never label the notes as verified (E15).</li><li><b>Do probability arithmetic in code.</b> Ask about single statements and combine them yourself. Jev overprices statements containing “not” or “or” (E14).</li><li><b>Batch questions freely</b> and don't worry about long inputs, number or date comparisons, or up to 255 options (E05, E07, E01, E06).</li></ol>
+
+<h2 id="limitations">Limitations</h2>
+<ul class="limits"><li>All scenarios are computer-generated policies (expenses, building access, insurance, library loans). This lets us know the correct answer exactly, but real documents are messier.</li><li>Sample sizes range from 25 to 3,744 per test. The likely ranges are shown in the charts and in the full tables.</li><li>Each result is for one model version (<code>typesafe/jev-1.13-20260917</code>) on 25 September – 1 October 2026. Behaviour may change in later versions.</li><li>The reasoning notes in E15 were generated by a program and are perfectly clean. Reasoning written by an LLM will be messier and was not tested.</li><li>Jev's answers vary between identical requests (E03). Small differences, especially below about 5 percentage points, are within noise.</li><li>We tested Jev on its own. How it compares with a general-purpose LLM on the same tests was out of scope.</li></ul>
+
+<h2 id="cost">Cost and data</h2>
+<p>Every request and response is saved, so any number here can be traced back to the raw data. In the project folder:
+<code>logs/</code> holds every call, <code>results/</code> the per-experiment tables, <code>data/</code> the generated
+datasets, <code>RUN_LOG.md</code> the timestamped history, and <code>experiments/</code> one script per test (re-running
+one resumes where it left off without paying again).</p>
+<div class="scroll"><table><thead><tr><th>experiment</th><th>calls logged</th><th>errors</th><th>cost USD</th><th>input tokens</th></tr></thead><tbody><tr><td>main run (analyze.py)</td><td>600</td><td>0</td><td>$0.0422</td><td>1,005,208</td></tr><tr><td>e01_numbers_negation</td><td>704</td><td>0</td><td>$0.0091</td><td>217,669</td></tr><tr><td>e02_unknowable</td><td>1166</td><td>0</td><td>$0.0299</td><td>712,114</td></tr><tr><td>e03_invariance</td><td>1500</td><td>0</td><td>$0.0497</td><td>1,183,718</td></tr><tr><td>e04_injection</td><td>1050</td><td>0</td><td>$0.0271</td><td>646,233</td></tr><tr><td>e05_independence</td><td>750</td><td>0</td><td>$0.0347</td><td>825,223</td></tr><tr><td>e06_options</td><td>400</td><td>0</td><td>$0.0414</td><td>986,284</td></tr><tr><td>e07_context</td><td>750</td><td>0</td><td>$0.3141</td><td>7,478,547</td></tr><tr><td>e08_depth</td><td>320</td><td>0</td><td>$0.0197</td><td>469,375</td></tr><tr><td>e09_counting</td><td>200</td><td>0</td><td>$0.0089</td><td>211,089</td></tr><tr><td>e11_load</td><td>352</td><td>0</td><td>$0.0178</td><td>423,456</td></tr><tr><td>e12_selftrust</td><td>7488</td><td>0</td><td>$0.4708</td><td>11,210,478</td></tr><tr><td>e13_anchoring</td><td>10011</td><td>11</td><td>$0.2919</td><td>6,950,195</td></tr><tr><td>e14_dutch_book</td><td>8000</td><td>0</td><td>$0.1565</td><td>3,725,429</td></tr><tr><td>e15_reasoning</td><td>4000</td><td>0</td><td>$0.1527</td><td>3,635,945</td></tr><tr><td><strong>total</strong></td><td>37291</td><td>11</td><td>$1.6666</td><td>39,680,963</td></tr></tbody></table></div>
+</div>
+<div id="tip" hidden></div>
+<script>
+(function () {
+  var tip = document.getElementById('tip');
+  document.querySelectorAll('[data-tip]').forEach(function (el) {
+    el.addEventListener('mousemove', function (e) {
+      tip.textContent = el.getAttribute('data-tip'); tip.hidden = false;
+      var x = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8);
+      tip.style.left = x + 'px'; tip.style.top = (e.clientY + 14) + 'px';
+    });
+    el.addEventListener('mouseleave', function () { tip.hidden = true; });
+  });
+})();
+</script>

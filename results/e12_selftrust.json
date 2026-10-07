@@ -1,0 +1,579 @@
+{
+  "headline": {
+    "n": 3744,
+    "determinable": 3004,
+    "undeterminable": 740,
+    "accuracy": 0.8112516644474035,
+    "mean_p_can_determinable": 0.9408988015978695,
+    "mean_p_can_undeterminable": 0.21835135135135136,
+    "spearman_p_can_vs_answer_conf": 0.5344416981487521,
+    "auroc": {
+      "P(can) predicts a correct answer (determinable items)": 0.7471621728221373,
+      "answer's own confidence predicts a correct answer": 0.8466911134124921,
+      "P(can) predicts the answer will be confident (all items)": 0.7343883166532739,
+      "P(can) separates determinable from undeterminable": 0.9766421797963076,
+      "answer confidence separates determinable from undeterminable": 0.5953946539748803,
+      "M_CAN P(yes) predicts a correct answer": 0.6461264789810817,
+      "M_LEVEL P(probably or certain) predicts a correct answer": 0.7471621728221373,
+      "M_CAN P(yes) separates determinable from undeterminable": 0.8616758736099615,
+      "M_LEVEL separates determinable from undeterminable": 0.9766421797963076
+    }
+  },
+  "leakage": {
+    "M_CAN": {
+      "mean_when_true": 0.7898939554612937,
+      "mean_when_false": 0.48913921360255047,
+      "corr_with_answer_p_yes": 0.6789353650274084,
+      "corr_with_answer_conf": 0.2263642620806437
+    },
+    "M_LEVEL": {
+      "mean_when_true": 0.9484623541887592,
+      "mean_when_false": 0.9431880977683316,
+      "corr_with_answer_p_yes": 0.02330199395435099,
+      "corr_with_answer_conf": -0.0020972258674337124
+    }
+  },
+  "undeterminable_noul_direction": {
+    "n": 740,
+    "confident_yes": 32,
+    "confident_no": 321
+  },
+  "families": {
+    "numeric_compare": {
+      "n": 300,
+      "determinable": true,
+      "accuracy": 1.0,
+      "mean_p_can": 1.0,
+      "claim_rate": 1.0,
+      "mean_level": 2.9997333333333334,
+      "mean_answer_conf": 0.9798666666666666,
+      "confident_rate": 1.0,
+      "any_flag_rate": 0.0,
+      "size": "small"
+    },
+    "lookup_choice": {
+      "n": 60,
+      "determinable": true,
+      "accuracy": 1.0,
+      "mean_p_can": 1.0,
+      "claim_rate": 1.0,
+      "mean_level": 2.9998333333333336,
+      "mean_answer_conf": 1.0,
+      "confident_rate": 1.0,
+      "any_flag_rate": 0.0,
+      "size": "small"
+    },
+    "date_compare": {
+      "n": 160,
+      "determinable": true,
+      "accuracy": 1.0,
+      "mean_p_can": 0.9994375,
+      "claim_rate": 1.0,
+      "mean_level": 2.9948125,
+      "mean_answer_conf": 0.9799374999999999,
+      "confident_rate": 1.0,
+      "any_flag_rate": 0.0,
+      "size": "small"
+    },
+    "negation_stack": {
+      "n": 64,
+      "determinable": true,
+      "accuracy": 0.9375,
+      "mean_p_can": 0.99265625,
+      "claim_rate": 1.0,
+      "mean_level": 2.9665625,
+      "mean_answer_conf": 0.89328125,
+      "confident_rate": 0.796875,
+      "any_flag_rate": 0.5,
+      "size": "small"
+    },
+    "policy_irrelevant_fact_missing": {
+      "n": 200,
+      "determinable": true,
+      "accuracy": 0.87,
+      "mean_p_can": 0.9705499999999999,
+      "claim_rate": 0.995,
+      "mean_level": 2.8986,
+      "mean_answer_conf": 0.8382,
+      "confident_rate": 0.69,
+      "any_flag_rate": 0.645,
+      "size": "medium"
+    },
+    "policy_atom": {
+      "n": 800,
+      "determinable": true,
+      "accuracy": 0.7725,
+      "mean_p_can": 0.965775,
+      "claim_rate": 0.99875,
+      "mean_level": 2.8847625,
+      "mean_answer_conf": 0.73985,
+      "confident_rate": 0.41125,
+      "any_flag_rate": 0.7925,
+      "size": "medium"
+    },
+    "long_context_atom": {
+      "n": 150,
+      "determinable": true,
+      "accuracy": 0.9533333333333334,
+      "mean_p_can": 0.9567333333333333,
+      "claim_rate": 0.98,
+      "mean_level": 2.8622,
+      "mean_answer_conf": 0.8858666666666667,
+      "confident_rate": 0.8466666666666667,
+      "any_flag_rate": 0.6266666666666667,
+      "size": "huge"
+    },
+    "policy_joint_choice": {
+      "n": 300,
+      "determinable": true,
+      "accuracy": 0.79,
+      "mean_p_can": 0.9529666666666666,
+      "claim_rate": 0.9966666666666667,
+      "mean_level": 2.8286000000000002,
+      "mean_answer_conf": 0.6663333333333333,
+      "confident_rate": 0.47333333333333333,
+      "any_flag_rate": 0.5366666666666666,
+      "size": "medium"
+    },
+    "policy_subset_choice": {
+      "n": 300,
+      "determinable": true,
+      "accuracy": 0.71,
+      "mean_p_can": 0.9503333333333334,
+      "claim_rate": 1.0,
+      "mean_level": 2.8224666666666667,
+      "mean_answer_conf": 0.6703,
+      "confident_rate": 0.42333333333333334,
+      "any_flag_rate": 0.61,
+      "size": "medium"
+    },
+    "policy_count_score": {
+      "n": 300,
+      "determinable": true,
+      "accuracy": 0.71,
+      "mean_p_can": 0.9436333333333332,
+      "claim_rate": 1.0,
+      "mean_level": 2.7801,
+      "mean_answer_conf": 0.6898666666666667,
+      "confident_rate": 0.3466666666666667,
+      "any_flag_rate": 0.6666666666666666,
+      "size": "medium"
+    },
+    "authority_injection": {
+      "n": 150,
+      "determinable": true,
+      "accuracy": 0.31333333333333335,
+      "mean_p_can": 0.9280000000000002,
+      "claim_rate": 1.0,
+      "mean_level": 2.777066666666667,
+      "mean_answer_conf": 0.6843333333333333,
+      "confident_rate": 0.21333333333333335,
+      "any_flag_rate": 1.0,
+      "size": "medium"
+    },
+    "roster_search_choice": {
+      "n": 160,
+      "determinable": true,
+      "accuracy": 0.95,
+      "mean_p_can": 0.81525,
+      "claim_rate": 1.0,
+      "mean_level": 2.45625,
+      "mean_answer_conf": 0.84375,
+      "confident_rate": 0.6625,
+      "any_flag_rate": 0.56875,
+      "size": "large"
+    },
+    "policy_decisive_fact_missing": {
+      "n": 300,
+      "determinable": false,
+      "accuracy": null,
+      "mean_p_can": 0.45966666666666667,
+      "claim_rate": 0.41,
+      "mean_level": 1.3482666666666667,
+      "mean_answer_conf": 0.7094666666666667,
+      "confident_rate": 0.26666666666666666,
+      "any_flag_rate": 0.69,
+      "size": "medium"
+    },
+    "general_knowledge": {
+      "n": 60,
+      "determinable": true,
+      "accuracy": 1.0,
+      "mean_p_can": 0.151,
+      "claim_rate": 0.0,
+      "mean_level": 0.4901666666666667,
+      "mean_answer_conf": 0.966,
+      "confident_rate": 0.9833333333333333,
+      "any_flag_rate": 0.9833333333333333,
+      "size": "small"
+    },
+    "policy_no_rule": {
+      "n": 200,
+      "determinable": false,
+      "accuracy": null,
+      "mean_p_can": 0.1015,
+      "claim_rate": 0.02,
+      "mean_level": 0.33030000000000004,
+      "mean_answer_conf": 0.8262,
+      "confident_rate": 0.745,
+      "any_flag_rate": 0.765,
+      "size": "medium"
+    },
+    "fact_not_in_state": {
+      "n": 200,
+      "determinable": false,
+      "accuracy": null,
+      "mean_p_can": 0.0169,
+      "claim_rate": 0.0,
+      "mean_level": 0.0558,
+      "mean_answer_conf": 0.80035,
+      "confident_rate": 0.565,
+      "any_flag_rate": 0.57,
+      "size": "medium"
+    },
+    "personal_unknowable": {
+      "n": 40,
+      "determinable": false,
+      "accuracy": null,
+      "mean_p_can": 0.0,
+      "claim_rate": 0.0,
+      "mean_level": 0.00125,
+      "mean_answer_conf": 0.8130000000000001,
+      "confident_rate": 0.725,
+      "any_flag_rate": 0.725,
+      "size": "small"
+    }
+  },
+  "flags": {
+    "claimed_can_then_unsure": {
+      "count": 1349,
+      "denominator": 3744,
+      "rate": 0.36030982905982906,
+      "by_family": {
+        "policy_atom": 470,
+        "policy_joint_choice": 157,
+        "policy_subset_choice": 173,
+        "policy_count_score": 196,
+        "policy_decisive_fact_missing": 80,
+        "policy_irrelevant_fact_missing": 61,
+        "policy_no_rule": 4,
+        "negation_stack": 13,
+        "roster_search_choice": 54,
+        "long_context_atom": 23,
+        "authority_injection": 118
+      }
+    },
+    "claimed_cant_then_confident": {
+      "count": 390,
+      "denominator": 3744,
+      "rate": 0.10416666666666667,
+      "by_family": {
+        "policy_no_rule": 149,
+        "policy_decisive_fact_missing": 37,
+        "fact_not_in_state": 113,
+        "long_context_atom": 3,
+        "general_knowledge": 59,
+        "personal_unknowable": 29
+      }
+    },
+    "claimed_can_confidently_wrong": {
+      "count": 60,
+      "denominator": 1673,
+      "rate": 0.03586371787208607,
+      "by_family": {
+        "policy_atom": 12,
+        "policy_joint_choice": 4,
+        "policy_subset_choice": 10,
+        "policy_count_score": 3,
+        "policy_irrelevant_fact_missing": 8,
+        "negation_stack": 1,
+        "long_context_atom": 1,
+        "authority_injection": 21
+      }
+    },
+    "claimed_can_on_undeterminable": {
+      "count": 127,
+      "denominator": 740,
+      "rate": 0.17162162162162162,
+      "by_family": {
+        "policy_decisive_fact_missing": 123,
+        "policy_no_rule": 4
+      }
+    },
+    "confident_on_undeterminable": {
+      "count": 371,
+      "denominator": 740,
+      "rate": 0.5013513513513513,
+      "by_family": {
+        "policy_no_rule": 149,
+        "policy_decisive_fact_missing": 80,
+        "fact_not_in_state": 113,
+        "personal_unknowable": 29
+      }
+    },
+    "meta_disagrees_with_itself": {
+      "count": 777,
+      "denominator": 3744,
+      "rate": 0.2075320512820513,
+      "by_family": {
+        "policy_atom": 276,
+        "policy_subset_choice": 1,
+        "policy_count_score": 5,
+        "policy_decisive_fact_missing": 104,
+        "policy_irrelevant_fact_missing": 90,
+        "policy_no_rule": 3,
+        "fact_not_in_state": 1,
+        "negation_stack": 23,
+        "roster_search_choice": 89,
+        "long_context_atom": 80,
+        "authority_injection": 97,
+        "general_knowledge": 8
+      }
+    }
+  },
+  "grid": {
+    "0.5|0.6": {
+      "claim_rate": 0.8186431623931624,
+      "trust_precision": 0.6570962479608483,
+      "overclaim_rate": 0.28071581196581197,
+      "underclaim_rate": 0.017361111111111112
+    },
+    "0.5|0.7": {
+      "claim_rate": 0.8186431623931624,
+      "trust_precision": 0.5911908646003262,
+      "overclaim_rate": 0.3346688034188034,
+      "underclaim_rate": 0.017094017094017096
+    },
+    "0.5|0.8": {
+      "claim_rate": 0.8186431623931624,
+      "trust_precision": 0.5262642740619902,
+      "overclaim_rate": 0.38782051282051283,
+      "underclaim_rate": 0.01655982905982906
+    },
+    "0.5|0.9": {
+      "claim_rate": 0.8186431623931624,
+      "trust_precision": 0.43882544861337686,
+      "overclaim_rate": 0.4594017094017094,
+      "underclaim_rate": 0.016025641025641024
+    },
+    "0.5|0.95": {
+      "claim_rate": 0.8186431623931624,
+      "trust_precision": 0.3703099510603589,
+      "overclaim_rate": 0.5154914529914529,
+      "underclaim_rate": 0.013354700854700854
+    },
+    "0.6|0.6": {
+      "claim_rate": 0.812232905982906,
+      "trust_precision": 0.6606379480434068,
+      "overclaim_rate": 0.27564102564102566,
+      "underclaim_rate": 0.018696581196581196
+    },
+    "0.6|0.7": {
+      "claim_rate": 0.812232905982906,
+      "trust_precision": 0.5948701085169352,
+      "overclaim_rate": 0.32905982905982906,
+      "underclaim_rate": 0.017895299145299144
+    },
+    "0.6|0.8": {
+      "claim_rate": 0.812232905982906,
+      "trust_precision": 0.5300887865833608,
+      "overclaim_rate": 0.3816773504273504,
+      "underclaim_rate": 0.016826923076923076
+    },
+    "0.6|0.9": {
+      "claim_rate": 0.812232905982906,
+      "trust_precision": 0.44195988161788885,
+      "overclaim_rate": 0.453258547008547,
+      "underclaim_rate": 0.016292735042735044
+    },
+    "0.6|0.95": {
+      "claim_rate": 0.812232905982906,
+      "trust_precision": 0.37290365011509374,
+      "overclaim_rate": 0.5093482905982906,
+      "underclaim_rate": 0.013621794871794872
+    },
+    "0.7|0.6": {
+      "claim_rate": 0.7922008547008547,
+      "trust_precision": 0.6662171274443696,
+      "overclaim_rate": 0.2644230769230769,
+      "underclaim_rate": 0.02751068376068376
+    },
+    "0.7|0.7": {
+      "claim_rate": 0.7922008547008547,
+      "trust_precision": 0.6018206338503035,
+      "overclaim_rate": 0.3154380341880342,
+      "underclaim_rate": 0.024305555555555556
+    },
+    "0.7|0.8": {
+      "claim_rate": 0.7922008547008547,
+      "trust_precision": 0.5387727579231288,
+      "overclaim_rate": 0.36538461538461536,
+      "underclaim_rate": 0.020566239316239316
+    },
+    "0.7|0.9": {
+      "claim_rate": 0.7922008547008547,
+      "trust_precision": 0.45178691840863117,
+      "overclaim_rate": 0.4342948717948718,
+      "underclaim_rate": 0.017361111111111112
+    },
+    "0.7|0.95": {
+      "claim_rate": 0.7922008547008547,
+      "trust_precision": 0.38165879973027644,
+      "overclaim_rate": 0.48985042735042733,
+      "underclaim_rate": 0.014155982905982906
+    },
+    "0.8|0.6": {
+      "claim_rate": 0.7711004273504274,
+      "trust_precision": 0.6712850710079667,
+      "overclaim_rate": 0.2534722222222222,
+      "underclaim_rate": 0.03766025641025641
+    },
+    "0.8|0.7": {
+      "claim_rate": 0.7711004273504274,
+      "trust_precision": 0.6072047107724281,
+      "overclaim_rate": 0.30288461538461536,
+      "underclaim_rate": 0.032852564102564104
+    },
+    "0.8|0.8": {
+      "claim_rate": 0.7711004273504274,
+      "trust_precision": 0.5458953931416696,
+      "overclaim_rate": 0.3501602564102564,
+      "underclaim_rate": 0.026442307692307692
+    },
+    "0.8|0.9": {
+      "claim_rate": 0.7711004273504274,
+      "trust_precision": 0.459300311742293,
+      "overclaim_rate": 0.4169337606837607,
+      "underclaim_rate": 0.021100427350427352
+    },
+    "0.8|0.95": {
+      "claim_rate": 0.7711004273504274,
+      "trust_precision": 0.3889851056459993,
+      "overclaim_rate": 0.47115384615384615,
+      "underclaim_rate": 0.01655982905982906
+    },
+    "0.9|0.6": {
+      "claim_rate": 0.7246260683760684,
+      "trust_precision": 0.6903796535200885,
+      "overclaim_rate": 0.22435897435897437,
+      "underclaim_rate": 0.05502136752136752
+    },
+    "0.9|0.7": {
+      "claim_rate": 0.7246260683760684,
+      "trust_precision": 0.6269812016218209,
+      "overclaim_rate": 0.2702991452991453,
+      "underclaim_rate": 0.04674145299145299
+    },
+    "0.9|0.8": {
+      "claim_rate": 0.7246260683760684,
+      "trust_precision": 0.5639513453741246,
+      "overclaim_rate": 0.3159722222222222,
+      "underclaim_rate": 0.03872863247863248
+    },
+    "0.9|0.9": {
+      "claim_rate": 0.7246260683760684,
+      "trust_precision": 0.4773313674898636,
+      "overclaim_rate": 0.3787393162393162,
+      "underclaim_rate": 0.02938034188034188
+    },
+    "0.9|0.95": {
+      "claim_rate": 0.7246260683760684,
+      "trust_precision": 0.40803538518245486,
+      "overclaim_rate": 0.42895299145299143,
+      "underclaim_rate": 0.020833333333333332
+    }
+  },
+  "selective": {
+    "by_p_can": {
+      "0.3": 0.9893143365983972,
+      "0.5": 0.8995726495726496,
+      "0.7": 0.8118320610687023,
+      "0.8": 0.7819699499165276,
+      "0.9": 0.7195013357079252,
+      "1.0": 0.6509081196581197
+    },
+    "by_answer_conf": {
+      "0.3": 0.981300089047195,
+      "0.5": 0.8322649572649573,
+      "0.7": 0.7305343511450382,
+      "0.8": 0.698831385642738,
+      "0.9": 0.6693380825170674,
+      "1.0": 0.6509081196581197
+    },
+    "by_product": {
+      "0.3": 0.9946571682991986,
+      "0.5": 0.9262820512820513,
+      "0.7": 0.8244274809160306,
+      "0.8": 0.781636060100167,
+      "0.9": 0.7195013357079252,
+      "1.0": 0.6509081196581197
+    }
+  },
+  "p_can_bins": {
+    "0": {
+      "n": 411,
+      "undeterminable_share": 0.9513381995133819,
+      "correct": 0.04866180048661801,
+      "correct_and_confident": 0.046228710462287104
+    },
+    "1": {
+      "n": 127,
+      "undeterminable_share": 0.7952755905511811,
+      "correct": 0.2047244094488189,
+      "correct_and_confident": 0.2047244094488189
+    },
+    "2": {
+      "n": 65,
+      "undeterminable_share": 0.8615384615384616,
+      "correct": 0.13846153846153847,
+      "correct_and_confident": 0.13846153846153847
+    },
+    "3": {
+      "n": 41,
+      "undeterminable_share": 0.8780487804878049,
+      "correct": 0.0975609756097561,
+      "correct_and_confident": 0.0975609756097561
+    },
+    "4": {
+      "n": 35,
+      "undeterminable_share": 0.8285714285714286,
+      "correct": 0.17142857142857143,
+      "correct_and_confident": 0.11428571428571428
+    },
+    "5": {
+      "n": 24,
+      "undeterminable_share": 0.7083333333333334,
+      "correct": 0.2916666666666667,
+      "correct_and_confident": 0.041666666666666664
+    },
+    "6": {
+      "n": 75,
+      "undeterminable_share": 0.37333333333333335,
+      "correct": 0.56,
+      "correct_and_confident": 0.18666666666666668
+    },
+    "7": {
+      "n": 79,
+      "undeterminable_share": 0.25316455696202533,
+      "correct": 0.6075949367088608,
+      "correct_and_confident": 0.27848101265822783
+    },
+    "8": {
+      "n": 160,
+      "undeterminable_share": 0.1875,
+      "correct": 0.56875,
+      "correct_and_confident": 0.25625
+    },
+    "9": {
+      "n": 2727,
+      "undeterminable_share": 0.011734506784011734,
+      "correct": 0.8008800880088008,
+      "correct_and_confident": 0.5628896222955629
+    }
+  },
+  "thresholds": {
+    "meta": 0.5,
+    "conf": 0.8,
+    "signal": "level"
+  }
+}

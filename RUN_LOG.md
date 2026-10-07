@@ -1,0 +1,61 @@
+# Run log
+
+Chronological record of every experiment run.
+
+- `2026-09-25T06:16:13` **e01_numbers_negation** — starting: 704 targeted calls
+- `2026-09-25T06:16:51` **e01_numbers_negation** — ran 704 calls in 38s, spent $0.0091, 0 errors (OpenRouter usage before: $0.1132)
+- `2026-09-25T06:18:09` **e02_unknowable** — starting: 1166 calls
+- `2026-09-25T06:19:08` **e02_unknowable** — ran 1166 calls in 59s, spent $0.0299, 0 errors (OpenRouter usage before: $0.1223)
+- `2026-09-25T06:19:09` **e03_invariance** — starting: 1500 calls
+- `2026-09-25T06:20:26` **e03_invariance** — ran 1500 calls in 78s, spent $0.0497, 0 errors (OpenRouter usage before: $0.1429)
+- `2026-09-25T06:20:26` **e04_injection** — starting: 1050 calls
+- `2026-09-25T06:21:21` **e04_injection** — ran 1050 calls in 54s, spent $0.0271, 0 errors (OpenRouter usage before: $0.1911)
+- `2026-09-25T06:21:21` **e05_independence** — starting: 750 calls
+- `2026-09-25T06:21:59` **e05_independence** — ran 750 calls in 38s, spent $0.0347, 0 errors (OpenRouter usage before: $0.2242)
+- `2026-09-25T06:22:21` **e06_options** — starting: 400 calls
+- `2026-09-25T06:22:35` **e03_invariance** — starting: 1500 calls
+- `2026-09-25T06:22:43` **e06_options** — ran 400 calls in 21s, spent $0.0414, 0 errors (OpenRouter usage before: $0.2478)
+- `2026-09-25T06:22:43` **e08_depth** — starting: 320 calls
+- `2026-09-25T06:22:59` **e08_depth** — ran 320 calls in 17s, spent $0.0197, 0 errors (OpenRouter usage before: $0.2751)
+- `2026-09-25T06:23:00` **e09_counting** — starting: 200 calls
+- `2026-09-25T06:23:10` **e09_counting** — ran 200 calls in 10s, spent $0.0089, 0 errors (OpenRouter usage before: $0.3092)
+- `2026-09-25T06:23:10` **e07_context** — starting: 750 calls
+- `2026-09-25T06:24:15` **e07_context** — ran 750 calls in 65s, spent $0.3141, 0 errors (OpenRouter usage before: $0.3260)
+- `2026-09-25T06:24:35` **e11_load** — ran 32 calls in 13s, spent $0.0016, 0 errors (OpenRouter usage before: $0.5615)
+- `2026-09-25T06:24:35` **e11_load** — concurrency 1: p50 396 ms, 2.4 req/s
+- `2026-09-25T06:24:42` **e11_load** — ran 32 calls in 7s, spent $0.0016, 0 errors (OpenRouter usage before: $0.6479)
+- `2026-09-25T06:24:42` **e11_load** — concurrency 2: p50 400 ms, 4.8 req/s
+- `2026-09-25T06:24:45` **e11_load** — ran 32 calls in 3s, spent $0.0016, 0 errors (OpenRouter usage before: $0.6491)
+- `2026-09-25T06:24:45` **e11_load** — concurrency 4: p50 397 ms, 9.3 req/s
+- `2026-09-25T06:24:47` **e11_load** — ran 32 calls in 2s, spent $0.0016, 0 errors (OpenRouter usage before: $0.6491)
+- `2026-09-25T06:24:47` **e11_load** — concurrency 8: p50 419 ms, 16.7 req/s
+- `2026-09-25T06:24:48` **e11_load** — ran 32 calls in 1s, spent $0.0016, 0 errors (OpenRouter usage before: $0.6491)
+- `2026-09-25T06:24:48` **e11_load** — concurrency 16: p50 402 ms, 35.1 req/s
+- `2026-09-25T06:24:50` **e11_load** — ran 64 calls in 1s, spent $0.0032, 0 errors (OpenRouter usage before: $0.6491)
+- `2026-09-25T06:24:50` **e11_load** — concurrency 32: p50 406 ms, 42.8 req/s
+- `2026-09-25T06:24:51` **e11_load** — ran 128 calls in 1s, spent $0.0065, 0 errors (OpenRouter usage before: $0.6491)
+- `2026-09-25T06:24:51` **e11_load** — concurrency 64: p50 403 ms, 92.5 req/s
+- `2026-09-25T14:35:03` **e12_selftrust** — dataset: 3744 items, 7488 calls, ~7.3M input tokens (est.)
+- `2026-09-25T14:40:28` **e12_selftrust** — ran 7488 calls in 324s, spent $0.4708, 0 errors (OpenRouter usage before: $0.6656)
+- `2026-09-25T14:40:28` **e12_selftrust** — wrote /Users/ashutosh/Projects/jevpros/data/e12_selftrust/answers.jsonl
+- `2026-09-30T02:36:49` **e13_anchoring** — stage 1: 9600 calls (400 cases x 24 conditions)
+- `2026-09-30T02:41:19` **e13_anchoring** — ran 9600 calls in 269s, spent $0.2799, 11 errors (OpenRouter usage before: $1.1365)
+- `2026-09-30T02:41:35` **e13_anchoring** — stage 1: 9600 calls (400 cases x 24 conditions)
+- `2026-09-30T02:41:35` **e13_anchoring** — ran 11 calls in 1s, spent $0.0003, 0 errors (OpenRouter usage before: $1.3936)
+- `2026-09-30T02:41:35` **e13_anchoring** — stage 2: 400 calls (Jev's own earlier answer shown)
+- `2026-09-30T02:41:47` **e13_anchoring** — ran 400 calls in 11s, spent $0.0117, 0 errors (OpenRouter usage before: $1.4163)
+- `2026-09-30T14:18:51` **e14_dutch_book** — starting: 8000 calls (600 sets)
+- `2026-09-30T14:22:04` **e14_dutch_book** — ran 8000 calls in 192s, spent $0.1565, 0 errors (OpenRouter usage before: $1.4284)
+- `2026-09-30T14:23:15` **e14_dutch_book** — starting: 8000 calls (600 sets)
+- `2026-10-01T06:20:29` **e15_reasoning** — starting: 4000 calls (400 cases x 10 conditions)
+- `2026-10-01T06:22:08` **e15_reasoning** — ran 4000 calls in 98s, spent $0.1527, 0 errors (OpenRouter usage before: $1.5849)
+- `2026-10-02T04:04:58` **e16_memory_ops** — starting: 21 decisions; 42 Jev calls + 84 LLM calls
+- `2026-10-02T04:05:00` **e16_memory_ops** — ran 42 calls in 2s, spent $0.0011, 0 errors (OpenRouter usage before: $1.7376)
+- `2026-10-02T04:05:17` **e16_memory_ops** — ran 84 calls in 17s, spent $0.0087, 0 errors (OpenRouter usage before: $1.7376)
+- `2026-10-02T04:05:36` **e16_memory_ops** — starting: 2100 decisions; 4200 Jev calls + 8400 LLM calls
+- `2026-10-02T04:07:22` **e16_memory_ops** — ran 4158 calls in 106s, spent $0.1800, 0 errors (OpenRouter usage before: $1.7376)
+- `2026-10-02T04:37:02` **e16_memory_ops** — starting: 2100 decisions; 4200 Jev calls + 8400 LLM calls
+- `2026-10-02T04:43:15` **e16_memory_ops** — ran 2467 calls in 373s, spent $0.3254, 0 errors (OpenRouter usage before: $2.6753)
+- `2026-10-02T04:44:00` **e16_memory_ops** — starting: 2100 decisions; 6300 Jev calls + 12600 LLM calls
+- `2026-10-02T04:44:59` **e16_memory_ops** — ran 2100 calls in 58s, spent $0.1580, 0 errors (OpenRouter usage before: $3.0006)
+- `2026-10-02T04:50:21` **e16_memory_ops** — ran 4200 calls in 322s, spent $0.3125, 0 errors (OpenRouter usage before: $3.1064)

@@ -1,0 +1,146 @@
+[e16_memory_ops] starting: 21 decisions; 42 Jev calls + 84 LLM calls
+[e16_memory_ops] ran 42 calls in 2s, spent $0.0011, 0 errors (OpenRouter usage before: $1.7376)
+[e16_memory_ops] ran 84 calls in 17s, spent $0.0087, 0 errors (OpenRouter usage before: $1.7376)
+# E16 — Delegating Mem0's memory-write decision (ADD / UPDATE / DELETE / NONE)
+
+E16 - Delegating an agent's memory-write decision: Mem0's ADD / UPDATE / DELETE / NONE step.
+
+The Mem0 paper's update step (arXiv:2504.19413; used by mem0ai 1.x, still in the 2.x repo but no longer called by
+add()) asks an LLM, for each newly extracted fact and the related existing memories, whether to ADD it, UPDATE an
+existing memory, DELETE an existing memory, or do NONE. This benchmark asks whether a single-pass typed decider can
+take over that decision.
+
+Gold labels follow Mem0's own rules (experiments/mem0_prompt.py, copied verbatim):
+  dup_exact        the new fact repeats a memory word for word                      -> NONE
+  dup_paraphrase   the new fact says the same thing in other words                  -> NONE
+  weaker           the memory is more detailed than the new fact                    -> NONE
+  update_detail    the new fact adds detail to a memory                             -> UPDATE that memory
+  update_change    a single-valued attribute changed (city, job, car, favourite)    -> UPDATE that memory
+  delete_contra    the new fact contradicts a memory (antonym / explicit "not" / "no longer")  -> DELETE that memory
+  add_unrelated    no existing memory is about the new fact's topic                 -> ADD
+Each subtype x K (number of existing memories: 1, 5, 10) x 100 items = 2,100 decisions. With K > 1 the other
+memories are about other topics; for multi-valued topics (foods, sports, pets, allergies, languages), half of the
+items also hold a NEAR distractor: the same topic with a different value ("Loves pizza" next to "Loves sushi").
+
+Deciders (each sees the same existing memories and new fact):
+  jev_flat        Jev, one Choice over every (operation, memory) pair: ADD, UPDATE i, DELETE i, NONE
+  jev_decomp      Jev, one Choice per existing memory: unrelated / same or less / adds or changes / contradicts;
+                  code combines (any contradiction -> DELETE, else any adds/changes -> UPDATE, else any same -> NONE,
+                  else ADD)
+  typed:<model>   an open small LLM given the same options as jev_flat, lettered; the decision and its probability
+                  are read from the first token's log-probabilities (max_tokens 1)
+  mem0:<model>    the model run exactly as Mem0 runs it: Mem0's prompt verbatim, JSON output, events parsed as Mem0's
+                  code reads them (only explicit ADD / UPDATE / DELETE events count)
+jev_flat, jev_decomp and typed:* get a short plain-text summary of Mem0's four rules instead of Mem0's JSON prompt.
+Scoring: STRICT = the set of (operation, memory) changes equals the gold set exactly. LENIENT also accepts
+semantically equivalent changes: DELETE i + ADD for an UPDATE or DELETE gold, and UPDATE i for an exact/paraphrase
+duplicate (rewriting the same fact). Outputs: data/e16_memory_ops/{dataset,answers}.jsonl, logs/e16_memory_ops/calls.jsonl.
+
+### Overall
+
+| decider | strict accuracy [95% CI] | lenient accuracy [95% CI] | unparseable | invalid / multiple changes | p50 ms | p95 ms | $ per 1,000 decisions |
+|---|---|---|---|---|---|---|---|
+| jev_flat | 100.0% [84.5%–100.0%] | 100.0% [84.5%–100.0%] | 0 | 0 | 425 | 869 | $0.026 |
+| jev_decomp | 85.7% [65.4%–95.0%] | 85.7% [65.4%–95.0%] | 0 | 0 | 448 | 907 | $0.027 |
+| typed:meta-llama/llama-3.1-8b-instruct | 66.7% [45.4%–82.8%] | 76.2% [54.9%–89.4%] | 0 | 0 | 779 | 5777 | $0.014 |
+| mem0:meta-llama/llama-3.1-8b-instruct | 66.7% [45.4%–82.8%] | 66.7% [45.4%–82.8%] | 0 | 2 | 361 | 3323 | $0.050 |
+| mem0:qwen/qwen-2.5-7b-instruct | 47.6% [28.3%–67.6%] | 52.4% [32.4%–71.7%] | 2 | 2 | 1059 | 4903 | $0.161 |
+| mem0:openai/gpt-4o-mini | 66.7% [45.4%–82.8%] | 81.0% [60.0%–92.3%] | 0 | 0 | 1922 | 2651 | $0.188 |
+
+### Strict accuracy by case type
+
+| case → gold | jev_flat | jev_decomp | typed:llama-3.1-8b-instruct | mem0:llama-3.1-8b-instruct | mem0:qwen-2.5-7b-instruct | mem0:gpt-4o-mini |
+|---|---|---|---|---|---|---|
+| dup_exact → NONE | 100.0% | 100.0% | 100.0% | 100.0% | 100.0% | 100.0% |
+| dup_paraphrase → NONE | 100.0% | 100.0% | 0.0% | 33.3% | 0.0% | 0.0% |
+| weaker → NONE | 100.0% | 100.0% | 100.0% | 0.0% | 0.0% | 0.0% |
+| update_detail → UPDATE | 100.0% | 100.0% | 100.0% | 100.0% | 66.7% | 100.0% |
+| update_change → UPDATE | 100.0% | 0.0% | 66.7% | 66.7% | 66.7% | 100.0% |
+| delete_contra → DELETE | 100.0% | 100.0% | 33.3% | 66.7% | 0.0% | 66.7% |
+| add_unrelated → ADD | 100.0% | 100.0% | 66.7% | 100.0% | 100.0% | 100.0% |
+
+### Strict accuracy by number of existing memories (K)
+
+| K | jev_flat | jev_decomp | typed:llama-3.1-8b-instruct | mem0:llama-3.1-8b-instruct | mem0:qwen-2.5-7b-instruct | mem0:gpt-4o-mini |
+|---|---|---|---|---|---|---|
+| 1 | 100.0% | 85.7% | 66.7% | 66.7% | 47.6% | 66.7% |
+| 5 | nan% | nan% | nan% | nan% | nan% | nan% |
+| 10 | nan% | nan% | nan% | nan% | nan% | nan% |
+
+### Contradictions (gold DELETE) by wording
+
+| wording | jev_flat | jev_decomp | typed:llama-3.1-8b-instruct | mem0:llama-3.1-8b-instruct | mem0:qwen-2.5-7b-instruct | mem0:gpt-4o-mini |
+|---|---|---|---|---|---|---|
+| antonym | nan% (n=0) | nan% (n=0) | nan% (n=0) | nan% (n=0) | nan% (n=0) | nan% (n=0) |
+| explicit_not | 100.0% (n=2) | 100.0% (n=2) | 0.0% (n=2) | 100.0% (n=2) | 0.0% (n=2) | 100.0% (n=2) |
+| no_longer | 100.0% (n=1) | 100.0% (n=1) | 100.0% (n=1) | 0.0% (n=1) | 0.0% (n=1) | 0.0% (n=1) |
+
+### Same-topic look-alike memories (multi-valued topics, K > 1, excluding ADD cases)
+
+| setting | jev_flat | jev_decomp | typed:llama-3.1-8b-instruct | mem0:llama-3.1-8b-instruct | mem0:qwen-2.5-7b-instruct | mem0:gpt-4o-mini |
+|---|---|---|---|---|---|---|
+| no look-alike (multi-valued topics, K>1) | nan% (n=0) | nan% (n=0) | nan% (n=0) | nan% (n=0) | nan% (n=0) | nan% (n=0) |
+| with a same-topic look-alike | nan% (n=0) | nan% (n=0) | nan% (n=0) | nan% (n=0) | nan% (n=0) | nan% (n=0) |
+
+### What each decider did, by gold operation (row shares)
+
+| decider | gold | → ADD | → UPDATE | → DELETE | → NONE | → several | → bad id | → unparseable |
+|---|---|---|---|---|---|---|---|---|
+| jev_flat | ADD | 100.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| jev_flat | UPDATE | 0.0% | 100.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| jev_flat | DELETE | 0.0% | 0.0% | 100.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| jev_flat | NONE | 0.0% | 0.0% | 0.0% | 100.0% | 0.0% | 0.0% | 0.0% |
+| jev_decomp | ADD | 100.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| jev_decomp | UPDATE | 0.0% | 50.0% | 50.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| jev_decomp | DELETE | 0.0% | 0.0% | 100.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| jev_decomp | NONE | 0.0% | 0.0% | 0.0% | 100.0% | 0.0% | 0.0% | 0.0% |
+| typed:meta-llama/llama-3.1-8b-instruct | ADD | 66.7% | 0.0% | 0.0% | 33.3% | 0.0% | 0.0% | 0.0% |
+| typed:meta-llama/llama-3.1-8b-instruct | UPDATE | 0.0% | 83.3% | 0.0% | 16.7% | 0.0% | 0.0% | 0.0% |
+| typed:meta-llama/llama-3.1-8b-instruct | DELETE | 0.0% | 0.0% | 33.3% | 66.7% | 0.0% | 0.0% | 0.0% |
+| typed:meta-llama/llama-3.1-8b-instruct | NONE | 11.1% | 22.2% | 0.0% | 66.7% | 0.0% | 0.0% | 0.0% |
+| mem0:meta-llama/llama-3.1-8b-instruct | ADD | 100.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| mem0:meta-llama/llama-3.1-8b-instruct | UPDATE | 16.7% | 83.3% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| mem0:meta-llama/llama-3.1-8b-instruct | DELETE | 33.3% | 0.0% | 66.7% | 0.0% | 0.0% | 0.0% | 0.0% |
+| mem0:meta-llama/llama-3.1-8b-instruct | NONE | 0.0% | 22.2% | 11.1% | 44.4% | 11.1% | 11.1% | 0.0% |
+| mem0:qwen/qwen-2.5-7b-instruct | ADD | 100.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| mem0:qwen/qwen-2.5-7b-instruct | UPDATE | 0.0% | 66.7% | 0.0% | 0.0% | 0.0% | 0.0% | 33.3% |
+| mem0:qwen/qwen-2.5-7b-instruct | DELETE | 0.0% | 100.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| mem0:qwen/qwen-2.5-7b-instruct | NONE | 0.0% | 44.4% | 0.0% | 33.3% | 22.2% | 0.0% | 0.0% |
+| mem0:openai/gpt-4o-mini | ADD | 100.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| mem0:openai/gpt-4o-mini | UPDATE | 0.0% | 100.0% | 0.0% | 0.0% | 0.0% | 0.0% | 0.0% |
+| mem0:openai/gpt-4o-mini | DELETE | 0.0% | 33.3% | 66.7% | 0.0% | 0.0% | 0.0% | 0.0% |
+| mem0:openai/gpt-4o-mini | NONE | 0.0% | 66.7% | 0.0% | 33.3% | 0.0% | 0.0% | 0.0% |
+
+### Cascade: confident decisions kept, the rest sent to openai/gpt-4o-mini (Mem0 prompt)
+
+| first decider | sent to the LLM when | share sent | strict accuracy |
+|---|---|---|---|
+| jev_flat | never | 0.0% | 100.0% |
+| jev_flat | conf < 0.5 | 0.0% | 100.0% |
+| jev_flat | conf < 0.7 | 9.5% | 90.5% |
+| jev_flat | conf < 0.8 | 9.5% | 90.5% |
+| jev_flat | conf < 0.9 | 9.5% | 90.5% |
+| jev_flat | conf < 0.95 | 19.0% | 81.0% |
+| jev_flat | always | 100.0% | 66.7% |
+| typed:meta-llama/llama-3.1-8b-instruct | never | 0.0% | 66.7% |
+| typed:meta-llama/llama-3.1-8b-instruct | conf < 0.5 | 23.8% | 71.4% |
+| typed:meta-llama/llama-3.1-8b-instruct | conf < 0.7 | 76.2% | 71.4% |
+| typed:meta-llama/llama-3.1-8b-instruct | conf < 0.8 | 85.7% | 71.4% |
+| typed:meta-llama/llama-3.1-8b-instruct | conf < 0.9 | 95.2% | 66.7% |
+| typed:meta-llama/llama-3.1-8b-instruct | conf < 0.95 | 95.2% | 66.7% |
+| typed:meta-llama/llama-3.1-8b-instruct | always | 100.0% | 66.7% |
+
+### Confidence vs accuracy
+
+| decider | confidence | n | strict accuracy |
+|---|---|---|---|
+| jev_flat | 0.50–0.70 | 2 | 100.0% |
+| jev_flat | 0.90–0.97 | 3 | 100.0% |
+| jev_flat | 0.97–1.00 | 16 | 100.0% |
+| jev_decomp | 0.70–0.90 | 5 | 40.0% |
+| jev_decomp | 0.97–1.00 | 16 | 100.0% |
+| typed:meta-llama/llama-3.1-8b-instruct | 0.00–0.50 | 5 | 40.0% |
+| typed:meta-llama/llama-3.1-8b-instruct | 0.50–0.70 | 11 | 63.6% |
+| typed:meta-llama/llama-3.1-8b-instruct | 0.70–0.90 | 4 | 100.0% |
+| typed:meta-llama/llama-3.1-8b-instruct | 0.97–1.00 | 1 | 100.0% |
+

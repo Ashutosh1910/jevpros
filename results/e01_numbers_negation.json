@@ -1,0 +1,246 @@
+{
+  "part_a": {
+    "boundary value in an evaluated condition | yes": {
+      "right": 277,
+      "n": 327,
+      "depth_standardised": 0.8669123302216771
+    },
+    "boundary value in an evaluated condition | no": {
+      "right": 1293,
+      "n": 1473,
+      "depth_standardised": 0.8734444583651996
+    },
+    "negated wording in an evaluated condition | yes": {
+      "right": 662,
+      "n": 787,
+      "depth_standardised": 0.8647863692915759
+    },
+    "negated wording in an evaluated condition | no": {
+      "right": 908,
+      "n": 1013,
+      "depth_standardised": 0.8811305351889324
+    },
+    "deciding condition is numeric | yes": {
+      "right": 550,
+      "n": 629,
+      "depth_standardised": 0.8777840473058649
+    },
+    "deciding condition is numeric | no": {
+      "right": 1020,
+      "n": 1171,
+      "depth_standardised": 0.8699720921303712
+    },
+    "deciding condition is categorical | yes": {
+      "right": 431,
+      "n": 514,
+      "depth_standardised": 0.8408556536365405
+    },
+    "deciding condition is categorical | no": {
+      "right": 1139,
+      "n": 1286,
+      "depth_standardised": 0.8850326509682105
+    },
+    "deciding condition is yes/no | yes": {
+      "right": 589,
+      "n": 657,
+      "depth_standardised": 0.8932655755348957
+    },
+    "deciding condition is yes/no | no": {
+      "right": 981,
+      "n": 1143,
+      "depth_standardised": 0.8606847937142688
+    },
+    "deciding condition is numeric AND at the exact boundary | yes": {
+      "right": 163,
+      "n": 182,
+      "depth_standardised": 0.8972853158899671
+    },
+    "deciding condition is numeric AND at the exact boundary | no": {
+      "right": 1407,
+      "n": 1618,
+      "depth_standardised": 0.8699478451878452
+    }
+  },
+  "B1": {
+    "overall": 1.0,
+    "n": 480,
+    "relation=far below": {
+      "acc": 1.0,
+      "n": 96,
+      "mean_p_true": 0.9822916666666667
+    },
+    "relation=just below": {
+      "acc": 1.0,
+      "n": 96,
+      "mean_p_true": 0.98
+    },
+    "relation=equal": {
+      "acc": 1.0,
+      "n": 96,
+      "mean_p_true": 0.9735416666666666
+    },
+    "relation=just above": {
+      "acc": 1.0,
+      "n": 96,
+      "mean_p_true": 0.9805208333333333
+    },
+    "relation=far above": {
+      "acc": 1.0,
+      "n": 96,
+      "mean_p_true": 0.9810416666666666
+    },
+    "comparator=over": {
+      "acc": 1.0,
+      "n": 60,
+      "mean_p_true": 0.9798333333333333
+    },
+    "comparator=more than": {
+      "acc": 1.0,
+      "n": 60,
+      "mean_p_true": 0.98
+    },
+    "comparator=at least": {
+      "acc": 1.0,
+      "n": 60,
+      "mean_p_true": 0.9828333333333333
+    },
+    "comparator=exceeding": {
+      "acc": 1.0,
+      "n": 60,
+      "mean_p_true": 0.9788333333333333
+    },
+    "comparator=under": {
+      "acc": 1.0,
+      "n": 60,
+      "mean_p_true": 0.9781666666666666
+    },
+    "comparator=less than": {
+      "acc": 1.0,
+      "n": 60,
+      "mean_p_true": 0.9786666666666667
+    },
+    "comparator=at most": {
+      "acc": 1.0,
+      "n": 60,
+      "mean_p_true": 0.9813333333333333
+    },
+    "comparator=not exceeding": {
+      "acc": 1.0,
+      "n": 60,
+      "mean_p_true": 0.9761666666666666
+    },
+    "magnitude=small int": {
+      "acc": 1.0,
+      "n": 120,
+      "mean_p_true": 0.9786666666666667
+    },
+    "magnitude=money": {
+      "acc": 1.0,
+      "n": 120,
+      "mean_p_true": 0.9785833333333332
+    },
+    "magnitude=large": {
+      "acc": 1.0,
+      "n": 120,
+      "mean_p_true": 0.9815833333333333
+    },
+    "magnitude=decimal": {
+      "acc": 1.0,
+      "n": 120,
+      "mean_p_true": 0.9790833333333333
+    }
+  },
+  "B2": {
+    "overall": 0.99375,
+    "n": 160,
+    "relation=months before": {
+      "acc": 1.0,
+      "n": 32,
+      "mean_p_true": 0.9818749999999999
+    },
+    "relation=1 day before": {
+      "acc": 1.0,
+      "n": 32,
+      "mean_p_true": 0.9815625
+    },
+    "relation=same day": {
+      "acc": 1.0,
+      "n": 32,
+      "mean_p_true": 0.978125
+    },
+    "relation=1 day after": {
+      "acc": 0.96875,
+      "n": 32,
+      "mean_p_true": 0.9584374999999999
+    },
+    "relation=months after": {
+      "acc": 1.0,
+      "n": 32,
+      "mean_p_true": 0.9818749999999999
+    },
+    "format=ISO": {
+      "acc": 1.0,
+      "n": 40,
+      "mean_p_true": 0.98225
+    },
+    "format=US numeric": {
+      "acc": 1.0,
+      "n": 40,
+      "mean_p_true": 0.978
+    },
+    "format=long": {
+      "acc": 1.0,
+      "n": 40,
+      "mean_p_true": 0.9814999999999999
+    },
+    "format=day-first": {
+      "acc": 0.975,
+      "n": 40,
+      "mean_p_true": 0.9637499999999999
+    },
+    "op=after": {
+      "acc": 1.0,
+      "n": 80,
+      "mean_p_true": 0.9801249999999999
+    },
+    "op=on or before": {
+      "acc": 0.9875,
+      "n": 80,
+      "mean_p_true": 0.9726250000000001
+    }
+  },
+  "B3": {
+    "overall": 0.921875,
+    "n": 64,
+    "negations=0": {
+      "acc": 1.0,
+      "n": 16,
+      "mean_p_true": 0.975625
+    },
+    "negations=1": {
+      "acc": 1.0,
+      "n": 16,
+      "mean_p_true": 0.9768749999999999
+    },
+    "negations=2": {
+      "acc": 1.0,
+      "n": 16,
+      "mean_p_true": 0.973125
+    },
+    "negations=3": {
+      "acc": 0.6875,
+      "n": 16,
+      "mean_p_true": 0.5725
+    },
+    "base_truth=True": {
+      "acc": 0.9375,
+      "n": 32,
+      "mean_p_true": 0.86875
+    },
+    "base_truth=False": {
+      "acc": 0.90625,
+      "n": 32,
+      "mean_p_true": 0.8803124999999999
+    }
+  }
+}

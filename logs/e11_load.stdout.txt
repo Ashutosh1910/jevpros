@@ -1,0 +1,34 @@
+[e11_load] ran 32 calls in 13s, spent $0.0016, 0 errors (OpenRouter usage before: $0.5615)
+[e11_load] concurrency 1: p50 396 ms, 2.4 req/s
+[e11_load] ran 32 calls in 7s, spent $0.0016, 0 errors (OpenRouter usage before: $0.6479)
+[e11_load] concurrency 2: p50 400 ms, 4.8 req/s
+[e11_load] ran 32 calls in 3s, spent $0.0016, 0 errors (OpenRouter usage before: $0.6491)
+[e11_load] concurrency 4: p50 397 ms, 9.3 req/s
+[e11_load] ran 32 calls in 2s, spent $0.0016, 0 errors (OpenRouter usage before: $0.6491)
+[e11_load] concurrency 8: p50 419 ms, 16.7 req/s
+[e11_load] ran 32 calls in 1s, spent $0.0016, 0 errors (OpenRouter usage before: $0.6491)
+[e11_load] concurrency 16: p50 402 ms, 35.1 req/s
+[e11_load] ran 64 calls in 1s, spent $0.0032, 0 errors (OpenRouter usage before: $0.6491)
+[e11_load] concurrency 32: p50 406 ms, 42.8 req/s
+  [e11_load] 100/128 calls, $0.0051, 0 errors
+[e11_load] ran 128 calls in 1s, spent $0.0065, 0 errors (OpenRouter usage before: $0.6491)
+[e11_load] concurrency 64: p50 403 ms, 92.5 req/s
+# E11 — Latency under load
+
+E11 - Latency and throughput under concurrency.
+
+One fixed request (scenario s00000 from the main dataset: ~1.2k input tokens, 13 questions) sent at
+concurrency 1, 2, 4, 8, 16, 32, 64. Calls per level: max(32, 2 x concurrency). Run this alone.
+
+| concurrency | calls | p50 ms | p95 ms | p99 ms | wall s | throughput req/s | errors |
+|---|---|---|---|---|---|---|---|
+| 1 | 32 | 396 | 489 | 521 | 13.1 | 2.4 | 0 |
+| 2 | 32 | 400 | 518 | 527 | 6.7 | 4.8 | 0 |
+| 4 | 32 | 397 | 492 | 494 | 3.4 | 9.3 | 0 |
+| 8 | 32 | 419 | 542 | 587 | 1.9 | 16.7 | 0 |
+| 16 | 32 | 402 | 426 | 433 | 0.9 | 35.1 | 0 |
+| 32 | 64 | 406 | 940 | 982 | 1.5 | 42.8 | 0 |
+| 64 | 128 | 403 | 958 | 1024 | 1.4 | 92.5 | 0 |
+
+Wall time includes one OpenRouter credits check per level (~0.2–0.5 s), so throughput at low call counts is slightly understated.
+

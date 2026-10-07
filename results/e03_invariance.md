@@ -1,0 +1,46 @@
+# E03 — Invariance and determinism
+
+E03 - Invariance to meaning-preserving changes, and run-to-run determinism.
+
+150 cases (K=2, depth 1-5, 30 per depth). Questions: A0, A1 (nouls) and J (4-way joint choice).
+Variants of the same logical case:
+  base          original rendering
+  rename        items renamed (e.g. "Expense 1" -> "Submission Q-17")
+  reorder       rule order and fact order shuffled
+  synonyms      title, header and every rule clause reworded
+  units         "$120" -> "120 USD", "30 days" -> "30 calendar days", ...
+  all           all four at once
+Determinism: `base` sent 5 times (base = repeat 0).
+
+Base accuracy: atoms 88.3%, joint choice 78.7%.
+
+### Changes vs the base rendering (the correct answer never changes)
+
+| variant | atom decision flips [95% CI] | joint choice flips [95% CI] | mean |Δp| atoms | atom acc | joint acc |
+|---|---|---|---|---|---|
+| repeat (noise floor) | 4.0% [2.3%–6.9%] | 4.7% [2.3%–9.3%] | 0.025 | 89.0% | 79.3% |
+| rename | 6.3% [4.1%–9.7%] | 5.3% [2.7%–10.2%] | 0.039 | 89.3% | 82.0% |
+| reorder | 14.0% [10.5%–18.4%] | 16.7% [11.6%–23.4%] | 0.083 | 87.7% | 77.3% |
+| synonyms | 15.3% [11.7%–19.8%] | 17.3% [12.1%–24.2%] | 0.094 | 82.3% | 70.0% |
+| units | 4.7% [2.8%–7.7%] | 6.7% [3.7%–11.8%] | 0.029 | 89.0% | 77.3% |
+| all | 13.7% [10.2%–18.0%] | 20.7% [15.0%–27.8%] | 0.106 | 87.3% | 74.7% |
+
+Share of cases where at least one atom decision flipped, by depth:
+
+| depth | repeat (noise) | rename | reorder | synonyms | units | all |
+|---|---|---|---|---|---|---|
+| 1 | 0% | 0% | 0% | 0% | 0% | 0% |
+| 2 | 7% | 7% | 10% | 7% | 7% | 7% |
+| 3 | 3% | 13% | 27% | 33% | 3% | 33% |
+| 4 | 10% | 20% | 40% | 30% | 13% | 30% |
+| 5 | 20% | 23% | 47% | 57% | 20% | 57% |
+
+### Determinism (5 identical calls per case, n=150)
+
+| metric | value |
+|---|---|
+| fully identical answers across repeats | 4.0% |
+| mean spread (max−min) of an atom probability | 0.052 |
+| max spread observed | 0.500 |
+| atoms whose decision flipped across repeats | 8.0% |
+| joint choices that changed across repeats | 6.7% |

@@ -1,0 +1,17 @@
+# E08 — Deeper nesting
+
+E08 - Deeper nesting (up to 10 exceptions per rule).
+
+40 cases per depth (10 per domain), K=2, depths 1,3,5,6,7,8,9,10, full 13-question set.
+Baselines: "always answer the default" and chance (50%).
+
+| depth | atom acc [95% CI] | 'always default' baseline | answered default when truth≠default | full-set choice acc | soft violation rate | hard contradiction rate | scenarios w/ ≥1 hard contradiction | input tokens |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 97.5% [91.3%–99.3%] | 55.0% | 2.8% | 95.0% | 0.3% | 0.5% | 5.0% | 1134 |
+| 3 | 90.0% [81.5%–94.8%] | 51.2% | 10.3% | 72.5% | 8.9% | 11.5% | 40.0% | 1269 |
+| 5 | 82.5% [72.7%–89.3%] | 52.5% | 21.1% | 65.0% | 8.6% | 17.5% | 50.0% | 1400 |
+| 6 | 76.2% [65.9%–84.2%] | 61.3% | 35.5% | 57.5% | 5.6% | 16.8% | 60.0% | 1449 |
+| 7 | 75.0% [64.5%–83.2%] | 55.0% | 22.2% | 45.0% | 5.3% | 21.5% | 75.0% | 1518 |
+| 8 | 75.0% [64.5%–83.2%] | 66.2% | 48.1% | 67.5% | 3.9% | 17.0% | 60.0% | 1592 |
+| 9 | 73.8% [63.2%–82.1%] | 58.8% | 33.3% | 52.5% | 5.5% | 26.2% | 75.0% | 1661 |
+| 10 | 56.2% [45.3%–66.6%] | 51.2% | 69.2% | 35.0% | 1.7% | 29.5% | 85.0% | 1712 |
